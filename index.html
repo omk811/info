@@ -15,8 +15,6 @@
   --text:#1e293b;
   --bubble:#ffffff;
   --bubble-shadow:rgba(0,0,0,0.07);
-  --send:#2563eb;
-  --send-hover:#1e40af;
 }
 
 body {
@@ -26,12 +24,11 @@ body {
   color:var(--text);
 }
 
-/* ===== App Header ===== */
 .app-header {
   position:sticky;
   top:0;
   background:var(--header);
-  padding:18px 16px;
+  padding:18px;
   text-align:center;
   font-size:22px;
   font-weight:700;
@@ -40,20 +37,17 @@ body {
   z-index:99;
 }
 
-/* ===== Container ===== */
 .container {
   max-width:520px;
   margin:0 auto;
-  padding:15px;
+  padding:14px;
 }
 
-/* ===== Input Card ===== */
 .input-card {
   background:var(--bubble);
   padding:18px;
   border-radius:14px;
   box-shadow:0 3px 10px var(--bubble-shadow);
-  margin-bottom:20px;
 }
 
 input, textarea {
@@ -65,81 +59,41 @@ input, textarea {
   font-size:16px;
   background:#f8fafc;
 }
-input:focus, textarea:focus {
-  border-color:var(--header);
-  background:white;
-}
 
-/* ===== Send Button ===== */
 .send-btn {
   width:100%;
   padding:13px;
-  background:var(--send);
+  background:#2563eb;
   color:white;
   border:none;
   border-radius:12px;
   font-size:18px;
   font-weight:600;
   cursor:pointer;
-  transition:0.25s;
-}
-.send-btn:hover {
-  background:var(--send-hover);
 }
 
-/* ===== Notes ===== */
 .note {
   background:var(--bubble);
-  padding:15px 18px;
+  padding:18px;
   border-radius:14px;
   box-shadow:0 3px 10px var(--bubble-shadow);
   margin:16px 0;
 }
-
-.note-name {
-  font-weight:700;
-  font-size:17px;
-}
-
-.note-text {
-  margin-top:6px;
-  line-height:1.85;
-  font-size:16px;
-}
-
-.note img {
-  width:100%;
-  border-radius:10px;
-  margin-top:12px;
-}
-
 .reply-box {
   background:#e7fff4;
   border-right:5px solid #10b981;
   padding:12px;
   border-radius:10px;
   margin-top:14px;
-  font-size:15px;
 }
+.wait { color:#777; margin-top:10px; }
 
-.wait {
-  margin-top:10px;
-  color:#777;
-  font-size:15px;
-}
-
-/* ===== Footer Navigation ===== */
 .footer-nav {
   text-align:center;
-  margin-top:30px;
+  margin-top:25px;
   font-size:15px;
-  color:#555;
 }
-.footer-nav a {
-  color:var(--header);
-  text-decoration:none;
-  font-weight:700;
-}
+.footer-nav a { color:#2563eb; font-weight:700; text-decoration:none; }
 </style>
 </head>
 
@@ -149,105 +103,89 @@ input:focus, textarea:focus {
 
 <div class="container">
 
-  <!-- إرسال ملاحظة -->
   <div class="input-card">
-    <h3 style="margin-top:0; font-size:20px;">إرسال ملاحظة جديدة</h3>
+    <h3>إرسال ملاحظة جديدة</h3>
 
     <input id="name" placeholder="اسمك الكريم">
     <textarea id="message" placeholder="اكتب ملاحظتك…" rows="4"></textarea>
     <input type="file" id="image">
 
     <button class="send-btn" onclick="sendNote()">إرسال</button>
-    <p id="status" style="margin-top:10px; color:green;"></p>
+    <p id="status" style="color:green;"></p>
   </div>
 
-  <!-- الملاحظات -->
-  <h3 style="padding-right:4px;">الملاحظات الأخيرة:</h3>
+  <h3 style="margin-top:25px;">الملاحظات الأخيرة:</h3>
   <div id="notes"></div>
 
   <div class="footer-nav">
-    إدارة الردود والملاحظات؟  
-    <a href="admin.html">اضغط هنا</a>
-    <br><br>
-    قناة الواتساب:  
-    <a href="https://whatsapp.com/channel/0029VamotBKCxoAy3fzUcv3T">الضغط للدخول</a>
-    <br>
-    موقع المدونة:  
-    <a href="https://omk811.blogspot.com/">زيارة الموقع</a>
+    إدارة الردود ↦ 
+    <a href="admin.html">لوحة التحكم</a>
   </div>
-
 </div>
-
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
 
-async function sendNote(){
-  const name = document.getElementById("name").value.trim();
-  const message = document.getElementById("message").value.trim();
+async function sendNote() {
+  const name = name.value.trim();
+  const message = message.value.trim();
   const imgFile = document.getElementById("image").files[0];
 
-  if(!name || !message){
-    document.getElementById("status").innerText = "❗ الرجاء تعبئة كل الحقول";
-    return;
-  }
+  if (!name || !message) return status.innerText = "❗ أدخل الاسم والملاحظة";
 
-  document.getElementById("status").innerText = "⏳ يتم الإرسال…";
+  status.innerText = "⏳ يتم الإرسال…";
 
-  let base64 = "";
-  if(imgFile){
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      base64 = reader.result;
-      submitNote(name, message, base64);
-    };
-    reader.readAsDataURL(imgFile);
+  if (imgFile) {
+    const r = new FileReader();
+    r.onloadend = () => submitNote(name, message, r.result);
+    r.readAsDataURL(imgFile);
   } else {
     submitNote(name, message, "");
   }
 }
 
-async function submitNote(name, message, image){
+async function submitNote(name, message, image) {
   await fetch(scriptURL, {
-    method:"POST",
-    body:JSON.stringify({
-      type:"note",
+    method: "POST",
+    body: JSON.stringify({
+      type: "note",
       name,
       message,
       image
     })
   });
 
-  document.getElementById("status").innerText = "✔ تم إرسال الملاحظة!";
+  status.innerText = "✔ تم إرسال الملاحظة!";
   loadNotes();
 }
 
-async function loadNotes(){
+async function loadNotes() {
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
 
-  let box = document.getElementById("notes");
-  box.innerHTML = "";
-
+  let out = "";
   data.forEach(r => {
-    box.innerHTML += `
+    out += `
       <div class="note">
-        <div class="note-name">${r.name}</div>
-        <div class="note-text">${r.message}</div>
-        ${r.image ? `<img src="${r.image}">` : ""}
+        <b>${r.name}</b>
+        <p>${r.message}</p>
+        ${r.image ? `<img src="${r.image}" style="width:100%; border-radius:10px; margin-top:12px;">` : ""}
+        
         ${
-  r.reply || r.replyImage
-    ? `
-      <div class="reply-box">
-        ${r.reply ? `<b>رد المشرف:</b> ${r.reply}<br><br>` : ""}
-        ${r.replyImage ? `<img src="${r.replyImage}" style="max-width:100%; border-radius:10px;">` : ""}
-      </div>
-    `
-    : `<div class="wait">⏳ بانتظار الرد</div>`
-}
+          (r.reply || r.replyImage)
+            ? `
+              <div class="reply-box">
+                ${r.reply ? `<b>رد المشرف:</b> ${r.reply}<br><br>` : ""}
+                ${r.replyImage ? `<img src="${r.replyImage}" style="width:100%; border-radius:10px;">` : ""}
+              </div>
+            `
+            : `<div class="wait">⏳ بانتظار الرد</div>`
+        }
       </div>
     `;
   });
+
+  document.getElementById("notes").innerHTML = out;
 }
 
 loadNotes();
