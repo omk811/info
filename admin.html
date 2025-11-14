@@ -1,290 +1,282 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>لوحة الإدارة – الأستاذ خليل البلوشي</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>لوحة إدارة الملاحظات – قناة الأستاذ خليل البلوشي</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#f0f2f5;
-  --panel:#ffffff;
-  --border:#dcdcdc;
-  --blue:#0084ff;
+:root {
+  --bg:#eef2f7;
   --text:#1e293b;
+  --card:#ffffff;
+  --card-border:#cbd5e1;
+  --main:#2563eb;
+  --main-dark:#1e40af;
+  --reply:#10b981;
 }
 
-body.dark{
-  --bg:#121b22;
-  --panel:#1f2c33;
-  --border:#3c4b55;
-  --text:#e9edef;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Cairo", sans-serif;
+  margin: 0;
 }
-
-body{
-  margin:0;
-  background:var(--bg);
-  font-family:"Cairo",sans-serif;
-  color:var(--text);
-  overflow:hidden;
+.navbar {
+  background: linear-gradient(90deg, var(--main-dark), var(--main));
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
 }
-
-.top{
-  background:var(--panel);
-  padding:14px;
-  font-size:20px;
-  font-weight:700;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
+.card {
+  max-width: 880px;
+  margin: 25px auto;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
-
-.mode{
-  font-size:22px;
-  cursor:pointer;
-  background:none;
-  border:none;
-  color:var(--text);
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
 }
-
-.main{
-  height:calc(100vh - 60px);
-  display:flex;
+button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: var(--main);
 }
-
-.left{
-  width:32%;
-  background:var(--panel);
-  border-left:1px solid var(--border);
-  overflow-y:auto;
+button:hover {
+  background: var(--main-dark);
 }
-
-.item{
-  padding:14px;
-  border-bottom:1px solid var(--border);
-  cursor:pointer;
+.note-box {
+  border: 1px solid var(--card-border);
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff;
+  margin: 18px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-
-.item:hover{
-  background:#eaeaea55;
+.counter-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-
-.item-name{
-  font-weight:700;
+.counter {
+  background: #e0e7ff;
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  border-right: 4px solid var(--main-dark);
 }
-
-.item-msg{
-  color:#777;
-  font-size:14px;
+.filter-box {
+  margin: 12px 0;
+  display: flex;
+  gap: 10px;
 }
-
-.right{
-  width:68%;
-  display:flex;
-  flex-direction:column;
+.filter-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  font-weight: 600;
 }
-
-.chat{
-  flex:1;
-  padding:20px;
-  overflow-y:auto;
+.filter-btn:hover {
+  background: #e2e8f0;
 }
-
-.msg-box{
-  background:var(--panel);
-  padding:16px;
-  border-radius:12px;
-  margin-bottom:12px;
-  line-height:1.7;
+.filter-btn.active {
+  background: var(--main);
+  color: #fff;
 }
-
-img{
-  width:100%;
-  border-radius:10px;
-  margin-top:10px;
-  max-height:300px;
-  object-fit:contain;
-}
-
-.reply{
-  background:#e6f7ff;
-  border-right:4px solid var(--blue);
-  padding:12px;
-  margin-top:12px;
-  border-radius:10px;
-}
-
-.bottom{
-  padding:14px;
-  background:var(--panel);
-  border-top:1px solid var(--border);
-}
-
-textarea{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  font-size:15px;
-  background:#f8fafc;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  margin-top:10px;
-  background:var(--blue);
-  color:white;
-  font-size:17px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.delete{
-  background:#dc2626;
+.popup {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--main);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  display: none;
+  z-index: 99999;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  لوحة الإدارة
-  <button class="mode" onclick="toggle()">🌙</button>
+<div class="navbar">لوحة إدارة الملاحظات</div>
+
+<div id="popup" class="popup"></div>
+
+<div class="card" id="loginBox">
+  <h3>🔐 تسجيل الدخول</h3>
+  <input id="adminPass" type="password" placeholder="كلمة المرور">
+  <button onclick="login()">دخول</button>
+  <p id="loginStatus" style="color:red"></p>
 </div>
 
-<div class="main">
-  <div class="left" id="listBox"></div>
+<div class="card" id="adminPanel" style="display:none;">
 
-  <div class="right">
-    <div class="chat" id="chatWindow">
-      <p style="color:#888;">اختر ملاحظة من القائمة…</p>
-    </div>
+  <button onclick="location.href='index.html'">⬅️ الرجوع للصفحة الرئيسية</button>
 
-    <div class="bottom">
-      <textarea id="replyText" rows="3" placeholder="اكتب الرد…"></textarea>
-      <input id="replyImg" type="file" accept="image/*" style="margin-top:10px;">
-      <button onclick="sendReply()">💬 إرسال الرد</button>
-      <button class="delete" onclick="deleteNote()">🗑 حذف الملاحظة</button>
-    </div>
+  <div class="counter-box">
+    <div class="counter" id="countTotal">الإجمالي: 0</div>
+    <div class="counter" id="countNew">الجديدة: 0</div>
+    <div class="counter" id="countReplied">تم الرد: 0</div>
+    <div class="counter" id="countWithImg">مع صورة: 0</div>
   </div>
+
+  <div class="filter-box">
+    <div class="filter-btn active" onclick="applyFilter('all', this)">الكل</div>
+    <div class="filter-btn" onclick="applyFilter('new', this)">الجديدة</div>
+    <div class="filter-btn" onclick="applyFilter('replied', this)">تم الرد</div>
+    <div class="filter-btn" onclick="applyFilter('img', this)">مع صورة</div>
+  </div>
+
+  <div id="notesList"></div>
+
+  <h3 style="margin-top:25px;">✏️ الرد على الملاحظة:</h3>
+  <textarea id="replyText" rows="4" placeholder="اكتب الرد…"></textarea>
+  <input type="file" id="replyImage" accept="image/*">
+  <button onclick="sendReply()">💬 إرسال الرد</button>
+  <p id="replyStatus" style="color:green;"></p>
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxfK_7ByFDvHAEj8d-jqd6rPYWQivXNk9sE9bwjM6iDYNGLiu6h59x1G5X42X3XNeIh/exec";
+const scriptURL = "YOUR_SCRIPT_URL_HERE";
+const adminPassword = "Aysha123";
 
-let notes = [];
-let current = null;
+let allNotes = [];
+let filteredNotes = [];
 
-/* Dark mode toggle */
-function toggle(){
-  document.body.classList.toggle("dark");
+function popup(msg) {
+  const p = document.getElementById("popup");
+  p.innerText = msg;
+  p.style.display = "block";
+  setTimeout(() => p.style.display = "none", 2200);
 }
 
-/* Load notes */
-async function load(){
+function login() {
+  const pass = adminPass.value.trim();
+  if (pass !== adminPassword) {
+    loginStatus.innerText = "❌ كلمة مرور غير صحيحة";
+    return;
+  }
+  adminPanel.style.display = "block";
+  loginBox.style.display = "none";
+  loadNotes();
+}
+
+async function loadNotes() {
   const res = await fetch(scriptURL + "?getData");
-  notes = await res.json();
-  renderList();
+  allNotes = await res.json();
+  filteredNotes = allNotes;
+  updateCounters();
+  renderNotes();
 }
 
-function renderList(){
-  let box = document.getElementById("listBox");
-  box.innerHTML = "";
+function renderNotes() {
+  notesList.innerHTML = "";
 
-  notes.forEach((n,i)=>{
-    box.innerHTML += `
-      <div class="item" onclick="openNote(${i})">
-        <div class="item-name">${n.name}</div>
-        <div class="item-msg">${n.message.substring(0,25)}...</div>
+  filteredNotes.forEach((note, index) => {
+    notesList.innerHTML += `
+      <div class="note-box">
+        <b style="font-size:18px;">${note.Name}</b>
+        <p style="margin-top:6px;">${note.Message}</p>
+
+        ${note.imageURL
+          ? `<img src="${note.imageURL}" 
+                 style="width:100%; max-height:260px; object-fit:contain; 
+                        border-radius:10px; margin-top:10px;">`
+          : ""}
+
+        ${note.reply || note.replyImageURL
+          ? `
+            <div style="margin-top:12px; padding:10px; background:#e7fff4; border-right:4px solid #10b981; border-radius:10px;">
+              ${note.reply ? `<b>رد المشرف:</b> ${note.reply}` : ""}
+              ${note.replyImageURL 
+                ? `<img src="${note.replyImageURL}" style="width:100%; max-height:260px; object-fit:contain; margin-top:10px; border-radius:10px;">`
+                : ""}
+            </div>`
+          : `<p style="color:#999; margin-top:8px;">⏳ بانتظار الرد</p>`}
       </div>
     `;
   });
 }
 
-function openNote(i){
-  current = i;
-  const n = notes[i];
-  const chat = document.getElementById("chatWindow");
-
-  let html = `
-    <div class="msg-box">
-      <b>${n.name}</b><br>${n.message}
-      ${n.image ? `<img src="${n.image}">` : ""}
-    </div>
-  `;
-
-  if(n.reply || n.replyImage){
-    html += `<div class="reply">`;
-    if(n.reply) html += `<b>رد المشرف:</b><br>${n.reply}<br>`;
-    if(n.replyImage) html += `<img src="${n.replyImage}">`;
-    html += `</div>`;
-  }
-
-  chat.innerHTML = html;
+function updateCounters() {
+  countTotal.innerText = "الإجمالي: " + allNotes.length;
+  countNew.innerText = "الجديدة: " + allNotes.filter(n => !n.reply).length;
+  countReplied.innerText = "تم الرد: " + allNotes.filter(n => n.reply).length;
+  countWithImg.innerText = "مع صورة: " + allNotes.filter(n => n.imageURL).length;
 }
 
-/* Send reply */
-async function sendReply(){
-  if(current === null) return alert("اختر ملاحظة");
+function applyFilter(type, el) {
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
 
-  const reply = document.getElementById("replyText").value.trim();
-  const file = document.getElementById("replyImg").files[0];
+  if (type === "all") filteredNotes = allNotes;
+  else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
+  else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
+  else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
 
-  if(!reply && !file) return alert("الرد فارغ");
+  renderNotes();
+}
 
-  if(file){
+async function sendReply() {
+  const reply = replyText.value.trim();
+  const imgFile = replyImage.files[0];
+
+  if (!reply && !imgFile) return popup("⚠️ اكتب الرد أو أرفق صورة");
+
+  replyStatus.innerText = "⏳ يتم الإرسال…";
+
+  let img64 = "";
+  if (imgFile) {
+    img64 = await toBase64(imgFile);
+  }
+
+  const res = await fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({
+      type: "reply",
+      row: filteredNotes[0].row,
+      reply,
+      replyImage: img64
+    })
+  });
+
+  replyStatus.innerText = "✔ تم الإرسال";
+  loadNotes();
+}
+
+function toBase64(file) {
+  return new Promise((resolve) => {
     const r = new FileReader();
-    r.onloadend = ()=> submitReply(reply, r.result);
+    r.onloadend = () => resolve(r.result);
     r.readAsDataURL(file);
-  } else {
-    submitReply(reply, "");
-  }
-}
-
-async function submitReply(text, img){
-  await fetch(scriptURL,{
-    method:"POST",
-    body:JSON.stringify({
-      type:"reply",
-      row: notes[current].row,
-      reply: text,
-      replyImage: img
-    })
   });
-
-  document.getElementById("replyText").value = "";
-  document.getElementById("replyImg").value = "";
-
-  load();
-  openNote(current);
 }
-
-/* Delete note */
-async function deleteNote(){
-  if(current === null) return alert("اختر ملاحظة");
-
-  if(!confirm("هل تريد الحذف؟")) return;
-
-  await fetch(scriptURL,{
-    method:"POST",
-    body:JSON.stringify({
-      type:"delete",
-      row: notes[current].row
-    })
-  });
-
-  document.getElementById("chatWindow").innerHTML = "<p>تم الحذف</p>";
-  load();
-  current = null;
-}
-
-/* Init */
-load();
 </script>
 
 </body>
