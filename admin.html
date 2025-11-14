@@ -287,23 +287,34 @@ function renderNotes(){
 
   filteredNotes.forEach((note, index) => {
     box.innerHTML += `
-      <div class="note-box">
-        <input type="checkbox" class="noteCheck" value="${index}" style="transform:scale(1.4); margin-top:10px;">
-        
-        <div class="note-content">
-          <b style="font-size:18px;">${note.name}</b>
-          <p style="margin:6px 0;">${note.message}</p>
+      <div style="
+        background:var(--card);
+        border:1px solid var(--card-border);
+        padding:15px;
+        border-radius:10px;
+        margin:12px 0;
+      ">
 
-          ${note.image ? `<img src="${note.image}" class="note-img">` : ""}
+        <div style="display:flex; align-items:flex-start; gap:10px;">
+          <input type="checkbox" class="noteCheck" value="${index}" style="transform:scale(1.4); margin-top:6px;">
           
-          ${note.reply 
-            ? `<p style="color:var(--reply); margin-top:10px;"><b>رد المشرف:</b> ${note.reply}</p>`
-            : `<p style="color:#999; margin-top:10px;">⏳ بانتظار الرد</p>`}
+          <div style="flex:1;">
+            <b style="font-size:18px;">${note.name}</b>
+            <p style="margin:8px 0; line-height:1.7;">${note.message}</p>
+
+            ${note.image ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:10px;">` : ""}
+
+            ${note.reply 
+              ? `<p style="color:var(--reply); margin-top:12px;"><b>رد المشرف:</b> ${note.reply}</p>`
+              : `<p style="color:#999; margin-top:12px;">⏳ بانتظار الرد</p>`}
+          </div>
         </div>
+
       </div>
     `;
   });
 }
+
 
 /* Counters */
 function updateCounters(){
