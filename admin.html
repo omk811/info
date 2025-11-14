@@ -1,283 +1,874 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>لوحة إدارة الملاحظات – قناة الأستاذ خليل البلوشي</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة الملاحظات – قناة الأستاذ خليل البلوشي</title>
+    
+    <!-- الخطوط -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- أيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(0, 0, 0, 0.12);
+            --error: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-:root {
-  --bg:#eef2f7;
-  --text:#1e293b;
-  --card:#ffffff;
-  --card-border:#cbd5e1;
-  --main:#2563eb;
-  --main-dark:#1e40af;
-  --reply:#10b981;
-}
+        body {
+            background: var(--light);
+            color: var(--dark);
+            font-family: "Cairo", sans-serif;
+            line-height: 1.6;
+        }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Cairo", sans-serif;
-  margin: 0;
-}
-.navbar {
-  background: linear-gradient(90deg, var(--main-dark), var(--main));
-  color: #fff;
-  padding: 16px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-}
-.card {
-  max-width: 880px;
-  margin: 25px auto;
-  background: var(--card);
-  padding: 20px;
-  border-radius: 14px;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  background: #f8fafc;
-}
-button {
-  padding: 11px 16px;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  color: #fff;
-  background: var(--main);
-}
-button:hover {
-  background: var(--main-dark);
-}
-.note-box {
-  border: 1px solid var(--card-border);
-  padding: 20px;
-  border-radius: 12px;
-  background: #fff;
-  margin: 18px 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-.counter-box {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.counter {
-  background: #e0e7ff;
-  flex: 1;
-  min-width: 140px;
-  text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 700;
-  border-right: 4px solid var(--main-dark);
-}
-.filter-box {
-  margin: 12px 0;
-  display: flex;
-  gap: 10px;
-}
-.filter-btn {
-  flex: 1;
-  padding: 8px;
-  border-radius: 10px;
-  background: #fff;
-  border: 1px solid var(--card-border);
-  cursor: pointer;
-  font-weight: 600;
-}
-.filter-btn:hover {
-  background: #e2e8f0;
-}
-.filter-btn.active {
-  background: var(--main);
-  color: #fff;
-}
-.popup {
-  position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--main);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 700;
-  display: none;
-  z-index: 99999;
-}
-</style>
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar i {
+            margin-left: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid var(--light-gray);
+            font-family: "Cairo", sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #0d9668;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .counter-box {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .counter {
+            background: var(--white);
+            flex: 1;
+            min-width: 160px;
+            text-align: center;
+            padding: 20px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px var(--shadow);
+            border-right: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .counter:hover {
+            transform: translateY(-5px);
+        }
+
+        .counter-title {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .counter-value {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .counter.new {
+            border-right-color: var(--warning);
+        }
+
+        .counter.new .counter-value {
+            color: var(--warning);
+        }
+
+        .counter.replied {
+            border-right-color: var(--success);
+        }
+
+        .counter.replied .counter-value {
+            color: var(--success);
+        }
+
+        .counter.images {
+            border-right-color: #8b5cf6;
+        }
+
+        .counter.images .counter-value {
+            color: #8b5cf6;
+        }
+
+        .filter-box {
+            margin: 20px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: var(--light-gray);
+            border-color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .notes-list {
+            margin-top: 20px;
+        }
+
+        .note-box {
+            border: 1px solid var(--light-gray);
+            padding: 20px;
+            border-radius: 16px;
+            background: var(--white);
+            margin: 18px 0;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .note-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px var(--shadow-hover);
+        }
+
+        .note-box.unreplied {
+            border-right: 5px solid var(--warning);
+        }
+
+        .note-box.replied {
+            border-right: 5px solid var(--success);
+        }
+
+        .note-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .note-author {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .note-date {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .note-content {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .note-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-top: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .reply-box {
+            background: #f0fdf4;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            border-right: 5px solid var(--success);
+        }
+
+        .reply-title {
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reply-content {
+            line-height: 1.7;
+        }
+
+        .reply-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-top: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .pending {
+            background: #fef3c7;
+            border-right: 5px solid var(--warning);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+            color: #92400e;
+            font-weight: 600;
+        }
+
+        .pending i {
+            margin-left: 8px;
+        }
+
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            background: var(--light);
+            border: 2px dashed var(--light-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: var(--light-gray);
+            border-color: var(--primary);
+        }
+
+        .file-input-label i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        #popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            animation: fadeInOut 2.5s ease;
+        }
+
+        .popup-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .popup-error {
+            background: var(--error);
+            color: white;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; top: 0; }
+            20% { opacity: 1; top: 20px; }
+            80% { opacity: 1; top: 20px; }
+            100% { opacity: 0; top: 0; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--light-gray);
+        }
+
+        .empty-state p {
+            font-size: 18px;
+        }
+
+        .login-form {
+            max-width: 500px;
+            margin: 40px auto;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .status-message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: var(--success);
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: var(--error);
+            border: 1px solid #fecaca;
+        }
+
+        .status-loading {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .navbar {
+                font-size: 20px;
+                padding: 16px;
+            }
+            
+            .counter-box {
+                gap: 12px;
+            }
+            
+            .counter {
+                min-width: calc(50% - 12px);
+            }
+            
+            .filter-box {
+                gap: 8px;
+            }
+            
+            .filter-btn {
+                min-width: calc(50% - 8px);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div id="popup"></div>
 
-<div class="navbar">لوحة إدارة الملاحظات</div>
+    <div class="navbar">
+        <i class="fas fa-cogs"></i> لوحة إدارة الملاحظات
+    </div>
 
-<div id="popup" class="popup"></div>
+    <div class="container">
+        <!-- نموذج تسجيل الدخول -->
+        <div class="card login-form" id="loginBox">
+            <h2 class="card-title login-title"><i class="fas fa-lock"></i> تسجيل الدخول</h2>
+            
+            <div class="form-group">
+                <label for="adminPass">كلمة المرور</label>
+                <input id="adminPass" type="password" placeholder="أدخل كلمة المرور">
+            </div>
+            
+            <button class="btn btn-primary" onclick="login()" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> دخول
+            </button>
+            
+            <div id="loginStatus" class="status-message status-error" style="display: none;"></div>
+        </div>
 
-<div class="card" id="loginBox">
-  <h3>🔐 تسجيل الدخول</h3>
-  <input id="adminPass" type="password" placeholder="كلمة المرور">
-  <button onclick="login()">دخول</button>
-  <p id="loginStatus" style="color:red"></p>
-</div>
+        <!-- لوحة التحكم -->
+        <div id="adminPanel" style="display:none;">
+            <div class="card">
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="location.href='index.html'">
+                        <i class="fas fa-arrow-right"></i> الرجوع للصفحة الرئيسية
+                    </button>
+                    <button class="btn btn-primary" onclick="loadNotes()">
+                        <i class="fas fa-sync-alt"></i> تحديث البيانات
+                    </button>
+                </div>
+            </div>
 
-<div class="card" id="adminPanel" style="display:none;">
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-chart-bar"></i> إحصائيات الملاحظات</h3>
+                
+                <div class="counter-box">
+                    <div class="counter">
+                        <div class="counter-title">إجمالي الملاحظات</div>
+                        <div class="counter-value" id="countTotal">0</div>
+                    </div>
+                    <div class="counter new">
+                        <div class="counter-title">ملاحظات جديدة</div>
+                        <div class="counter-value" id="countNew">0</div>
+                    </div>
+                    <div class="counter replied">
+                        <div class="counter-title">تم الرد عليها</div>
+                        <div class="counter-value" id="countReplied">0</div>
+                    </div>
+                    <div class="counter images">
+                        <div class="counter-title">تحتوي على صور</div>
+                        <div class="counter-value" id="countWithImg">0</div>
+                    </div>
+                </div>
 
-  <button onclick="location.href='index.html'">⬅️ الرجوع للصفحة الرئيسية</button>
+                <div class="filter-box">
+                    <div class="filter-btn active" onclick="applyFilter('all', this)">
+                        <i class="fas fa-list"></i> الكل
+                    </div>
+                    <div class="filter-btn" onclick="applyFilter('new', this)">
+                        <i class="fas fa-clock"></i> الجديدة
+                    </div>
+                    <div class="filter-btn" onclick="applyFilter('replied', this)">
+                        <i class="fas fa-check-circle"></i> تم الرد
+                    </div>
+                    <div class="filter-btn" onclick="applyFilter('img', this)">
+                        <i class="fas fa-image"></i> مع صورة
+                    </div>
+                </div>
+            </div>
 
-  <div class="counter-box">
-    <div class="counter" id="countTotal">الإجمالي: 0</div>
-    <div class="counter" id="countNew">الجديدة: 0</div>
-    <div class="counter" id="countReplied">تم الرد: 0</div>
-    <div class="counter" id="countWithImg">مع صورة: 0</div>
-  </div>
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-comments"></i> قائمة الملاحظات</h3>
+                
+                <div id="notesList" class="notes-list">
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>جاري تحميل الملاحظات...</p>
+                    </div>
+                </div>
+            </div>
 
-  <div class="filter-box">
-    <div class="filter-btn active" onclick="applyFilter('all', this)">الكل</div>
-    <div class="filter-btn" onclick="applyFilter('new', this)">الجديدة</div>
-    <div class="filter-btn" onclick="applyFilter('replied', this)">تم الرد</div>
-    <div class="filter-btn" onclick="applyFilter('img', this)">مع صورة</div>
-  </div>
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-reply"></i> الرد على الملاحظة</h3>
+                
+                <div class="form-group">
+                    <label for="replyText">نص الرد</label>
+                    <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>إضافة صورة للرد (اختياري)</label>
+                    <div class="file-input-container">
+                        <div class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>اختر صورة</span>
+                        </div>
+                        <input type="file" id="replyImage" class="file-input" accept="image/*">
+                    </div>
+                    <div class="file-name" id="replyFileName"></div>
+                </div>
+                
+                <button class="btn btn-success" onclick="sendReply()" id="sendReplyBtn" style="width: 100%;">
+                    <i class="fas fa-paper-plane"></i> إرسال الرد
+                </button>
+                
+                <div id="replyStatus" class="status-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
 
-  <div id="notesList"></div>
+    <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyKpEenRr74vciXTleGtjYQwxsttbVfAX5KiqeB1eCkrWUZpa9vNnNfEuGH4kHoTogO/exec";
+        const adminPassword = "Aysha123";
 
-  <h3 style="margin-top:25px;">✏️ الرد على الملاحظة:</h3>
-  <textarea id="replyText" rows="4" placeholder="اكتب الرد…"></textarea>
-  <input type="file" id="replyImage" accept="image/*">
-  <button onclick="sendReply()">💬 إرسال الرد</button>
-  <p id="replyStatus" style="color:green;"></p>
-</div>
+        let allNotes = [];
+        let filteredNotes = [];
+        let selectedNote = null;
 
-<script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxfK_7ByFDvHAEj8d-jqd6rPYWQivXNk9sE9bwjM6iDYNGLiu6h59x1G5X42X3XNeIh/exec";
-const adminPassword = "Aysha123";
+        // إظهار رسالة منبثقة
+        function popup(msg, type = "success") {
+            const p = document.getElementById("popup");
+            p.innerText = msg;
+            p.className = type === "success" ? "popup-success" : "popup-error";
+            p.style.display = 'block';
+            
+            setTimeout(() => {
+                p.style.display = 'none';
+            }, 2500);
+        }
 
-let allNotes = [];
-let filteredNotes = [];
+        // تسجيل الدخول
+        function login() {
+            const pass = document.getElementById("adminPass").value.trim();
+            const loginStatus = document.getElementById("loginStatus");
+            
+            if (pass !== adminPassword) {
+                loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
+                loginStatus.className = "status-message status-error";
+                loginStatus.style.display = "block";
+                return;
+            }
+            
+            document.getElementById("adminPanel").style.display = "block";
+            document.getElementById("loginBox").style.display = "none";
+            loadNotes();
+        }
 
-function popup(msg) {
-  const p = document.getElementById("popup");
-  p.innerText = msg;
-  p.style.display = "block";
-  setTimeout(() => p.style.display = "none", 2200);
-}
+        // تحميل الملاحظات
+        async function loadNotes() {
+            const notesList = document.getElementById("notesList");
+            notesList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل الملاحظات...</p></div>';
 
-function login() {
-  const pass = adminPass.value.trim();
-  if (pass !== adminPassword) {
-    loginStatus.innerText = "❌ كلمة مرور غير صحيحة";
-    return;
-  }
-  adminPanel.style.display = "block";
-  loginBox.style.display = "none";
-  loadNotes();
-}
+            try {
+                const res = await fetch(scriptURL + "?getData");
+                allNotes = await res.json();
+                filteredNotes = allNotes;
+                updateCounters();
+                renderNotes();
+            } catch (error) {
+                notesList.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>حدث خطأ في تحميل الملاحظات</p></div>';
+                console.error("Error loading notes:", error);
+            }
+        }
 
-async function loadNotes() {
-  const res = await fetch(scriptURL + "?getData");
-  allNotes = await res.json();
-  filteredNotes = allNotes;
-  updateCounters();
-  renderNotes();
-}
+        // عرض الملاحظات
+        function renderNotes() {
+            const notesList = document.getElementById("notesList");
+            
+            if (filteredNotes.length === 0) {
+                notesList.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات لعرضها</p></div>';
+                return;
+            }
 
-function renderNotes() {
-  notesList.innerHTML = "";
+            let out = "";
+            filteredNotes.forEach((note, index) => {
+                const hasReply = note.reply || note.replyImageURL;
+                out += `
+                <div class="note-box ${hasReply ? 'replied' : 'unreplied'}" onclick="selectNote(${index})" 
+                     style="cursor: pointer; ${selectedNote === index ? 'background: #f0f9ff;' : ''}">
+                    <div class="note-header">
+                        <div class="note-author">${note.Name}</div>
+                        <div class="note-date">${note.date || ""}</div>
+                    </div>
+                    <div class="note-content">${note.Message}</div>
 
-  filteredNotes.forEach((note, index) => {
-    notesList.innerHTML += `
-      <div class="note-box">
-        <b style="font-size:18px;">${note.Name}</b>
-        <p style="margin-top:6px;">${note.Message}</p>
+                    ${note.imageURL
+                        ? `<img src="${note.imageURL}" class="note-image" alt="صورة الملاحظة">`
+                        : ""}
 
-        ${note.imageURL
-          ? `<img src="${note.imageURL}" 
-                 style="width:100%; max-height:260px; object-fit:contain; 
-                        border-radius:10px; margin-top:10px;">`
-          : ""}
+                    ${
+                        hasReply
+                        ? `<div class="reply-box">
+                            <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
+                            ${note.reply ? `<div class="reply-content">${note.reply}</div>` : ""}
+                            ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" alt="صورة الرد">` : ""}
+                        </div>`
+                        : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
+                    }
+                </div>`;
+            });
 
-        ${note.reply || note.replyImageURL
-          ? `
-            <div style="margin-top:12px; padding:10px; background:#e7fff4; border-right:4px solid #10b981; border-radius:10px;">
-              ${note.reply ? `<b>رد المشرف:</b> ${note.reply}` : ""}
-              ${note.replyImageURL 
-                ? `<img src="${note.replyImageURL}" style="width:100%; max-height:260px; object-fit:contain; margin-top:10px; border-radius:10px;">`
-                : ""}
-            </div>`
-          : `<p style="color:#999; margin-top:8px;">⏳ بانتظار الرد</p>`}
-      </div>
-    `;
-  });
-}
+            notesList.innerHTML = out;
+        }
 
-function updateCounters() {
-  countTotal.innerText = "الإجمالي: " + allNotes.length;
-  countNew.innerText = "الجديدة: " + allNotes.filter(n => !n.reply).length;
-  countReplied.innerText = "تم الرد: " + allNotes.filter(n => n.reply).length;
-  countWithImg.innerText = "مع صورة: " + allNotes.filter(n => n.imageURL).length;
-}
+        // تحديث العدادات
+        function updateCounters() {
+            document.getElementById("countTotal").textContent = allNotes.length;
+            document.getElementById("countNew").textContent = allNotes.filter(n => !n.reply).length;
+            document.getElementById("countReplied").textContent = allNotes.filter(n => n.reply).length;
+            document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
+        }
 
-function applyFilter(type, el) {
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
+        // تطبيق الفلتر
+        function applyFilter(type, el) {
+            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+            el.classList.add("active");
 
-  if (type === "all") filteredNotes = allNotes;
-  else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
-  else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
-  else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
+            if (type === "all") filteredNotes = allNotes;
+            else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
+            else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
+            else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
 
-  renderNotes();
-}
+            selectedNote = null;
+            renderNotes();
+        }
 
-async function sendReply() {
-  const reply = replyText.value.trim();
-  const imgFile = replyImage.files[0];
+        // تحديد ملاحظة للرد
+        function selectNote(index) {
+            selectedNote = index;
+            renderNotes();
+            
+            // تمرير الملاحظة المحددة إلى الأعلى
+            document.getElementById('notesList').scrollIntoView({ behavior: 'smooth' });
+        }
 
-  if (!reply && !imgFile) return popup("⚠️ اكتب الرد أو أرفق صورة");
+        // إرسال الرد
+        async function sendReply() {
+            const reply = document.getElementById("replyText").value.trim();
+            const imgFile = document.getElementById("replyImage").files[0];
+            const replyStatus = document.getElementById("replyStatus");
+            const sendBtn = document.getElementById("sendReplyBtn");
 
-  replyStatus.innerText = "⏳ يتم الإرسال…";
+            if (selectedNote === null || filteredNotes.length === 0) {
+                popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
+                return;
+            }
 
-  let img64 = "";
-  if (imgFile) {
-    img64 = await toBase64(imgFile);
-  }
+            if (!reply && !imgFile) {
+                popup("⚠️ اكتب الرد أو أرفق صورة", "error");
+                return;
+            }
 
-  const res = await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({
-      type: "reply",
-      row: filteredNotes[0].row,
-      reply,
-      replyImage: img64
-    })
-  });
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
 
-  replyStatus.innerText = "✔ تم الإرسال";
-  loadNotes();
-}
+            replyStatus.textContent = "⏳ يتم الإرسال…";
+            replyStatus.className = "status-message status-loading";
+            replyStatus.style.display = "block";
 
-function toBase64(file) {
-  return new Promise((resolve) => {
-    const r = new FileReader();
-    r.onloadend = () => resolve(r.result);
-    r.readAsDataURL(file);
-  });
-}
-</script>
+            let img64 = "";
+            if (imgFile) {
+                img64 = await toBase64(imgFile);
+            }
 
+            try {
+                await fetch(scriptURL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        type: "reply",
+                        row: filteredNotes[selectedNote].row,
+                        reply,
+                        replyImage: img64
+                    })
+                });
+
+                replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
+                replyStatus.className = "status-message status-success";
+                
+                popup("✔ تم إرسال الرد بنجاح");
+                
+                // إعادة تعيين الحقول
+                document.getElementById("replyText").value = "";
+                document.getElementById("replyImage").value = "";
+                document.getElementById("replyFileName").textContent = "";
+                
+                // إعادة تحميل الملاحظات
+                loadNotes();
+            } catch (error) {
+                replyStatus.textContent = "❌ حدث خطأ أثناء الإرسال";
+                replyStatus.className = "status-message status-error";
+                popup("❌ حدث خطأ أثناء الإرسال", "error");
+                console.error("Error sending reply:", error);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
+            }
+        }
+
+        // تحويل الصورة إلى Base64
+        function toBase64(file) {
+            return new Promise((resolve) => {
+                const r = new FileReader();
+                r.onloadend = () => resolve(r.result);
+                r.readAsDataURL(file);
+            });
+        }
+
+        // إعداد مستمعي الأحداث عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحديث اسم الملف المختار للرد
+            document.getElementById('replyImage').addEventListener('change', function(e) {
+                const fileName = e.target.files[0] ? e.target.files[0].name : '';
+                document.getElementById('replyFileName').textContent = fileName;
+            });
+            
+            // السماح بالدخول باستخدام زر Enter في حقل كلمة المرور
+            document.getElementById('adminPass').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
