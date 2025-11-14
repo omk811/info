@@ -3,68 +3,174 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام الملاحظات والاقتراحات</title>
+<title>قناة الأستاذ خليل البلوشي – الاستفسارات والملاحظات</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body {
-  background: #f4f6f8;
+  background: #eef2f7;
   font-family: "Cairo", sans-serif;
-  padding: 20px;
+  margin: 0;
+  padding-bottom: 40px;
 }
 
-.container {
-  max-width: 520px;
-  margin: auto;
+/* Navbar */
+.navbar {
+  background: linear-gradient(90deg, #1e40af, #2563eb);
+  color: #fff;
+  padding: 18px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Containers */
+.card-container {
+  max-width: 680px;
+  margin: 25px auto;
+  padding: 20px;
   background: #fff;
-  padding: 25px;
   border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
 
 input, textarea, select {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  transition: 0.3s;
+  font-size: 16px;
+}
+input:focus, textarea:focus {
+  border-color: #2563eb;
+  background: #fff;
 }
 
 button {
   width: 100%;
   padding: 12px;
-  background: #15803d;
+  background: #2563eb;
   color: white;
   border: none;
+  border-radius: 12px;
   font-size: 18px;
-  border-radius: 8px;
   cursor: pointer;
+  transition: 0.25s;
+}
+button:hover {
+  background: #1e40af;
 }
 
+/* Note Cards */
 .note-card {
   background: #fff;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 18px auto;
+  padding: 18px;
   border-radius: 14px;
-  max-width: 520px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+  border-right: 6px solid #2563eb;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #facc15;
+  color: #000;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.reply-badge {
+  background: #4ade80 !important;
 }
 
 .note-name {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 18px;
+  color: #1e293b;
 }
 
 .note-text {
   margin: 10px 0;
-  font-size: 16px;
-  line-height: 1.6;
+  color: #334155;
+  line-height: 1.7;
 }
 
 .reply-box {
   margin-top: 15px;
+  background: #effdf5;
   padding: 12px;
-  border-right: 4px solid #15803d;
-  background: #ecfdf5;
+  border-right: 4px solid #10b981;
+  border-radius: 10px;
+}
+
+/* Counters */
+.counter-box {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  margin: 20px auto;
+}
+.counter {
+  background: #fff;
+  padding: 15px 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Popup */
+.popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2563eb;
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 10px;
+  display: none;
+  animation: fade 0.5s ease;
+  z-index: 9999;
+}
+@keyframes fade {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* Mobile */
+@media(max-width: 600px) {
+  .card-container {
+    margin: 15px;
+    padding: 18px;
+  }
+  .note-card {
+    margin: 12px;
+  }
+}
+
+.delete-btn {
+  background: #dc2626;
+}
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+.action-btn {
+  background: #10b981;
+}
+.action-btn:hover {
+  background: #059669;
 }
 
 img {
@@ -72,80 +178,87 @@ img {
   margin-top: 15px;
   border-radius: 10px;
 }
-
-.admin-box {
-  background: #fff8e1;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- نموذج الملاحظة -->
-<div class="container">
-  <h2 style="text-align:center;">📬 إرسال ملاحظة أو اقتراح</h2>
+<div class="navbar">قناة الأستاذ خليل البلوشي – الاستفسارات والملاحظات</div>
 
-  <input id="name" placeholder="اسم المتابع">
-  <textarea id="message" placeholder="الملاحظة" rows="5"></textarea>
-  <input type="file" id="image">
+<div id="popup" class="popup"></div>
 
-  <button onclick="sendNote()">إرسال الملاحظة</button>
-  <p id="status"></p>
+<!-- Counters -->
+<div class="counter-box">
+  <div class="counter">📌 إجمالي: <span id="totalCount">0</span></div>
+  <div class="counter">🕒 بانتظار الرد: <span id="pendingCount">0</span></div>
 </div>
 
-<hr>
+<!-- نموذج إرسال الملاحظة -->
+<div class="card-container">
+  <h2 style="text-align:center;">✉ إرسال ملاحظة أو استفسار</h2>
 
-<!-- لوحة التحكم -->
-<div class="container" id="adminLoginBox">
+  <input id="name" placeholder="اسم المتابع">
+  <textarea id="message" placeholder="اكتب ملاحظتك…" rows="4"></textarea>
+  <input type="file" id="image">
+
+  <button onclick="sendNote()">إرسال</button>
+</div>
+
+<!-- Login -->
+<div class="card-container" id="adminLoginBox">
   <h3>🔐 تسجيل دخول المشرف</h3>
-  <input id="adminPass" placeholder="ادخل كلمة المرور">
+  <input id="adminPass" placeholder="كلمة المرور">
   <button onclick="login()">دخول</button>
   <p id="loginStatus"></p>
 </div>
 
-<div class="container" id="adminPanel" style="display:none;">
-  <h3>🛠 لوحة تحكم المشرف</h3>
-  <p>اختر الملاحظة التي تريد الرد عليها:</p>
+<!-- Admin Panel -->
+<div class="card-container" id="adminPanel" style="display:none;">
+  <h3>🛠 لوحة إدارة الردود</h3>
 
+  <label>اختر الملاحظة:</label>
   <select id="noteSelect"></select>
-  <textarea id="replyText" placeholder="اكتب الرد هنا" rows="4"></textarea>
 
-  <button style="background:#2563eb;" onclick="sendReply()">إرسال الرد</button>
+  <textarea id="replyText" placeholder="اكتب الرد…" rows="4"></textarea>
+
+  <button class="action-btn" onclick="sendReply()">💬 إرسال الرد</button>
+  <button class="delete-btn" onclick="deleteNote()">🗑 حذف الملاحظة</button>
+
   <p id="replyStatus"></p>
 </div>
 
-<h2 style="margin-top:40px;">📌 الملاحظات والردود</h2>
+<h2 style="text-align:center;">📋 الملاحظات</h2>
 <div id="notes"></div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec"; 
 const adminPassword = "Aysha123";
 
-// --------------------------------------------------
-// إرسال ملاحظة
-// --------------------------------------------------
+/* Popup */
+function showPopup(msg) {
+  const p = document.getElementById("popup");
+  p.innerText = msg;
+  p.style.display = "block";
+  setTimeout(() => p.style.display = "none", 2500);
+}
+
+/* إرسال ملاحظة */
 async function sendNote() {
   const name = document.getElementById("name").value.trim();
   const message = document.getElementById("message").value.trim();
   const imgFile = document.getElementById("image").files[0];
 
   if (!name || !message) {
-    document.getElementById("status").innerText = "❗ الرجاء تعبئة كل الحقول";
+    showPopup("⚠️ الرجاء تعبئة جميع الحقول");
     return;
   }
 
-  document.getElementById("status").innerText = "⏳ يتم الإرسال...";
+  showPopup("⏳ يتم الإرسال…");
 
   let base64 = "";
   if (imgFile) {
     const reader = new FileReader();
-    reader.onloadend = () => {
-      base64 = reader.result;
-      submitNote(name, message, base64);
-    };
+    reader.onloadend = () => submitNote(name, message, reader.result);
     reader.readAsDataURL(imgFile);
   } else {
     submitNote(name, message, "");
@@ -155,89 +268,98 @@ async function sendNote() {
 async function submitNote(name, message, image) {
   await fetch(scriptURL, {
     method: "POST",
-    body: JSON.stringify({
-      type: "note",
-      name,
-      message,
-      image
-    })
+    body: JSON.stringify({ type: "note", name, message, image })
   });
 
-  document.getElementById("status").innerText = "✔ تم إرسال الملاحظة!";
+  showPopup("✔ تم تسجيل الملاحظة");
   loadNotes();
 }
 
-// --------------------------------------------------
-// تسجيل دخول المشرف
-// --------------------------------------------------
+/* Login */
 function login() {
   const pass = document.getElementById("adminPass").value.trim();
-
   if (pass === adminPassword) {
     document.getElementById("adminPanel").style.display = "block";
     document.getElementById("adminLoginBox").style.display = "none";
+    showPopup("✔ تم تسجيل الدخول");
   } else {
-    document.getElementById("loginStatus").innerText = "❌ كلمة مرور غير صحيحة";
+    showPopup("❌ كلمة مرور خاطئة");
   }
 }
 
-// --------------------------------------------------
-// إرسال الرد
-// --------------------------------------------------
+/* إرسال الرد */
 async function sendReply() {
   const row = document.getElementById("noteSelect").value;
   const reply = document.getElementById("replyText").value.trim();
 
-  if (!reply) {
-    document.getElementById("replyStatus").innerText = "❗ أدخل الرد أولاً";
-    return;
-  }
+  if (!reply) return showPopup("⚠️ أدخل الرد أولاً");
 
   await fetch(scriptURL, {
     method: "POST",
-    body: JSON.stringify({
-      type: "reply",
-      row,
-      reply
-    })
+    body: JSON.stringify({ type: "reply", row, reply })
   });
 
-  document.getElementById("replyStatus").innerText = "✔ تم إرسال الرد!";
+  showPopup("✔ تم إرسال الرد");
   loadNotes();
 }
 
-// --------------------------------------------------
-// تحميل وعرض الملاحظات
-// --------------------------------------------------
+/* حذف ملاحظة */
+async function deleteNote() {
+  const row = document.getElementById("noteSelect").value;
+
+  if (!confirm("هل تريد حذف هذه الملاحظة نهائيًا؟")) return;
+
+  await fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({ type: "delete", row })
+  });
+
+  showPopup("🗑 تم حذف الملاحظة");
+  loadNotes();
+}
+
+/* تحميل الملاحظات */
 async function loadNotes() {
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
 
   let box = document.getElementById("notes");
   let select = document.getElementById("noteSelect");
+  let total = 0, pending = 0;
 
   box.innerHTML = "";
   select.innerHTML = "";
 
   data.forEach((r, i) => {
-    select.innerHTML += `<option value="${i+1}">${r.name} - ${r.message.substring(0,20)}...</option>`;
+    total++;
+    if (!r.reply) pending++;
+
+    select.innerHTML += `<option value="${i+1}">${r.name}</option>`;
 
     box.innerHTML += `
       <div class="note-card">
+        ${!r.reply 
+          ? `<div class="badge">جديدة</div>` 
+          : `<div class="badge reply-badge">تم الرد</div>`}
+        
         <div class="note-name">${r.name}</div>
         <div class="note-text">${r.message}</div>
-        ${r.image ? `<img src="${r.image}">` : ""}
+
+        ${r.image ? `<img src="${r.image}" alt="صورة">` : ""}
+
         ${
           r.reply
-            ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
-            : `<div style="color:#777;">⏳ بانتظار الرد</div>`
+          ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
+          : `<div style="color:#999;">⏳ بانتظار الرد</div>`
         }
       </div>
     `;
   });
+
+  document.getElementById("totalCount").innerText = total;
+  document.getElementById("pendingCount").innerText = pending;
 }
 
-// تشغيل عند فتح الصفحة
 loadNotes();
 </script>
 
