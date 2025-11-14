@@ -296,38 +296,45 @@ function renderNotes(){
 
   filteredNotes.forEach((note, index) => {
     box.innerHTML += `
-      <div class="note-box">
+      <div class="note-box" style="
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+        padding: 20px;
+      ">
 
-        <div style="display:flex; gap:12px; align-items:flex-start;">
+        <!-- Checkbox -->
+        <div style="text-align:center; padding-top:5px;">
           <input type="checkbox" class="noteCheck" value="${index}" 
-                 style="transform:scale(1.4); margin-top:6px;">
+                 style="transform:scale(1.5); cursor:pointer;">
+        </div>
 
-          <div style="flex:1;">
+        <!-- Content -->
+        <div>
 
-            <b style="font-size:19px; display:block; margin-bottom:8px;">
-              ${note.name}
-            </b>
+          <b style="font-size:19px; display:block; margin-bottom:8px;">
+            ${note.name}
+          </b>
 
-            <p style="margin:8px 0; line-height:1.9; font-size:16px;">
-              ${note.message}
-            </p>
+          <p style="margin:8px 0; line-height:1.9; font-size:16px;">
+            ${note.message}
+          </p>
 
-            ${note.image 
-              ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:10px;">`
-              : ""
-            }
+          ${note.image 
+            ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:12px;">`
+            : ""
+          }
 
-            ${
-              note.reply 
-                ? `
-                  <hr style="margin-top:15px; border:0; border-top:1px solid #ccc;">
-                  <p style="color:var(--reply); margin-top:12px; font-size:16px;">
-                    <b>رد المشرف:</b> ${note.reply}
-                  </p>`
-                : `<p style="color:#999; margin-top:15px;">⏳ بانتظار الرد</p>`
-            }
+          ${
+            note.reply 
+              ? `
+                <hr style="margin-top:15px; border:0; border-top:1px solid #ccc;">
+                <p style="color:var(--reply); margin-top:12px; font-size:16px;">
+                  <b>رد المشرف:</b> ${note.reply}
+                </p>`
+              : `<p style="color:#999; margin-top:15px;">⏳ بانتظار الرد</p>`
+          }
 
-          </div>
         </div>
 
       </div>
