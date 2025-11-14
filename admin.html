@@ -36,6 +36,7 @@ body {
   padding-bottom: 40px;
 }
 
+/* Navbar */
 .navbar {
   background: linear-gradient(90deg, var(--main-dark), var(--main));
   color: #fff;
@@ -49,7 +50,7 @@ body {
 #modeToggle {
   position: absolute;
   left: 15px;
-  top: 10px;
+  top: 8px;
   background: transparent;
   color: #fff;
   font-size: 22px;
@@ -63,11 +64,11 @@ body {
   background: var(--card);
   padding: 20px;
   border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--card-border);
 }
 
-input, textarea, select {
+input, textarea {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -76,23 +77,26 @@ input, textarea, select {
   background: #f8fafc;
   font-size: 16px;
 }
+input:focus, textarea:focus {
+  border-color: var(--main);
+  background: #fff;
+}
 
+/* Buttons */
 button {
-  width: 100%;
   padding: 12px;
   border: none;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   cursor: pointer;
   color: #fff;
   background: var(--main);
-  transition: 0.3s;
+  transition: 0.25s;
 }
 button:hover { background: var(--main-dark); }
 
 .small-btn {
-  width: auto;
   padding: 8px 14px;
   font-size: 15px;
   margin: 5px;
@@ -106,6 +110,7 @@ button:hover { background: var(--main-dark); }
 }
 .delete-btn:hover { background:#b91c1c; }
 
+/* Popup */
 .popup {
   position: fixed;
   top:20px;
@@ -120,6 +125,7 @@ button:hover { background: var(--main-dark); }
   z-index:9999;
 }
 
+/* Counters */
 .counter-box {
   display:flex;
   gap:15px;
@@ -137,6 +143,7 @@ button:hover { background: var(--main-dark); }
   border-right:5px solid var(--main-dark);
 }
 
+/* Filters */
 .filter-box {
   display:flex;
   gap:10px;
@@ -160,7 +167,23 @@ button:hover { background: var(--main-dark); }
   background:var(--main);
   color:white;
 }
+
+/* Notes List container */
+#notesList {
+  margin-top: 20px;
+}
+
+/* Note box (final layout A improved) */
+.note-box {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 18px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 </style>
+
 </head>
 
 <body>
@@ -209,15 +232,15 @@ button:hover { background: var(--main-dark); }
     <div class="filter-btn" onclick="applyFilter('img', this)">مع صورة</div>
   </div>
 
-  <!-- Notes List -->
   <div id="notesList"></div>
 
   <textarea id="replyText" placeholder="أدخل الرد…" rows="4"></textarea>
   <button onclick="sendReply()">💬 إرسال الرد على المحددة</button>
 </div>
 
+
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
+const scriptURL = "YOUR_SCRIPT_URL_HERE";
 const adminPassword = "Aysha123";
 let allNotes = [];
 let filteredNotes = [];
@@ -266,34 +289,44 @@ async function loadNotes(){
   renderNotes();
 }
 
-/* Render notes — شكل A */
+/* Render notes — شكل A المطوّر */
 function renderNotes(){
   const box = document.getElementById("notesList");
   box.innerHTML = "";
 
   filteredNotes.forEach((note, index) => {
     box.innerHTML += `
-      <div style="
-        background:var(--card);
-        border:1px solid var(--card-border);
-        padding:15px;
-        border-radius:10px;
-        margin:12px 0;
-      ">
+      <div class="note-box">
 
-        <div style="display:flex; align-items:flex-start; gap:10px;">
-          <input type="checkbox" class="noteCheck" value="${index}" style="transform:scale(1.4); margin-top:6px;">
-          
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <input type="checkbox" class="noteCheck" value="${index}" 
+                 style="transform:scale(1.4); margin-top:6px;">
+
           <div style="flex:1;">
-            <b style="font-size:18px;">${note.name}</b>
 
-            <p style="margin:8px 0; line-height:1.7;">${note.message}</p>
+            <b style="font-size:19px; display:block; margin-bottom:8px;">
+              ${note.name}
+            </b>
 
-            ${note.image ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:10px;">` : ""}
+            <p style="margin:8px 0; line-height:1.9; font-size:16px;">
+              ${note.message}
+            </p>
 
-            ${note.reply 
-              ? `<p style="color:var(--reply); margin-top:12px;"><b>رد المشرف:</b> ${note.reply}</p>`
-              : `<p style="color:#999; margin-top:12px;">⏳ بانتظار الرد</p>`}
+            ${note.image 
+              ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:10px;">`
+              : ""
+            }
+
+            ${
+              note.reply 
+                ? `
+                  <hr style="margin-top:15px; border:0; border-top:1px solid #ccc;">
+                  <p style="color:var(--reply); margin-top:12px; font-size:16px;">
+                    <b>رد المشرف:</b> ${note.reply}
+                  </p>`
+                : `<p style="color:#999; margin-top:15px;">⏳ بانتظار الرد</p>`
+            }
+
           </div>
         </div>
 
@@ -305,12 +338,9 @@ function renderNotes(){
 /* Counters */
 function updateCounters(){
   document.getElementById("countTotal").innerText = "الإجمالي: " + allNotes.length;
-  document.getElementById("countNew").innerText = "الجديدة: " +
-    allNotes.filter(n => !n.reply).length;
-  document.getElementById("countReplied").innerText = "المردود عليها: " +
-    allNotes.filter(n => n.reply).length;
-  document.getElementById("countWithImg").innerText = "مع صورة: " +
-    allNotes.filter(n => n.image).length;
+  document.getElementById("countNew").innerText = "الجديدة: " + allNotes.filter(n => !n.reply).length;
+  document.getElementById("countReplied").innerText = "المردود عليها: " + allNotes.filter(n => n.reply).length;
+  document.getElementById("countWithImg").innerText = "مع صورة: " + allNotes.filter(n => n.image).length;
 }
 
 /* Filters */
