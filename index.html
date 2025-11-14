@@ -236,10 +236,15 @@ async function loadNotes(){
         <div class="note-text">${r.message}</div>
         ${r.image ? `<img src="${r.image}">` : ""}
         ${
-          r.reply
-            ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
-            : `<div class="wait">⏳ بانتظار الرد</div>`
-        }
+  r.reply || r.replyImage
+    ? `
+      <div class="reply-box">
+        ${r.reply ? `<b>رد المشرف:</b> ${r.reply}<br><br>` : ""}
+        ${r.replyImage ? `<img src="${r.replyImage}" style="max-width:100%; border-radius:10px;">` : ""}
+      </div>
+    `
+    : `<div class="wait">⏳ بانتظار الرد</div>`
+}
       </div>
     `;
   });
