@@ -10,152 +10,159 @@
 <style>
 :root {
   --bg:#f2f4f7;
-  --header:#2563eb;
-  --header-dark:#1e40af;
+  --main:#2563eb;
   --text:#1e293b;
-  --bubble:#ffffff;
-  --bubble-shadow:rgba(0,0,0,0.07);
+  --bubble:#fff;
+  --shadow:rgba(0,0,0,0.06);
 }
-
 body {
   margin:0;
   background:var(--bg);
   font-family:"Cairo",sans-serif;
   color:var(--text);
 }
-
-.app-header {
-  position:sticky;
-  top:0;
-  background:var(--header);
-  padding:18px;
+.header {
+  background:var(--main);
+  padding:16px;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
   font-weight:700;
   color:white;
-  box-shadow:0 2px 12px rgba(0,0,0,0.2);
-  z-index:99;
+  box-shadow:0 2px 10px rgba(0,0,0,0.18);
 }
-
 .container {
   max-width:520px;
-  margin:0 auto;
-  padding:14px;
+  margin:auto;
+  padding:10px;
 }
-
-.input-card {
+.card {
   background:var(--bubble);
-  padding:18px;
+  padding:16px;
   border-radius:14px;
-  box-shadow:0 3px 10px var(--bubble-shadow);
+  box-shadow:0 2px 8px var(--shadow);
+  margin-top:15px;
 }
-
 input, textarea {
   width:100%;
-  padding:12px;
-  margin:8px 0;
+  padding:10px;
+  margin-top:8px;
+  border:1px solid #d0d7e1;
   border-radius:10px;
-  border:1px solid #cbd5e1;
-  font-size:16px;
+  font-size:15px;
   background:#f8fafc;
 }
-
-.send-btn {
+button {
   width:100%;
-  padding:13px;
-  background:#2563eb;
+  padding:12px;
+  background:var(--main);
   color:white;
   border:none;
-  border-radius:12px;
-  font-size:18px;
+  border-radius:10px;
+  font-size:17px;
   font-weight:600;
   cursor:pointer;
+  margin-top:10px;
 }
-
 .note {
   background:var(--bubble);
-  padding:18px;
-  border-radius:14px;
-  box-shadow:0 3px 10px var(--bubble-shadow);
-  margin:16px 0;
-}
-.reply-box {
-  background:#e7fff4;
-  border-right:5px solid #10b981;
-  padding:12px;
-  border-radius:10px;
+  padding:14px;
+  border-radius:12px;
   margin-top:14px;
+  box-shadow:0 2px 8px var(--shadow);
 }
-.wait { color:#777; margin-top:10px; }
-
-.footer-nav {
+.reply {
+  background:#eafff3;
+  border-right:5px solid #10b981;
+  padding:10px;
+  border-radius:10px;
+  margin-top:12px;
+}
+.footer {
   text-align:center;
   margin-top:25px;
-  font-size:15px;
 }
-.footer-nav a { color:#2563eb; font-weight:700; text-decoration:none; }
+.footer a { color:var(--main); font-weight:700; text-decoration:none; }
+img {
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="app-header">📬 الملاحظات والاستفسارات</div>
+<div class="header">📬 الملاحظات والاستفسارات</div>
 
 <div class="container">
 
-  <div class="input-card">
-    <h3>إرسال ملاحظة جديدة</h3>
-
-    <input id="name" placeholder="اسمك الكريم">
-    <textarea id="message" placeholder="اكتب ملاحظتك…" rows="4"></textarea>
-    <input type="file" id="image">
-
-    <button class="send-btn" onclick="sendNote()">إرسال</button>
+  <!-- Form -->
+  <div class="card">
+    <h3>أرسل ملاحظتك</h3>
+    <input id="userName" placeholder="الاسم">
+    <textarea id="userMsg" placeholder="الملاحظة…" rows="4"></textarea>
+    <input type="file" id="userImg" accept="image/*">
+    <button onclick="sendNote()">إرسال</button>
     <p id="status" style="color:green;"></p>
   </div>
 
-  <h3 style="margin-top:25px;">الملاحظات الأخيرة:</h3>
+  <h3 style="margin-top:20px;">آخر الملاحظات</h3>
   <div id="notes"></div>
 
-  <div class="footer-nav">
-    إدارة الردود ↦ 
-    <a href="admin.html">لوحة التحكم</a>
+  <div class="footer">
+    🛠 إدارة الملاحظات: <a href="admin.html">لوحة التحكم</a>
   </div>
+
 </div>
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbzkHX8ssX66_ES6uig9CYuWx9_9JUvlyeZH6O_jYo5AMeuuc5MAQKa-YyYPQdSEnntk/exec";
 
+// ضغط الصورة لسرعة الإرسال
+function compressBase64(base64, maxSize = 150000) {
+  if (base64.length <= maxSize) return base64;
+  return base64.substring(0, maxSize);
+}
+
 async function sendNote() {
-  const name = name.value.trim();
-  const message = message.value.trim();
-  const imgFile = document.getElementById("image").files[0];
+  const name = document.getElementById("userName").value.trim();
+  const msg  = document.getElementById("userMsg").value.trim();
+  const file = document.getElementById("userImg").files[0];
 
-  if (!name || !message) return status.innerText = "❗ أدخل الاسم والملاحظة";
+  if (!name || !msg) {
+    status.innerText = "❗ أدخل الاسم والملاحظة";
+    return;
+  }
 
-  status.innerText = "⏳ يتم الإرسال…";
+  status.innerText = "⏳ جارٍ الإرسال…";
 
-  if (imgFile) {
-    const r = new FileReader();
-    r.onloadend = () => submitNote(name, message, r.result);
-    r.readAsDataURL(imgFile);
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const img = compressBase64(reader.result, 160000); 
+      submit(name, msg, img);
+    };
+    reader.readAsDataURL(file);
   } else {
-    submitNote(name, message, "");
+    submit(name, msg, "");
   }
 }
 
-async function submitNote(name, message, image) {
+async function submit(name, msg, img) {
   await fetch(scriptURL, {
     method: "POST",
     body: JSON.stringify({
       type: "note",
-      name,
-      message,
-      image
+      name: name,
+      message: msg,
+      image: img
     })
   });
 
-  status.innerText = "✔ تم إرسال الملاحظة!";
+  status.innerText = "✔ تمت الإضافة";
+  document.getElementById("userName").value = "";
+  document.getElementById("userMsg").value = "";
+  document.getElementById("userImg").value = "";
   loadNotes();
 }
 
@@ -163,29 +170,32 @@ async function loadNotes() {
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
 
-  let out = "";
+  const notesBox = document.getElementById("notes");
+  notesBox.innerHTML = "";
+
+  const frag = document.createDocumentFragment();
+
   data.forEach(r => {
-    out += `
-      <div class="note">
-        <b>${r.name}</b>
-        <p>${r.message}</p>
-        ${r.image ? `<img src="${r.image}" style="width:100%; border-radius:10px; margin-top:12px;">` : ""}
-        
-        ${
-          (r.reply || r.replyImage)
-            ? `
-              <div class="reply-box">
-                ${r.reply ? `<b>رد المشرف:</b> ${r.reply}<br><br>` : ""}
-                ${r.replyImage ? `<img src="${r.replyImage}" style="width:100%; border-radius:10px;">` : ""}
-              </div>
-            `
-            : `<div class="wait">⏳ بانتظار الرد</div>`
-        }
-      </div>
-    `;
+    const card = document.createElement("div");
+    card.className = "note";
+
+    let html = `<b>${r.name}</b><p>${r.message}</p>`;
+    if (r.image) html += `<img src="${r.image}">`;
+
+    if (r.reply || r.replyImage) {
+      html += `<div class="reply">`;
+      if (r.reply) html += `<b>رد المشرف:</b> ${r.reply}<br><br>`;
+      if (r.replyImage) html += `<img src="${r.replyImage}">`;
+      html += `</div>`;
+    } else {
+      html += `<p style="color:#777;">⏳ بانتظار الرد</p>`;
+    }
+
+    card.innerHTML = html;
+    frag.appendChild(card);
   });
 
-  document.getElementById("notes").innerHTML = out;
+  notesBox.appendChild(frag);
 }
 
 loadNotes();
