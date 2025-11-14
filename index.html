@@ -219,7 +219,17 @@ async function loadNotes(){
   box.appendChild(frag);
 }
 
-loadNotes();
+${r.image && r.image.startsWith("data:image")
+  ? `<img src="${r.image}" 
+          style="width:100%; 
+          max-height:280px;
+          object-fit:contain;
+          display:block;
+          margin-top:12px;
+          border-radius:10px;">`
+  : ""
+}
+
 </script>
 
 </body>
