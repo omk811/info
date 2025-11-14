@@ -151,16 +151,8 @@ button:hover { background: var(--main-dark); }
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";  
-const hashedPassword = "ef92d80f7f22fbd5f2af2f4b5340fe1da5d1b4a1af9da6af7a5c1e3b90a5d8af";
+const adminPassword = "Aysha123";   // ← رجعناه نصّي
 let allData = [];
-
-/* Hash function */
-async function sha256(text) {
-  const msgBuffer = new TextEncoder().encode(text);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-}
 
 /* Dark mode */
 const modeBtn = document.getElementById("modeToggle");
@@ -187,11 +179,10 @@ function popup(msg){
 }
 
 /* Login */
-async function login(){
+function login(){
   const pass = document.getElementById("adminPass").value.trim();
-  const hash = await sha256(pass);
 
-  if(hash === hashedPassword){
+  if(pass === adminPassword){
     document.getElementById("adminPanel").style.display="block";
     document.getElementById("loginBox").style.display="none";
     popup("✔ تسجيل الدخول ناجح");
