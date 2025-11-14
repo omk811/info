@@ -15,7 +15,7 @@ body {
   padding-bottom: 40px;
 }
 
-/* Navbar */
+/* Header */
 .navbar {
   background: linear-gradient(90deg, #1e40af, #2563eb);
   color: #fff;
@@ -26,17 +26,27 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* Section Titles */
+.section-title {
+  text-align: center;
+  font-size: 22px;
+  margin: 30px 0 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
 /* Containers */
 .card-container {
   max-width: 680px;
-  margin: 25px auto;
+  margin: 20px auto;
   padding: 20px;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.08);
 }
 
-input, textarea, select {
+/* Inputs */
+input, textarea {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
@@ -51,6 +61,7 @@ input:focus, textarea:focus {
   background: #fff;
 }
 
+/* Buttons */
 button {
   width: 100%;
   padding: 12px;
@@ -66,14 +77,14 @@ button:hover {
   background: #1e40af;
 }
 
-/* Note Cards */
+/* Notes Display */
 .note-card {
   background: #fff;
-  margin: 18px auto;
   padding: 18px;
   border-radius: 14px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-  border-right: 6px solid #2563eb;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  border-right: 5px solid #2563eb;
   position: relative;
 }
 
@@ -82,11 +93,10 @@ button:hover {
   top: 10px;
   left: 10px;
   background: #facc15;
-  color: #000;
-  padding: 5px 10px;
+  padding: 4px 10px;
   font-size: 12px;
+  font-weight: 700;
   border-radius: 6px;
-  font-weight: bold;
 }
 
 .reply-badge {
@@ -113,26 +123,37 @@ button:hover {
   border-radius: 10px;
 }
 
-/* Counters */
-.counter-box {
+/* Filters */
+.filters {
   display: flex;
-  justify-content: space-around;
-  text-align: center;
-  margin: 20px auto;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 10px;
 }
-.counter {
+.filter-btn {
+  flex: 1;
   background: #fff;
-  padding: 15px 25px;
-  border-radius: 14px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  font-weight: bold;
-  font-size: 18px;
+  border: 1px solid #cbd5e1;
+  padding: 8px;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+.filter-btn:hover {
+  background: #e2e8f0;
+}
+.active {
+  background: #2563eb !important;
+  color: white;
 }
 
 /* Popup */
 .popup {
   position: fixed;
-  top: 20px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
   background: #2563eb;
@@ -143,40 +164,34 @@ button:hover {
   animation: fade 0.5s ease;
   z-index: 9999;
 }
-@keyframes fade {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-/* Mobile */
-@media(max-width: 600px) {
-  .card-container {
-    margin: 15px;
-    padding: 18px;
-  }
-  .note-card {
-    margin: 12px;
-  }
-}
-
-.delete-btn {
-  background: #dc2626;
-}
-.delete-btn:hover {
-  background: #b91c1c;
-}
-
-.action-btn {
-  background: #10b981;
-}
-.action-btn:hover {
-  background: #059669;
-}
+@keyframes fade { from {opacity:0;} to {opacity:1;} }
 
 img {
   max-width: 100%;
-  margin-top: 15px;
   border-radius: 10px;
+  margin-top: 12px;
+}
+
+/* Footer */
+footer {
+  margin-top:40px;
+  background:#1e3a8a;
+  color:white;
+  padding:25px 15px;
+  text-align:center;
+  border-radius:14px;
+  max-width:700px;
+  margin-left:auto;
+  margin-right:auto;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+footer a {
+  color:#c7d2fe;
+  font-weight:600;
+  text-decoration:none;
+}
+footer a:hover {
+  text-decoration:underline;
 }
 </style>
 </head>
@@ -187,52 +202,52 @@ img {
 
 <div id="popup" class="popup"></div>
 
-<!-- Counters -->
-<div class="counter-box">
-  <div class="counter">📌 إجمالي: <span id="totalCount">0</span></div>
-  <div class="counter">🕒 بانتظار الرد: <span id="pendingCount">0</span></div>
-</div>
+<!-- 🟦 قسم الملاحظات -->
+<div class="section-title">✉ إرسال ملاحظة</div>
 
-<!-- نموذج إرسال الملاحظة -->
 <div class="card-container">
-  <h2 style="text-align:center;">✉ إرسال ملاحظة أو استفسار</h2>
-
   <input id="name" placeholder="اسم المتابع">
   <textarea id="message" placeholder="اكتب ملاحظتك…" rows="4"></textarea>
   <input type="file" id="image">
-
-  <button onclick="sendNote()">إرسال</button>
+  <button onclick="sendNote()">إرسال الملاحظة</button>
 </div>
 
-<!-- Login -->
-<div class="card-container" id="adminLoginBox">
-  <h3>🔐 تسجيل دخول المشرف</h3>
-  <input id="adminPass" placeholder="كلمة المرور">
-  <button onclick="login()">دخول</button>
-  <p id="loginStatus"></p>
+<!-- 🟩 قسم الردود -->
+<div class="section-title">📋 الردود</div>
+
+<!-- Filters -->
+<div class="filters">
+  <div class="filter-btn active" onclick="filterNotes('all', this)">الكل</div>
+  <div class="filter-btn" onclick="filterNotes('new', this)">🟡 الجديدة</div>
+  <div class="filter-btn" onclick="filterNotes('replied', this)">🟢 تم الرد</div>
+  <div class="filter-btn" onclick="filterNotes('image', this)">🖼 مع صورة</div>
 </div>
 
-<!-- Admin Panel -->
-<div class="card-container" id="adminPanel" style="display:none;">
-  <h3>🛠 لوحة إدارة الردود</h3>
-
-  <label>اختر الملاحظة:</label>
-  <select id="noteSelect"></select>
-
-  <textarea id="replyText" placeholder="اكتب الرد…" rows="4"></textarea>
-
-  <button class="action-btn" onclick="sendReply()">💬 إرسال الرد</button>
-  <button class="delete-btn" onclick="deleteNote()">🗑 حذف الملاحظة</button>
-
-  <p id="replyStatus"></p>
-</div>
-
-<h2 style="text-align:center;">📋 الملاحظات</h2>
+<!-- Notes -->
 <div id="notes"></div>
 
+<!-- Footer -->
+<footer>
+  <h3 style="margin:0;font-size:20px;">قناة الأستاذ خليل البلوشي</h3>
+
+  <div style="margin:12px 0;font-size:17px;line-height:1.9;">
+    <a href="https://whatsapp.com/channel/0029VamotBKCxoAy3fzUcv3T" target="_blank">
+      📌 الانضمام إلى قناة الواتساب الرسمية
+    </a>
+    <br>
+    <a href="https://omk811.blogspot.com/" target="_blank">
+      🌐 زيارة الموقع الرسمي (مدونة الأستاذ خليل البلوشي)
+    </a>
+  </div>
+
+  <p style="margin-top:10px;font-size:14px;opacity:0.9;">
+    © جميع الحقوق محفوظة — آخر تحديث: 2025
+  </p>
+</footer>
+
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec"; 
-const adminPassword = "Aysha123";
+const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
+let allData = [];
 
 /* Popup */
 function showPopup(msg) {
@@ -242,7 +257,7 @@ function showPopup(msg) {
   setTimeout(() => p.style.display = "none", 2500);
 }
 
-/* إرسال ملاحظة */
+/* إرسال الملاحظة */
 async function sendNote() {
   const name = document.getElementById("name").value.trim();
   const message = document.getElementById("message").value.trim();
@@ -253,7 +268,7 @@ async function sendNote() {
     return;
   }
 
-  showPopup("⏳ يتم الإرسال…");
+  showPopup("⏳ جاري الإرسال…");
 
   let base64 = "";
   if (imgFile) {
@@ -271,95 +286,58 @@ async function submitNote(name, message, image) {
     body: JSON.stringify({ type: "note", name, message, image })
   });
 
-  showPopup("✔ تم تسجيل الملاحظة");
+  showPopup("✔ تم إرسال الملاحظة بنجاح");
   loadNotes();
 }
 
-/* Login */
-function login() {
-  const pass = document.getElementById("adminPass").value.trim();
-  if (pass === adminPassword) {
-    document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("adminLoginBox").style.display = "none";
-    showPopup("✔ تم تسجيل الدخول");
-  } else {
-    showPopup("❌ كلمة مرور خاطئة");
-  }
-}
-
-/* إرسال الرد */
-async function sendReply() {
-  const row = document.getElementById("noteSelect").value;
-  const reply = document.getElementById("replyText").value.trim();
-
-  if (!reply) return showPopup("⚠️ أدخل الرد أولاً");
-
-  await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({ type: "reply", row, reply })
-  });
-
-  showPopup("✔ تم إرسال الرد");
-  loadNotes();
-}
-
-/* حذف ملاحظة */
-async function deleteNote() {
-  const row = document.getElementById("noteSelect").value;
-
-  if (!confirm("هل تريد حذف هذه الملاحظة نهائيًا؟")) return;
-
-  await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({ type: "delete", row })
-  });
-
-  showPopup("🗑 تم حذف الملاحظة");
-  loadNotes();
-}
-
-/* تحميل الملاحظات */
+/* تحميل الردود */
 async function loadNotes() {
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
+  allData = data.reverse();
+  displayNotes(allData);
+}
 
+/* عرض الردود */
+function displayNotes(list) {
   let box = document.getElementById("notes");
-  let select = document.getElementById("noteSelect");
-  let total = 0, pending = 0;
-
   box.innerHTML = "";
-  select.innerHTML = "";
 
-  data.forEach((r, i) => {
-    total++;
-    if (!r.reply) pending++;
+  if (list.length === 0) {
+    box.innerHTML = `<p style="text-align:center; color:#999;">لا توجد نتائج</p>`;
+    return;
+  }
 
-    select.innerHTML += `<option value="${i+1}">${r.name}</option>`;
-
+  list.forEach(r => {
     box.innerHTML += `
       <div class="note-card">
-        ${!r.reply 
-          ? `<div class="badge">جديدة</div>` 
-          : `<div class="badge reply-badge">تم الرد</div>`}
-        
+        ${!r.reply ? `<div class="badge">جديدة</div>` : `<div class="badge reply-badge">تم الرد</div>`}
+
         <div class="note-name">${r.name}</div>
         <div class="note-text">${r.message}</div>
 
-        ${r.image ? `<img src="${r.image}" alt="صورة">` : ""}
+        ${r.image ? `<img src="${r.image}">` : ""}
 
-        ${
-          r.reply
+        ${r.reply 
           ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
-          : `<div style="color:#999;">⏳ بانتظار الرد</div>`
-        }
+          : `<div style="color:#999;">⏳ بانتظار الرد</div>`}
       </div>
     `;
   });
-
-  document.getElementById("totalCount").innerText = total;
-  document.getElementById("pendingCount").innerText = pending;
 }
 
+/* الفلاتر */
+function filterNotes(type, btn) {
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  if (type === "all") return displayNotes(allData);
+  if (type === "new") return displayNotes(allData.filter(n => !n.reply));
+  if (type === "replied") return displayNotes(allData.filter(n => n.reply));
+  if (type === "image") return displayNotes(allData.filter(n => n.image));
+}
+
+/* تشغيل */
 loadNotes();
 </script>
 
