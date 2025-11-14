@@ -3,27 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قناة الأستاذ خليل البلوشي – الاستفسارات والملاحظات</title>
+<title>قناة الأستاذ خليل البلوشي – معلم اللغة العربية</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --bg:#eef2f7;
+  --text:#1e293b;
+  --card:#ffffff;
+  --card-border:#cbd5e1;
+  --main:#2563eb;
+  --main-dark:#1e40af;
+  --badge-new:#facc15;
+  --badge-reply:#4ade80;
+  --reply-bg:#effdf5;
+}
+
+/* الوضع الليلي */
+.dark-mode {
+  --bg:#1e293b;
+  --text:#e2e8f0;
+  --card:#334155;
+  --card-border:#475569;
+  --main:#3b82f6;
+  --main-dark:#1e3a8a;
+  --reply-bg:#1e293b;
+}
+
 body {
-  background: #eef2f7;
+  background: var(--bg);
   font-family: "Cairo", sans-serif;
   margin: 0;
   padding-bottom: 40px;
+  color: var(--text);
 }
 
 /* Header */
 .navbar {
-  background: linear-gradient(90deg, #1e40af, #2563eb);
+  background: linear-gradient(90deg, var(--main-dark), var(--main));
   color: #fff;
   padding: 18px;
   text-align: center;
   font-size: 22px;
   font-weight: 700;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+/* زر الوضع الليلي */
+#modeToggle {
+  position: absolute;
+  left: 15px;
+  top: 12px;
+  background: transparent;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  border: none;
 }
 
 /* Section Titles */
@@ -32,7 +68,7 @@ body {
   font-size: 22px;
   margin: 30px 0 15px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text);
 }
 
 /* Containers */
@@ -40,9 +76,10 @@ body {
   max-width: 680px;
   margin: 20px auto;
   padding: 20px;
-  background: #fff;
+  background: var(--card);
   border-radius: 14px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  border: 1px solid var(--card-border);
 }
 
 /* Inputs */
@@ -51,13 +88,12 @@ input, textarea {
   padding: 12px;
   margin: 8px 0;
   border-radius: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--card-border);
   background: #f8fafc;
-  transition: 0.3s;
   font-size: 16px;
 }
 input:focus, textarea:focus {
-  border-color: #2563eb;
+  border-color: var(--main);
   background: #fff;
 }
 
@@ -65,7 +101,7 @@ input:focus, textarea:focus {
 button {
   width: 100%;
   padding: 12px;
-  background: #2563eb;
+  background: var(--main);
   color: white;
   border: none;
   border-radius: 12px;
@@ -74,17 +110,17 @@ button {
   transition: 0.25s;
 }
 button:hover {
-  background: #1e40af;
+  background: var(--main-dark);
 }
 
 /* Notes Display */
 .note-card {
-  background: #fff;
+  background: var(--card);
   padding: 18px;
   border-radius: 14px;
   margin-bottom: 18px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  border-right: 5px solid #2563eb;
+  border-right: 5px solid var(--main);
   position: relative;
 }
 
@@ -92,7 +128,7 @@ button:hover {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: #facc15;
+  background: var(--badge-new);
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 700;
@@ -100,24 +136,12 @@ button:hover {
 }
 
 .reply-badge {
-  background: #4ade80 !important;
-}
-
-.note-name {
-  font-weight: 700;
-  font-size: 18px;
-  color: #1e293b;
-}
-
-.note-text {
-  margin: 10px 0;
-  color: #334155;
-  line-height: 1.7;
+  background: var(--badge-reply) !important;
 }
 
 .reply-box {
   margin-top: 15px;
-  background: #effdf5;
+  background: var(--reply-bg);
   padding: 12px;
   border-right: 4px solid #10b981;
   border-radius: 10px;
@@ -133,8 +157,8 @@ button:hover {
 }
 .filter-btn {
   flex: 1;
-  background: #fff;
-  border: 1px solid #cbd5e1;
+  background: var(--card);
+  border: 1px solid var(--card-border);
   padding: 8px;
   text-align: center;
   border-radius: 10px;
@@ -146,7 +170,7 @@ button:hover {
   background: #e2e8f0;
 }
 .active {
-  background: #2563eb !important;
+  background: var(--main) !important;
   color: white;
 }
 
@@ -156,7 +180,7 @@ button:hover {
   top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  background: #2563eb;
+  background: var(--main);
   color: #fff;
   padding: 14px 22px;
   border-radius: 10px;
@@ -175,7 +199,7 @@ img {
 /* Footer */
 footer {
   margin-top:40px;
-  background:#1e3a8a;
+  background: var(--main-dark);
   color:white;
   padding:25px 15px;
   text-align:center;
@@ -198,11 +222,14 @@ footer a:hover {
 
 <body>
 
-<div class="navbar">قناة الأستاذ خليل البلوشي – الاستفسارات والملاحظات</div>
+<div class="navbar">
+  📘 قناة الأستاذ خليل البلوشي – معلم اللغة العربية
+  <button id="modeToggle">🌙</button>
+</div>
 
 <div id="popup" class="popup"></div>
 
-<!-- 🟦 قسم الملاحظات -->
+<!-- 🟦 قسم إرسال الملاحظات -->
 <div class="section-title">✉ إرسال ملاحظة</div>
 
 <div class="card-container">
@@ -240,7 +267,7 @@ footer a:hover {
     </a>
   </div>
 
-  <p style="margin-top:10px;font-size:14px;opacity:0.9;">
+  <p id="footerDate" style="margin-top:10px;font-size:14px;opacity:0.9;cursor:pointer;">
     © جميع الحقوق محفوظة — آخر تحديث: 2025
   </p>
 </footer>
@@ -248,6 +275,29 @@ footer a:hover {
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
 let allData = [];
+
+/* الوضع الليلي */
+const modeBtn = document.getElementById("modeToggle");
+modeBtn.onclick = () => {
+  document.body.classList.toggle("dark-mode");
+  let dark = document.body.classList.contains("dark-mode");
+  modeBtn.textContent = dark ? "☀️" : "🌙";
+  localStorage.setItem("darkMode", dark);
+};
+
+/* تحميل حالة الوضع الليلي */
+window.onload = () => {
+  if(localStorage.getItem("darkMode") === "true"){
+    document.body.classList.add("dark-mode");
+    modeBtn.textContent = "☀️";
+  }
+};
+
+/* زر سري لفتح لوحة التحكم */
+document.getElementById("footerDate").addEventListener("mousedown",function(){
+  pressTimer = setTimeout(()=>{ window.location.href="admin.html"; },2000);
+});
+document.getElementById("footerDate").addEventListener("mouseup",()=>{ clearTimeout(pressTimer); });
 
 /* Popup */
 function showPopup(msg) {
