@@ -2,203 +2,218 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>قناة الأستاذ خليل البلوشي – الملاحظات</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>الملاحظات – قناة الأستاذ خليل البلوشي</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg:#f2f4f7;
-  --main:#2563eb;
-  --text:#1e293b;
-  --bubble:#fff;
-  --shadow:rgba(0,0,0,0.06);
+  --bg:#e9edef;
+  --my:#d1f4cc;
+  --other:#ffffff;
+  --border:#dfe1e5;
+  --blue:#0084ff;
 }
+
 body {
   margin:0;
   background:var(--bg);
   font-family:"Cairo",sans-serif;
-  color:var(--text);
 }
+
+/* Header */
 .header {
-  background:var(--main);
-  padding:16px;
-  text-align:center;
+  position:sticky;
+  top:0;
+  background:#0084ff;
+  padding:14px;
   font-size:20px;
-  font-weight:700;
   color:white;
-  box-shadow:0 2px 10px rgba(0,0,0,0.18);
+  font-weight:700;
+  text-align:center;
 }
-.container {
+
+/* Form Box */
+.card {
   max-width:520px;
   margin:auto;
-  padding:10px;
-}
-.card {
-  background:var(--bubble);
+  background:white;
   padding:16px;
-  border-radius:14px;
-  box-shadow:0 2px 8px var(--shadow);
-  margin-top:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  border-radius:12px;
+  margin-top:16px;
 }
-input, textarea {
+
+input,textarea {
   width:100%;
   padding:10px;
   margin-top:8px;
-  border:1px solid #d0d7e1;
   border-radius:10px;
+  border:1px solid #cbd5e1;
   font-size:15px;
   background:#f8fafc;
 }
+
 button {
   width:100%;
   padding:12px;
-  background:var(--main);
+  background:#0084ff;
   color:white;
   border:none;
   border-radius:10px;
-  font-size:17px;
-  font-weight:600;
-  cursor:pointer;
+  font-size:16px;
+  font-weight:700;
   margin-top:10px;
 }
-.note {
-  background:var(--bubble);
-  padding:14px;
+
+/* Chat message style */
+.msg {
+  max-width:75%;
+  padding:12px;
   border-radius:12px;
-  margin-top:14px;
-  box-shadow:0 2px 8px var(--shadow);
+  margin:14px 0;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+  font-size:15px;
+  line-height:1.6;
 }
+
+.me { 
+  background:var(--my); 
+  margin-left:auto;
+}
+
+.other {
+  background:var(--other);
+  margin-right:auto;
+}
+
 .reply {
-  background:#eafff3;
-  border-right:5px solid #10b981;
+  background:#e6f7ff;
+  border-right:4px solid #0084ff;
+  margin-top:10px;
   padding:10px;
   border-radius:10px;
-  margin-top:12px;
 }
-.footer {
-  text-align:center;
-  margin-top:25px;
-}
-.footer a { color:var(--main); font-weight:700; text-decoration:none; }
+
 img {
   width:100%;
   border-radius:10px;
   margin-top:10px;
 }
+
+.footer {
+  text-align:center;
+  margin-top:20px;
+  font-weight:700;
+}
+
+.footer a {
+  color:#0084ff;
+  text-decoration:none;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="header">📬 الملاحظات والاستفسارات</div>
+<div class="header">💬 الملاحظات والاستفسارات</div>
 
-<div class="container">
+<div class="card">
+  <h3>أرسل ملاحظتك</h3>
 
-  <!-- Form -->
-  <div class="card">
-    <h3>أرسل ملاحظتك</h3>
-    <input id="userName" placeholder="الاسم">
-    <textarea id="userMsg" placeholder="الملاحظة…" rows="4"></textarea>
-    <input type="file" id="userImg" accept="image/*">
-    <button onclick="sendNote()">إرسال</button>
-    <p id="status" style="color:green;"></p>
-  </div>
+  <input id="name" placeholder="اسمك الكريم">
+  <textarea id="msg" rows="3" placeholder="اكتب ملاحظتك…"></textarea>
+  <input type="file" id="img" accept="image/*">
 
-  <h3 style="margin-top:20px;">آخر الملاحظات</h3>
-  <div id="notes"></div>
+  <button onclick="sendNote()">إرسال</button>
+  <p id="status" style="color:green;"></p>
+</div>
 
-  <div class="footer">
-    🛠 إدارة الملاحظات: <a href="admin.html">لوحة التحكم</a>
-  </div>
+<div style="max-width:520px; margin:auto; margin-top:20px;">
+  <h3>آخر الملاحظات</h3>
+  <div id="chat"></div>
+</div>
 
+<div class="footer">
+  🛠 إدارة الردود → <a href="admin.html">لوحة التحكم</a>
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzkHX8ssX66_ES6uig9CYuWx9_9JUvlyeZH6O_jYo5AMeuuc5MAQKa-YyYPQdSEnntk/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbx6VNysf7TZXvV7t6foklAA8B1eNbhXm8XAZV5_y8v_gOCoGN8oIe0BMb9dCluWDzrm/exec";
 
-// ضغط الصورة لسرعة الإرسال
-function compressBase64(base64, maxSize = 150000) {
-  if (base64.length <= maxSize) return base64;
-  return base64.substring(0, maxSize);
+function compress(base64, limit=180000) {
+  if (!base64) return "";
+  return base64.length <= limit ? base64 : base64.substring(0, limit);
 }
 
 async function sendNote() {
-  const name = document.getElementById("userName").value.trim();
-  const msg  = document.getElementById("userMsg").value.trim();
-  const file = document.getElementById("userImg").files[0];
+  const name = document.getElementById("name").value.trim();
+  const msg  = document.getElementById("msg").value.trim();
+  const file = document.getElementById("img").files[0];
 
   if (!name || !msg) {
-    status.innerText = "❗ أدخل الاسم والملاحظة";
+    status.textContent = "❗ أدخل جميع الحقول";
     return;
   }
 
-  status.innerText = "⏳ جارٍ الإرسال…";
+  status.textContent = "⏳ جارٍ الإرسال…";
 
   if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const img = compressBase64(reader.result, 160000); 
-      submit(name, msg, img);
-    };
-    reader.readAsDataURL(file);
+    const r = new FileReader();
+    r.onloadend = () => submit(name, msg, compress(r.result));
+    r.readAsDataURL(file);
   } else {
     submit(name, msg, "");
   }
 }
 
-async function submit(name, msg, img) {
+async function submit(name, msg, image) {
   await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({
-      type: "note",
-      name: name,
-      message: msg,
-      image: img
-    })
+    method:"POST",
+    body:JSON.stringify({ type:"note", name, message:msg, image })
   });
 
-  status.innerText = "✔ تمت الإضافة";
-  document.getElementById("userName").value = "";
-  document.getElementById("userMsg").value = "";
-  document.getElementById("userImg").value = "";
-  loadNotes();
+  document.getElementById("name").value = "";
+  document.getElementById("msg").value = "";
+  document.getElementById("img").value = "";
+  status.textContent = "✔ تم الإرسال";
+
+  load();
 }
 
-async function loadNotes() {
+async function load() {
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
 
-  const notesBox = document.getElementById("notes");
-  notesBox.innerHTML = "";
+  const box = document.getElementById("chat");
+  box.innerHTML = "";
 
   const frag = document.createDocumentFragment();
 
-  data.forEach(r => {
-    const card = document.createElement("div");
-    card.className = "note";
+  data.forEach(n => {
+    const div = document.createElement("div");
+    div.className = "msg other";
 
-    let html = `<b>${r.name}</b><p>${r.message}</p>`;
-    if (r.image) html += `<img src="${r.image}">`;
+    let html = `<b>${n.name}</b><br>${n.message}`;
+    if (n.image) html += `<img src='${n.image.split('"')[1]}'>`;
 
-    if (r.reply || r.replyImage) {
-      html += `<div class="reply">`;
-      if (r.reply) html += `<b>رد المشرف:</b> ${r.reply}<br><br>`;
-      if (r.replyImage) html += `<img src="${r.replyImage}">`;
+    if (n.reply || n.replyImage) {
+      html += `<div class='reply'>`;
+      if (n.reply) html += `<b>رد المشرف:</b><br>${n.reply}<br>`;
+      if (n.replyImage) html += `<img src='${n.replyImage.split('"')[1]}'>`;
       html += `</div>`;
-    } else {
-      html += `<p style="color:#777;">⏳ بانتظار الرد</p>`;
     }
 
-    card.innerHTML = html;
-    frag.appendChild(card);
+    div.innerHTML = html;
+    frag.appendChild(div);
   });
 
-  notesBox.appendChild(frag);
+  box.appendChild(frag);
 }
 
-loadNotes();
+load();
 </script>
 
 </body>
