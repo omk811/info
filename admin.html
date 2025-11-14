@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>لوحة إدارة الملاحظات – قناة الأستاذ خليل البلوشي</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#eef2f7;
+  --text:#1e293b;
+  --card:#ffffff;
+  --card-border:#cbd5e1;
+  --main:#2563eb;
+  --main-dark:#1e40af;
+}
+
+/* Dark mode */
+.dark-mode {
+  --bg:#1e293b;
+  --text:#e2e8f0;
+  --card:#334155;
+  --card-border:#475569;
+  --main:#3b82f6;
+  --main-dark:#1e3a8a;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Cairo", sans-serif;
+  margin: 0;
+  padding-bottom: 40px;
+}
+
+/* Header */
+.navbar {
+  background: linear-gradient(90deg, var(--main-dark), var(--main));
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  position: relative;
+}
+
+/* Dark mode button */
+#modeToggle {
+  position: absolute;
+  left: 15px;
+  top: 10px;
+  background: transparent;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  border: none;
+}
+
+.card {
+  max-width: 700px;
+  margin: 25px auto;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid var(--card-border);
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: #f8fafc;
+  font-size: 16px;
+}
+input:focus, textarea:focus {
+  border-color: var(--main);
+  background: #fff;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: var(--main);
+  transition: 0.3s;
+}
+button:hover { background: var(--main-dark); }
+
+.delete-btn {
+  background:#dc2626;
+}
+.delete-btn:hover { background:#b91c1c; }
+
+.popup {
+  position: fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background: var(--main);
+  color:#fff;
+  padding:12px 20px;
+  border-radius:10px;
+  display:none;
+  font-weight:600;
+  z-index:9999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  لوحة إدارة الملاحظات
+  <button id="modeToggle">🌙</button>
+</div>
+
+<div id="popup" class="popup"></div>
+
+<!-- Login -->
+<div class="card" id="loginBox">
+  <h3>🔐 تسجيل الدخول</h3>
+  <input id="adminPass" placeholder="كلمة المرور" type="password">
+  <button onclick="login()">دخول</button>
+  <p id="loginStatus" style="color:red"></p>
+</div>
+
+<!-- Admin Panel -->
+<div class="card" id="adminPanel" style="display:none;">
+  <h3>📘 إدارة الملاحظات</h3>
+
+  <label>اختر الملاحظة:</label>
+  <select id="noteSelect"></select>
+
+  <textarea id="replyText" placeholder="أدخل الرد…" rows="4"></textarea>
+
+  <button onclick="sendReply()">💬 إرسال الرد</button>
+  <button class="delete-btn" onclick="deleteNote()">🗑 حذف الملاحظة</button>
+
+  <p id="status"></p>
+</div>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";  
+const hashedPassword = "ef92d80f7f22fbd5f2af2f4b5340fe1da5d1b4a1af9da6af7a5c1e3b90a5d8af";
+let allData = [];
+
+/* Hash function */
+async function sha256(text) {
+  const msgBuffer = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+/* Dark mode */
+const modeBtn = document.getElementById("modeToggle");
+modeBtn.onclick = () => {
+  document.body.classList.toggle("dark-mode");
+  let dark = document.body.classList.contains("dark-mode");
+  modeBtn.textContent = dark ? "☀️" : "🌙";
+  localStorage.setItem("adminDarkMode", dark);
+};
+
+window.onload = () => {
+  if(localStorage.getItem("adminDarkMode") === "true"){
+    document.body.classList.add("dark-mode");
+    modeBtn.textContent = "☀️";
+  }
+};
+
+/* Popup */
+function popup(msg){
+  const p = document.getElementById("popup");
+  p.innerText = msg;
+  p.style.display = "block";
+  setTimeout(() => p.style.display="none", 2500);
+}
+
+/* Login */
+async function login(){
+  const pass = document.getElementById("adminPass").value.trim();
+  const hash = await sha256(pass);
+
+  if(hash === hashedPassword){
+    document.getElementById("adminPanel").style.display="block";
+    document.getElementById("loginBox").style.display="none";
+    popup("✔ تسجيل الدخول ناجح");
+    loadNotes();
+  } else {
+    document.getElementById("loginStatus").innerText = "❌ كلمة مرور غير صحيحة";
+  }
+}
+
+/* Load notes */
+async function loadNotes(){
+  const res = await fetch(scriptURL + "?getData");
+  allData = await res.json();
+
+  let sel = document.getElementById("noteSelect");
+  sel.innerHTML = "";
+
+  allData.forEach((r, i)=>{
+    sel.innerHTML += `<option value="${i+1}">${r.name} - ${r.message.substring(0,20)}...</option>`;
+  });
+}
+
+/* إرسال الرد */
+async function sendReply(){
+  const row = document.getElementById("noteSelect").value;
+  const reply = document.getElementById("replyText").value.trim();
+
+  if(!reply) return popup("⚠️ أدخل الرد أولاً");
+
+  await fetch(scriptURL, {
+    method:"POST",
+    body:JSON.stringify({ type:"reply", row, reply })
+  });
+
+  popup("✔ تم إرسال الرد");
+  loadNotes();
+}
+
+/* حذف الملاحظة */
+async function deleteNote(){
+  const row = document.getElementById("noteSelect").value;
+
+  if(!confirm("هل أنت متأكد من حذف الملاحظة؟")) return;
+
+  await fetch(scriptURL, {
+    method:"POST",
+    body:JSON.stringify({ type:"delete", row })
+  });
+
+  popup("🗑 تم حذف الملاحظة");
+  loadNotes();
+}
+</script>
+
+</body>
+</html>
