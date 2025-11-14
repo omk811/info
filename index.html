@@ -541,13 +541,24 @@
     const res = await fetch(scriptURL + "?getData");
     
     if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      throw new Error(`خطأ في الاتصال: ${res.status}`);
     }
     
-    const data = await res.json();
+    const result = await res.json();
+    console.log("البيانات المستلمة:", result); // للت Debug
     
-    // إذا كان الرد يحتوي على خاصية data
-    const notes = data.data || data;
+    // الحصول على المصفوفة الفعلية من الرد
+    let notes = [];
+    
+    if (result && result.data) {
+      // إذا كان الرد يحتوي على {success: true, data: [...]}
+      notes = result.data;
+    } else if (Array.isArray(result)) {
+      // إذا كان الرد مصفوفة مباشرة
+      notes = result;
+    } else {
+      throw new Error("تنسيق البيانات غير متوقع");
+    }
     
     if (notes.length === 0) {
       notesContainer.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات حتى الآن</p></div>';
@@ -559,19 +570,19 @@
       out += `
       <div class="note">
         <div class="note-header">
-          <div class="note-author">${r.Name}</div>
-          <div class="note-date">${r.date || ""}</div>
+          <div class="note-author">${r.Name || "بدون اسم"}</div>
+          <div class="note-date">${r.date || r.Time || ""}</div>
         </div>
-        <div class="note-content">${r.Message}</div>
+        <div class="note-content">${r.Message || "لا يوجد محتوى"}</div>
 
-        ${r.imageURL ? `<img src="${r.imageURL}" class="note-image" alt="صورة الملاحظة">` : ""}
+        ${r.imageURL ? `<img src="${r.imageURL}" class="note-image" alt="صورة الملاحظة" onerror="this.style.display='none'">` : ""}
 
         ${
           r.reply || r.replyImageURL
           ? `<div class="reply-box">
                <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
                ${r.reply ? `<div class="reply-content">${r.reply}</div>` : ""}
-               ${r.replyImageURL ? `<img src="${r.replyImageURL}" class="reply-image" alt="صورة الرد">` : ""}
+               ${r.replyImageURL ? `<img src="${r.replyImageURL}" class="reply-image" alt="صورة الرد" onerror="this.style.display='none'">` : ""}
              </div>`
           : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
         }
@@ -587,11 +598,13 @@
         <i class="fas fa-exclamation-triangle"></i>
         <p>حدث خطأ في تحميل الملاحظات</p>
         <small>${error.message}</small>
+        <button onclick="loadNotes()" style="margin-top: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
+          إعادة المحاولة
+        </button>
       </div>
     `;
   }
 }
-
         // إعداد مستمعي الأحداث عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             // تحديث اسم الملف المختار
