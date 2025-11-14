@@ -2,400 +2,249 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قناة الأستاذ خليل البلوشي – معلم اللغة العربية</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قناة الأستاذ خليل البلوشي – الملاحظات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg:#eef2f7;
+  --bg:#f2f4f7;
+  --header:#2563eb;
+  --header-dark:#1e40af;
   --text:#1e293b;
-  --card:#ffffff;
-  --card-border:#cbd5e1;
-  --main:#2563eb;
-  --main-dark:#1e40af;
-  --badge-new:#facc15;
-  --badge-reply:#4ade80;
-  --reply-bg:#effdf5;
-}
-
-/* الوضع الليلي */
-.dark-mode {
-  --bg:#1e293b;
-  --text:#e2e8f0;
-  --card:#334155;
-  --card-border:#475569;
-  --main:#3b82f6;
-  --main-dark:#1e3a8a;
-  --reply-bg:#1e293b;
+  --bubble:#ffffff;
+  --bubble-shadow:rgba(0,0,0,0.07);
+  --send:#2563eb;
+  --send-hover:#1e40af;
 }
 
 body {
-  background: var(--bg);
-  font-family: "Cairo", sans-serif;
-  margin: 0;
-  padding-bottom: 40px;
-  color: var(--text);
+  margin:0;
+  background:var(--bg);
+  font-family:"Cairo",sans-serif;
+  color:var(--text);
 }
 
-/* Header */
-.navbar {
-  background: linear-gradient(90deg, var(--main-dark), var(--main));
-  color: #fff;
-  padding: 18px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  position: relative;
+/* ===== App Header ===== */
+.app-header {
+  position:sticky;
+  top:0;
+  background:var(--header);
+  padding:18px 16px;
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  color:white;
+  box-shadow:0 2px 12px rgba(0,0,0,0.2);
+  z-index:99;
 }
 
-/* زر الوضع الليلي */
-#modeToggle {
-  position: absolute;
-  left: 15px;
-  top: 12px;
-  background: transparent;
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
-  border: none;
+/* ===== Container ===== */
+.container {
+  max-width:520px;
+  margin:0 auto;
+  padding:15px;
 }
 
-/* Section Titles */
-.section-title {
-  text-align: center;
-  font-size: 22px;
-  margin: 30px 0 15px;
-  font-weight: 700;
-  color: var(--text);
+/* ===== Input Card ===== */
+.input-card {
+  background:var(--bubble);
+  padding:18px;
+  border-radius:14px;
+  box-shadow:0 3px 10px var(--bubble-shadow);
+  margin-bottom:20px;
 }
 
-/* Containers */
-.card-container {
-  max-width: 680px;
-  margin: 20px auto;
-  padding: 20px;
-  background: var(--card);
-  border-radius: 14px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  border: 1px solid var(--card-border);
-}
-
-/* Inputs */
 input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 12px;
-  border: 1px solid var(--card-border);
-  background: #f8fafc;
-  font-size: 16px;
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+  font-size:16px;
+  background:#f8fafc;
 }
 input:focus, textarea:focus {
-  border-color: var(--main);
-  background: #fff;
+  border-color:var(--header);
+  background:white;
 }
 
-/* Buttons */
-button {
-  width: 100%;
-  padding: 12px;
-  background: var(--main);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: 0.25s;
+/* ===== Send Button ===== */
+.send-btn {
+  width:100%;
+  padding:13px;
+  background:var(--send);
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-size:18px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.25s;
 }
-button:hover {
-  background: var(--main-dark);
-}
-
-/* Notes Display */
-.note-card {
-  background: var(--card);
-  padding: 18px;
-  border-radius: 14px;
-  margin-bottom: 18px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  border-right: 5px solid var(--main);
-  position: relative;
+.send-btn:hover {
+  background:var(--send-hover);
 }
 
-.badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: var(--badge-new);
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 6px;
+/* ===== Notes ===== */
+.note {
+  background:var(--bubble);
+  padding:15px 18px;
+  border-radius:14px;
+  box-shadow:0 3px 10px var(--bubble-shadow);
+  margin:16px 0;
 }
 
-.reply-badge {
-  background: var(--badge-reply) !important;
+.note-name {
+  font-weight:700;
+  font-size:17px;
+}
+
+.note-text {
+  margin-top:6px;
+  line-height:1.85;
+  font-size:16px;
+}
+
+.note img {
+  width:100%;
+  border-radius:10px;
+  margin-top:12px;
 }
 
 .reply-box {
-  margin-top: 15px;
-  background: var(--reply-bg);
-  padding: 12px;
-  border-right: 4px solid #10b981;
-  border-radius: 10px;
+  background:#e7fff4;
+  border-right:5px solid #10b981;
+  padding:12px;
+  border-radius:10px;
+  margin-top:14px;
+  font-size:15px;
 }
 
-/* Filters */
-.filters {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-  gap: 10px;
-}
-.filter-btn {
-  flex: 1;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  padding: 8px;
-  text-align: center;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.25s;
-}
-.filter-btn:hover {
-  background: #e2e8f0;
-}
-.active {
-  background: var(--main) !important;
-  color: white;
+.wait {
+  margin-top:10px;
+  color:#777;
+  font-size:15px;
 }
 
-/* Popup */
-.popup {
-  position: fixed;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--main);
-  color: #fff;
-  padding: 14px 22px;
-  border-radius: 10px;
-  display: none;
-  animation: fade 0.5s ease;
-  z-index: 9999;
-}
-@keyframes fade { from {opacity:0;} to {opacity:1;} }
-
-img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-top: 12px;
-}
-
-/* Footer */
-footer {
-  margin-top:40px;
-  background: var(--main-dark);
-  color:white;
-  padding:25px 15px;
+/* ===== Footer Navigation ===== */
+.footer-nav {
   text-align:center;
-  border-radius:14px;
-  max-width:700px;
-  margin-left:auto;
-  margin-right:auto;
-  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  margin-top:30px;
+  font-size:15px;
+  color:#555;
 }
-footer a {
-  color:#c7d2fe;
-  font-weight:600;
+.footer-nav a {
+  color:var(--header);
   text-decoration:none;
-}
-footer a:hover {
-  text-decoration:underline;
+  font-weight:700;
 }
 </style>
 </head>
 
 <body>
 
-<div class="navbar">
-  📘 قناة الأستاذ خليل البلوشي – معلم اللغة العربية
-  <button id="modeToggle">🌙</button>
-</div>
+<div class="app-header">📬 الملاحظات والاستفسارات</div>
 
-<div id="popup" class="popup"></div>
+<div class="container">
 
-<!-- 🟦 قسم إرسال الملاحظات -->
-<div class="section-title">✉ إرسال ملاحظة</div>
+  <!-- إرسال ملاحظة -->
+  <div class="input-card">
+    <h3 style="margin-top:0; font-size:20px;">إرسال ملاحظة جديدة</h3>
 
-<div class="card-container">
-  <input id="name" placeholder="اسم المتابع">
-  <textarea id="message" placeholder="اكتب ملاحظتك…" rows="4"></textarea>
-  <input type="file" id="image">
-  <button onclick="sendNote()">إرسال الملاحظة</button>
-</div>
+    <input id="name" placeholder="اسمك الكريم">
+    <textarea id="message" placeholder="اكتب ملاحظتك…" rows="4"></textarea>
+    <input type="file" id="image">
 
-<!-- 🟩 قسم الردود -->
-<div class="section-title">📋 الردود</div>
-
-<!-- Filters -->
-<div class="filters">
-  <div class="filter-btn active" onclick="filterNotes('all', this)">الكل</div>
-  <div class="filter-btn" onclick="filterNotes('new', this)">🟡 الجديدة</div>
-  <div class="filter-btn" onclick="filterNotes('replied', this)">🟢 تم الرد</div>
-  <div class="filter-btn" onclick="filterNotes('image', this)">🖼 مع صورة</div>
-</div>
-
-<!-- Notes -->
-<div id="notes"></div>
-
-<!-- Footer -->
-<footer>
-  <h3 style="margin:0;font-size:20px;">قناة الأستاذ خليل البلوشي</h3>
-
-  <div style="margin:12px 0;font-size:17px;line-height:1.9;">
-    <a href="https://whatsapp.com/channel/0029VamotBKCxoAy3fzUcv3T" target="_blank">
-      📌 الانضمام إلى قناة الواتساب الرسمية
-    </a>
-    <br>
-    <a href="https://omk811.blogspot.com/" target="_blank">
-      🌐 زيارة الموقع الرسمي (مدونة الأستاذ خليل البلوشي)
-    </a>
-    <br><br>
-
-    <!-- رابط لوحة التحكم -->
-    <a href="admin.html" 
-       style="color:#fde047; font-weight:700; text-decoration:none; font-size:16px;">
-        ⚙️ لوحة التحكم
-    </a>
+    <button class="send-btn" onclick="sendNote()">إرسال</button>
+    <p id="status" style="margin-top:10px; color:green;"></p>
   </div>
 
-  <p style="margin-top:10px;font-size:14px;opacity:0.9;">
-    © جميع الحقوق محفوظة — آخر تحديث: 2025
-  </p>
-</footer>
+  <!-- الملاحظات -->
+  <h3 style="padding-right:4px;">الملاحظات الأخيرة:</h3>
+  <div id="notes"></div>
+
+  <div class="footer-nav">
+    إدارة الردود والملاحظات؟  
+    <a href="admin.html">اضغط هنا</a>
+    <br><br>
+    قناة الواتساب:  
+    <a href="https://whatsapp.com/channel/0029VamotBKCxoAy3fzUcv3T">الضغط للدخول</a>
+    <br>
+    موقع المدونة:  
+    <a href="https://omk811.blogspot.com/">زيارة الموقع</a>
+  </div>
+
+</div>
 
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
-let allData = [];
 
-/* الوضع الليلي */
-const modeBtn = document.getElementById("modeToggle");
-modeBtn.onclick = () => {
-  document.body.classList.toggle("dark-mode");
-  let dark = document.body.classList.contains("dark-mode");
-  modeBtn.textContent = dark ? "☀️" : "🌙";
-  localStorage.setItem("darkMode", dark);
-};
-
-/* تحميل حالة الوضع الليلي */
-window.onload = () => {
-  if(localStorage.getItem("darkMode") === "true"){
-    document.body.classList.add("dark-mode");
-    modeBtn.textContent = "☀️";
-  }
-};
-
-/* زر سري لفتح لوحة التحكم */
-document.getElementById("footerDate").addEventListener("mousedown",function(){
-  pressTimer = setTimeout(()=>{ window.location.href="admin.html"; },2000);
-});
-document.getElementById("footerDate").addEventListener("mouseup",()=>{ clearTimeout(pressTimer); });
-
-/* Popup */
-function showPopup(msg) {
-  const p = document.getElementById("popup");
-  p.innerText = msg;
-  p.style.display = "block";
-  setTimeout(() => p.style.display = "none", 2500);
-}
-
-/* إرسال الملاحظة */
-async function sendNote() {
+async function sendNote(){
   const name = document.getElementById("name").value.trim();
   const message = document.getElementById("message").value.trim();
   const imgFile = document.getElementById("image").files[0];
 
-  if (!name || !message) {
-    showPopup("⚠️ الرجاء تعبئة جميع الحقول");
+  if(!name || !message){
+    document.getElementById("status").innerText = "❗ الرجاء تعبئة كل الحقول";
     return;
   }
 
-  showPopup("⏳ جاري الإرسال…");
+  document.getElementById("status").innerText = "⏳ يتم الإرسال…";
 
   let base64 = "";
-  if (imgFile) {
+  if(imgFile){
     const reader = new FileReader();
-    reader.onloadend = () => submitNote(name, message, reader.result);
+    reader.onloadend = () => {
+      base64 = reader.result;
+      submitNote(name, message, base64);
+    };
     reader.readAsDataURL(imgFile);
   } else {
     submitNote(name, message, "");
   }
 }
 
-async function submitNote(name, message, image) {
+async function submitNote(name, message, image){
   await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({ type: "note", name, message, image })
+    method:"POST",
+    body:JSON.stringify({
+      type:"note",
+      name,
+      message,
+      image
+    })
   });
 
-  showPopup("✔ تم إرسال الملاحظة بنجاح");
+  document.getElementById("status").innerText = "✔ تم إرسال الملاحظة!";
   loadNotes();
 }
 
-/* تحميل الردود */
-async function loadNotes() {
+async function loadNotes(){
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
-  allData = data.reverse();
-  displayNotes(allData);
-}
 
-/* عرض الردود */
-function displayNotes(list) {
   let box = document.getElementById("notes");
   box.innerHTML = "";
 
-  if (list.length === 0) {
-    box.innerHTML = `<p style="text-align:center; color:#999;">لا توجد نتائج</p>`;
-    return;
-  }
-
-  list.forEach(r => {
+  data.forEach(r => {
     box.innerHTML += `
-      <div class="note-card">
-        ${!r.reply ? `<div class="badge">جديدة</div>` : `<div class="badge reply-badge">تم الرد</div>`}
-
+      <div class="note">
         <div class="note-name">${r.name}</div>
         <div class="note-text">${r.message}</div>
-
         ${r.image ? `<img src="${r.image}">` : ""}
-
-        ${r.reply 
-          ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
-          : `<div style="color:#999;">⏳ بانتظار الرد</div>`}
+        ${
+          r.reply
+            ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
+            : `<div class="wait">⏳ بانتظار الرد</div>`
+        }
       </div>
     `;
   });
 }
 
-/* الفلاتر */
-function filterNotes(type, btn) {
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-
-  if (type === "all") return displayNotes(allData);
-  if (type === "new") return displayNotes(allData.filter(n => !n.reply));
-  if (type === "replied") return displayNotes(allData.filter(n => n.reply));
-  if (type === "image") return displayNotes(allData.filter(n => n.image));
-}
-
-/* تشغيل */
 loadNotes();
 </script>
 
