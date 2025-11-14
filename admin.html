@@ -235,7 +235,15 @@ button:hover { background: var(--main-dark); }
   <div id="notesList"></div>
 
   <textarea id="replyText" placeholder="أدخل الرد…" rows="4"></textarea>
-  <button onclick="sendReply()">💬 إرسال الرد على المحددة</button>
+
+<label style="font-size:15px; margin-top:10px; display:block;">
+📎 إرفاق صورة مع الرد (اختياري):
+</label>
+<input type="file" id="replyImage" accept="image/*">
+
+<button onclick="sendReply()">💬 إرسال الرد على المحددة</button>
+<p id="replyStatus" style="color:green; margin-top:8px;"></p>
+
 </div>
 
 
@@ -399,17 +407,43 @@ async function sendReply(){
   if(selected.length !== 1) return popup("⚠️ اختر ملاحظة واحدة للرد عليها");
 
   const reply = document.getElementById("replyText").value.trim();
+  const imgFile = document.getElementById("replyImage").files[0];
 
-  if(!reply) return popup("⚠️ أدخل الرد أولاً");
+  if(!reply && !imgFile)
+    return popup("⚠️ ضع ردًا أو صورة على الأقل");
 
+  document.getElementById("replyStatus").innerText = "⏳ يتم الإرسال…";
+
+  let imageBase64 = "";
+
+  if(imgFile){
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      imageBase64 = reader.result;
+      await submitReply(selected[0], reply, imageBase64);
+    };
+    reader.readAsDataURL(imgFile);
+  } else {
+    await submitReply(selected[0], reply, "");
+  }
+}
+
+async function submitReply(rowIndex, reply, image){
   await fetch(scriptURL, {
-    method:"POST",
-    body: JSON.stringify({ type:"reply", row:selected[0]+1, reply })
+    method: "POST",
+    body: JSON.stringify({
+      type: "replyWithImage",
+      row: rowIndex + 1,
+      reply: reply,
+      image: image
+    })
   });
 
-  popup("✔ تم إرسال الرد");
+  popup("✔ تم إرسال الرد بنجاح");
+  document.getElementById("replyStatus").innerText = "";
   loadNotes();
 }
+
 </script>
 
 </body>
