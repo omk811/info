@@ -119,22 +119,7 @@ button:hover { background: var(--main-dark); }
   font-weight:600;
   z-index:9999;
 }
-.note-box {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  padding: 15px;
-  border-radius: 10px;
-  margin: 12px 0;
-  display: flex;
-  gap: 14px;
-}
-.note-content {
-  flex: 1;
-}
-.note-img {
-  max-width: 120px;
-  border-radius: 10px;
-}
+
 .counter-box {
   display:flex;
   gap:15px;
@@ -151,6 +136,7 @@ button:hover { background: var(--main-dark); }
   text-align:center;
   border-right:5px solid var(--main-dark);
 }
+
 .filter-box {
   display:flex;
   gap:10px;
@@ -280,7 +266,7 @@ async function loadNotes(){
   renderNotes();
 }
 
-/* Render notes */
+/* Render notes — شكل A */
 function renderNotes(){
   const box = document.getElementById("notesList");
   box.innerHTML = "";
@@ -300,6 +286,7 @@ function renderNotes(){
           
           <div style="flex:1;">
             <b style="font-size:18px;">${note.name}</b>
+
             <p style="margin:8px 0; line-height:1.7;">${note.message}</p>
 
             ${note.image ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:10px;">` : ""}
@@ -314,7 +301,6 @@ function renderNotes(){
     `;
   });
 }
-
 
 /* Counters */
 function updateCounters(){
@@ -384,7 +370,7 @@ async function sendReply(){
     body: JSON.stringify({ type:"reply", row:selected[0]+1, reply })
   });
 
-  popup("✔️ تم إرسال الرد");
+  popup("✔ تم إرسال الرد");
   loadNotes();
 }
 </script>
