@@ -18,7 +18,6 @@
   --reply:#10b981;
 }
 
-/* Dark mode */
 .dark-mode {
   --bg:#1e293b;
   --text:#e2e8f0;
@@ -36,7 +35,6 @@ body {
   padding-bottom: 40px;
 }
 
-/* Navbar */
 .navbar {
   background: linear-gradient(90deg, var(--main-dark), var(--main));
   color: #fff;
@@ -50,7 +48,7 @@ body {
 #modeToggle {
   position: absolute;
   left: 15px;
-  top: 8px;
+  top: 10px;
   background: transparent;
   color: #fff;
   font-size: 22px;
@@ -77,12 +75,7 @@ input, textarea {
   background: #f8fafc;
   font-size: 16px;
 }
-input:focus, textarea:focus {
-  border-color: var(--main);
-  background: #fff;
-}
 
-/* Buttons */
 button {
   padding: 12px;
   border: none;
@@ -110,7 +103,6 @@ button:hover { background: var(--main-dark); }
 }
 .delete-btn:hover { background:#b91c1c; }
 
-/* Popup */
 .popup {
   position: fixed;
   top:20px;
@@ -125,7 +117,6 @@ button:hover { background: var(--main-dark); }
   z-index:9999;
 }
 
-/* Counters */
 .counter-box {
   display:flex;
   gap:15px;
@@ -143,7 +134,6 @@ button:hover { background: var(--main-dark); }
   border-right:5px solid var(--main-dark);
 }
 
-/* Filters */
 .filter-box {
   display:flex;
   gap:10px;
@@ -168,12 +158,10 @@ button:hover { background: var(--main-dark); }
   color:white;
 }
 
-/* Notes List container */
 #notesList {
   margin-top: 20px;
 }
 
-/* Note box (final layout A improved) */
 .note-box {
   background: var(--card);
   border: 1px solid var(--card-border);
@@ -183,7 +171,6 @@ button:hover { background: var(--main-dark); }
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 </style>
-
 </head>
 
 <body>
@@ -208,7 +195,6 @@ button:hover { background: var(--main-dark); }
 
   <button class="small-btn" onclick="location.href='index.html'">⬅️ الرجوع للصفحة الرئيسية</button>
 
-  <!-- Counters -->
   <div class="counter-box">
     <div class="counter" id="countTotal">الإجمالي: 0</div>
     <div class="counter" id="countNew">الجديدة: 0</div>
@@ -216,7 +202,6 @@ button:hover { background: var(--main-dark); }
     <div class="counter" id="countWithImg">مع صورة: 0</div>
   </div>
 
-  <!-- Buttons -->
   <div style="margin:10px 0;">
     <button class="small-btn" onclick="selectAll()">تحديد الكل</button>
     <button class="small-btn" onclick="unselectAll()">إلغاء التحديد</button>
@@ -224,7 +209,6 @@ button:hover { background: var(--main-dark); }
     <button class="small-btn" onclick="loadNotes()">🔄 تحديث</button>
   </div>
 
-  <!-- Filters -->
   <div class="filter-box">
     <div class="filter-btn active" onclick="applyFilter('all', this)">الكل</div>
     <div class="filter-btn" onclick="applyFilter('new', this)">الجديدة</div>
@@ -234,15 +218,17 @@ button:hover { background: var(--main-dark); }
 
   <div id="notesList"></div>
 
-  <textarea id="replyText" placeholder="أدخل الرد…" rows="4"></textarea>
+  <h3 style="margin-top:25px;">✏️ الرد على الملاحظة:</h3>
 
-<label style="font-size:15px; margin-top:10px; display:block;">
-📎 إرفاق صورة مع الرد (اختياري):
-</label>
-<input type="file" id="replyImage" accept="image/*">
+  <textarea id="replyText" placeholder="اكتب الرد…" rows="4"></textarea>
 
-<button onclick="sendReply()">💬 إرسال الرد على المحددة</button>
-<p id="replyStatus" style="color:green; margin-top:8px;"></p>
+  <label style="font-size:15px; margin-top:10px; display:block;">
+    📎 إرفاق صورة مع الرد (اختياري):
+  </label>
+  <input type="file" id="replyImage" accept="image/*">
+
+  <button onclick="sendReply()">💬 إرسال الرد</button>
+  <p id="replyStatus" style="color:green;"></p>
 
 </div>
 
@@ -253,7 +239,6 @@ const adminPassword = "Aysha123";
 let allNotes = [];
 let filteredNotes = [];
 
-/* Dark Mode */
 const modeBtn = document.getElementById("modeToggle");
 modeBtn.onclick = () => {
   document.body.classList.toggle("dark-mode");
@@ -268,7 +253,6 @@ window.onload = () => {
   }
 };
 
-/* Popup */
 function popup(msg){
   const p = document.getElementById("popup");
   p.innerText = msg;
@@ -276,7 +260,6 @@ function popup(msg){
   setTimeout(() => p.style.display="none", 2500);
 }
 
-/* Login */
 function login(){
   const pass = document.getElementById("adminPass").value.trim();
   if(pass !== adminPassword){
@@ -288,7 +271,6 @@ function login(){
   loadNotes();
 }
 
-/* Load notes */
 async function loadNotes(){
   const res = await fetch(scriptURL + "?getData");
   allNotes = await res.json();
@@ -297,7 +279,6 @@ async function loadNotes(){
   renderNotes();
 }
 
-/* Render notes — شكل A المطوّر */
 function renderNotes(){
   const box = document.getElementById("notesList");
   box.innerHTML = "";
@@ -308,49 +289,38 @@ function renderNotes(){
         display: grid;
         grid-template-columns: 40px 1fr;
         gap: 10px;
-        padding: 20px;
       ">
-
-        <!-- Checkbox -->
         <div style="text-align:center; padding-top:5px;">
           <input type="checkbox" class="noteCheck" value="${index}" 
                  style="transform:scale(1.5); cursor:pointer;">
         </div>
 
-        <!-- Content -->
         <div>
+          <b style="font-size:19px;">${note.name}</b>
 
-          <b style="font-size:19px; display:block; margin-bottom:8px;">
-            ${note.name}
-          </b>
-
-          <p style="margin:8px 0; line-height:1.9; font-size:16px;">
-            ${note.message}
-          </p>
+          <p style="margin-top:8px; line-height:1.85;">${note.message}</p>
 
           ${note.image 
-            ? `<img src="${note.image}" style="max-width:100%; border-radius:10px; margin-top:12px;">`
-            : ""
-          }
+            ? `<img src="${note.image}" style="width:100%; border-radius:10px; margin-top:12px;">`
+            : ""}
 
           ${
-            note.reply 
+            (note.reply || note.replyImage)
               ? `
-                <hr style="margin-top:15px; border:0; border-top:1px solid #ccc;">
-                <p style="color:var(--reply); margin-top:12px; font-size:16px;">
-                  <b>رد المشرف:</b> ${note.reply}
-                </p>`
-              : `<p style="color:#999; margin-top:15px;">⏳ بانتظار الرد</p>`
+                <hr style="margin:15px 0;">
+                <p style="color:var(--reply); font-size:16px;">
+                  ${note.reply ? `<b>رد المشرف:</b> ${note.reply}<br><br>` : ""}
+                  ${note.replyImage ? `<img src="${note.replyImage}" style="width:100%; border-radius:10px;">` : ""}
+                </p>
+              `
+              : `<p style="color:#999; margin-top:10px;">⏳ بانتظار الرد</p>`
           }
-
         </div>
-
       </div>
     `;
   });
 }
 
-/* Counters */
 function updateCounters(){
   document.getElementById("countTotal").innerText = "الإجمالي: " + allNotes.length;
   document.getElementById("countNew").innerText = "الجديدة: " + allNotes.filter(n => !n.reply).length;
@@ -358,7 +328,6 @@ function updateCounters(){
   document.getElementById("countWithImg").innerText = "مع صورة: " + allNotes.filter(n => n.image).length;
 }
 
-/* Filters */
 function applyFilter(type, btn){
   document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -371,7 +340,6 @@ function applyFilter(type, btn){
   renderNotes();
 }
 
-/* Select helpers */
 function selectAll(){
   document.querySelectorAll(".noteCheck").forEach(cb => cb.checked = true);
 }
@@ -379,71 +347,66 @@ function unselectAll(){
   document.querySelectorAll(".noteCheck").forEach(cb => cb.checked = false);
 }
 
-/* Delete Selected */
 async function deleteSelected(){
   const selected = [...document.querySelectorAll(".noteCheck:checked")]
                    .map(cb => Number(cb.value));
 
-  if(selected.length === 0) return popup("⚠️ اختر ملاحظة واحدة على الأقل");
+  if(selected.length === 0) return popup("⚠️ اختر ملاحظة");
 
   if(!confirm("هل تريد حذف الملاحظات المحددة؟")) return;
 
   for(let index of selected){
     await fetch(scriptURL, {
       method:"POST",
-      body: JSON.stringify({ type:"delete", row:index+1 })
+      body: JSON.stringify({
+        type:"delete",
+        row:index+1
+      })
     });
   }
 
-  popup("🗑 تم حذف الملاحظات");
+  popup("🗑 تم الحذف");
   loadNotes();
 }
 
-/* Reply */
-async function sendReply(){
-  const selected = [...document.querySelectorAll(".noteCheck:checked")]
-                   .map(cb => Number(cb.value));
+async function sendReply() {
+  const selected = [...document.querySelectorAll(".noteCheck:checked")].map(cb => Number(cb.value));
 
-  if(selected.length !== 1) return popup("⚠️ اختر ملاحظة واحدة للرد عليها");
+  if (selected.length !== 1) return popup("⚠️ اختر ملاحظة واحدة");
 
   const reply = document.getElementById("replyText").value.trim();
   const imgFile = document.getElementById("replyImage").files[0];
 
-  if(!reply && !imgFile)
-    return popup("⚠️ ضع ردًا أو صورة على الأقل");
+  if (!reply && !imgFile) return popup("⚠️ الرد فارغ");
 
   document.getElementById("replyStatus").innerText = "⏳ يتم الإرسال…";
 
-  let imageBase64 = "";
-
-  if(imgFile){
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      imageBase64 = reader.result;
-      await submitReply(selected[0], reply, imageBase64);
+  if (imgFile) {
+    const r = new FileReader();
+    r.onloadend = async () => {
+      await submitReply(selected[0], reply, r.result);
     };
-    reader.readAsDataURL(imgFile);
+    r.readAsDataURL(imgFile);
   } else {
     await submitReply(selected[0], reply, "");
   }
 }
 
-async function submitReply(rowIndex, reply, image){
+async function submitReply(rowIndex, reply, imageBase64) {
   await fetch(scriptURL, {
     method: "POST",
     body: JSON.stringify({
-      type: "replyWithImage",
+      type: "reply",
       row: rowIndex + 1,
       reply: reply,
-      image: image
+      replyImage: imageBase64
     })
   });
 
-  popup("✔ تم إرسال الرد بنجاح");
-  document.getElementById("replyStatus").innerText = "";
+  popup("✔ تم إرسال الرد");
   loadNotes();
+  document.getElementById("replyStatus").innerText = "";
 }
-
 </script>
 
 </body>
