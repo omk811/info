@@ -22,28 +22,26 @@ body {
   font-family:"Cairo",sans-serif;
 }
 
-/* Header */
 .header {
   position:sticky;
   top:0;
   background:#0084ff;
   padding:14px;
-  font-size:20px;
   color:white;
-  font-weight:700;
   text-align:center;
-  box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  font-size:20px;
+  font-weight:700;
 }
 
-/* Form Card */
+/* form */
 .card {
   max-width:520px;
   margin:auto;
   background:white;
   padding:16px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.08);
   border-radius:12px;
-  margin-top:16px;
+  margin-top:18px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
 
 input,textarea {
@@ -52,8 +50,8 @@ input,textarea {
   margin-top:8px;
   border-radius:10px;
   border:1px solid #cbd5e1;
-  font-size:15px;
   background:#f8fafc;
+  font-size:15px;
 }
 
 button {
@@ -63,57 +61,54 @@ button {
   color:white;
   border:none;
   border-radius:10px;
+  margin-top:10px;
   font-size:16px;
   font-weight:700;
-  margin-top:10px;
   cursor:pointer;
 }
 
-/* Chat bubble style */
 .msg {
   max-width:75%;
   padding:12px;
   border-radius:12px;
   margin:14px 0;
-  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  background:#ffffff;
   font-size:15px;
-  line-height:1.6;
 }
 
-.other { background:var(--other); margin-right:auto; }
-.me    { background:var(--my);    margin-left:auto;  }
-
-/* reply design */
 .reply-box {
   background:#e6f7ff;
   border-right:4px solid #0084ff;
-  padding:12px;
+  padding:10px;
   border-radius:10px;
   margin-top:12px;
 }
 
-.chat-wrapper {
-  max-width:520px;
-  margin:auto;
-  margin-top:22px;
-}
-
-/* Image style */
 img {
   width:100%;
   border-radius:10px;
   margin-top:10px;
+  max-height:250px;
+  object-fit:contain;
 }
 
-/* Footer */
+.chat-container {
+  max-width:520px;
+  margin:auto;
+  margin-top:25px;
+}
+
 .footer {
   text-align:center;
-  margin:20px 0;
+  margin:25px 0;
   font-weight:700;
 }
 
-.footer a { color:#0084ff; text-decoration:none; }
-
+.footer a {
+  color:#0084ff;
+  text-decoration:none;
+}
 </style>
 </head>
 
@@ -123,110 +118,108 @@ img {
 
 <div class="card">
   <h3>أرسل ملاحظتك</h3>
+
   <input id="name" placeholder="اسمك الكريم">
-  <textarea id="msg" rows="3" placeholder="اكتب ملاحظتك…"></textarea>
-  <input type="file" id="img" accept="image/*">
+  <textarea id="message" rows="3" placeholder="اكتب ملاحظتك…"></textarea>
+  <input type="file" id="image" accept="image/*">
+
   <button onclick="sendNote()">إرسال</button>
   <p id="status" style="color:green;font-weight:600;"></p>
 </div>
 
-<div class="chat-wrapper">
+<div class="chat-container">
   <h3>آخر الملاحظات</h3>
   <div id="chat"></div>
 </div>
 
 <div class="footer">
-  🛠 إدارة الردود → <a href="admin.html">لوحة التحكم</a>
+  إدارة الردود → <a href="admin.html">لوحة التحكم</a>
 </div>
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxfK_7ByFDvHAEj8d-jqd6rPYWQivXNk9sE9bwjM6iDYNGLiu6h59x1G5X42X3XNeIh/exec";
 
-/* ضغط الصورة (اختياري) */
-function compress(base64, limit=250000) {
+/* Compress */
+function compress(base64, limit=300000) {
   if (!base64) return "";
   return base64.length <= limit ? base64 : base64.substring(0, limit);
 }
 
-async function sendNote() {
+async function sendNote(){
   const name = document.getElementById("name").value.trim();
-  const msg  = document.getElementById("msg").value.trim();
-  const file = document.getElementById("img").files[0];
+  const message = document.getElementById("message").value.trim();
+  const file = document.getElementById("image").files[0];
 
-  if (!name || !msg) {
+  if(!name || !message){
     status.textContent = "❗ أدخل الاسم والملاحظة";
     return;
   }
 
-  status.textContent = "⏳ جارٍ الإرسال…";
+  status.textContent = "⏳ جار الإرسال…";
 
-  if (file) {
+  if(file){
     const r = new FileReader();
-    r.onloadend = () => submit(name, msg, compress(r.result));
+    r.onloadend = ()=> submit(name, message, compress(r.result));
     r.readAsDataURL(file);
   } else {
-    submit(name, msg, "");
+    submit(name, message, "");
   }
 }
 
-async function submit(name, msg, base64) {
+async function submit(name, message, image){
   await fetch(scriptURL, {
     method:"POST",
     body:JSON.stringify({
       type:"note",
       name,
-      message:msg,
-      image: base64
+      message,
+      image
     })
   });
 
-  status.textContent = "✔ تم إرسال الملاحظة!";
+  status.textContent = "✔ تم الإرسال";
 
   document.getElementById("name").value = "";
-  document.getElementById("msg").value = "";
-  document.getElementById("img").value = "";
+  document.getElementById("message").value = "";
+  document.getElementById("image").value = "";
 
-  load();
+  loadNotes();
 }
 
-async function load() {
+async function loadNotes(){
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
 
   const box = document.getElementById("chat");
   box.innerHTML = "";
 
-  const fragment = document.createDocumentFragment();
+  const frag = document.createDocumentFragment();
 
-  data.forEach(n => {
+  data.forEach(n=>{
     const div = document.createElement("div");
-    div.className = "msg other";
+    div.className = "msg";
 
     let html = `<b>${n.name}</b><br>${n.message}`;
 
-    if (n.image) {
-      const url = n.image.split('"')[1];
-      html += `<img src="${url}">`;
+    if(n.image){
+      html += `<img src="${n.image}">`;
     }
 
-    if (n.reply || n.replyImage) {
+    if(n.reply || n.replyImage){
       html += `<div class="reply-box">`;
-      if (n.reply) html += `<b>رد المشرف:</b><br>${n.reply}<br>`;
-      if (n.replyImage) {
-        const url2 = n.replyImage.split('"')[1];
-        html += `<img src="${url2}">`;
-      }
+      if(n.reply) html += `<b>رد المشرف:</b><br>${n.reply}`;
+      if(n.replyImage) html += `<img src="${n.replyImage}">`;
       html += `</div>`;
     }
 
     div.innerHTML = html;
-    fragment.appendChild(div);
+    frag.appendChild(div);
   });
 
-  box.appendChild(fragment);
+  box.appendChild(frag);
 }
 
-load();
+loadNotes();
 </script>
 
 </body>
