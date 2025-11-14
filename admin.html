@@ -15,6 +15,7 @@
   --card-border:#cbd5e1;
   --main:#2563eb;
   --main-dark:#1e40af;
+  --reply:#10b981;
 }
 
 /* Dark mode */
@@ -35,7 +36,6 @@ body {
   padding-bottom: 40px;
 }
 
-/* Header */
 .navbar {
   background: linear-gradient(90deg, var(--main-dark), var(--main));
   color: #fff;
@@ -46,7 +46,6 @@ body {
   position: relative;
 }
 
-/* Dark mode button */
 #modeToggle {
   position: absolute;
   left: 15px;
@@ -59,7 +58,7 @@ body {
 }
 
 .card {
-  max-width: 700px;
+  max-width: 900px;
   margin: 25px auto;
   background: var(--card);
   padding: 20px;
@@ -77,10 +76,6 @@ input, textarea, select {
   background: #f8fafc;
   font-size: 16px;
 }
-input:focus, textarea:focus {
-  border-color: var(--main);
-  background: #fff;
-}
 
 button {
   width: 100%;
@@ -95,6 +90,16 @@ button {
   transition: 0.3s;
 }
 button:hover { background: var(--main-dark); }
+
+.small-btn {
+  width: auto;
+  padding: 8px 14px;
+  font-size: 15px;
+  margin: 5px;
+  background: var(--main);
+  border-radius: 8px;
+}
+.small-btn:hover { background: var(--main-dark); }
 
 .delete-btn {
   background:#dc2626;
@@ -113,6 +118,61 @@ button:hover { background: var(--main-dark); }
   display:none;
   font-weight:600;
   z-index:9999;
+}
+.note-box {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 12px 0;
+  display: flex;
+  gap: 14px;
+}
+.note-content {
+  flex: 1;
+}
+.note-img {
+  max-width: 120px;
+  border-radius: 10px;
+}
+.counter-box {
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom: 15px;
+}
+.counter {
+  background:#e0e7ff;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  flex:1;
+  min-width:130px;
+  text-align:center;
+  border-right:5px solid var(--main-dark);
+}
+.filter-box {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+.filter-btn {
+  flex:1;
+  background:#fff;
+  border:1px solid var(--card-border);
+  padding:8px;
+  border-radius:10px;
+  cursor:pointer;
+  text-align:center;
+  font-weight:600;
+}
+.filter-btn:hover {
+  background:#e2e8f0;
+}
+.active {
+  background:var(--main);
+  color:white;
 }
 </style>
 </head>
@@ -136,26 +196,47 @@ button:hover { background: var(--main-dark); }
 
 <!-- Admin Panel -->
 <div class="card" id="adminPanel" style="display:none;">
-  <h3>📘 إدارة الملاحظات</h3>
 
-  <!-- قائمة الملاحظات -->
+  <button class="small-btn" onclick="location.href='index.html'">⬅️ الرجوع للصفحة الرئيسية</button>
+
+  <!-- Counters -->
+  <div class="counter-box">
+    <div class="counter" id="countTotal">الإجمالي: 0</div>
+    <div class="counter" id="countNew">الجديدة: 0</div>
+    <div class="counter" id="countReplied">المردود عليها: 0</div>
+    <div class="counter" id="countWithImg">مع صورة: 0</div>
+  </div>
+
+  <!-- Buttons -->
+  <div style="margin:10px 0;">
+    <button class="small-btn" onclick="selectAll()">تحديد الكل</button>
+    <button class="small-btn" onclick="unselectAll()">إلغاء التحديد</button>
+    <button class="small-btn delete-btn" onclick="deleteSelected()">حذف المحدد</button>
+    <button class="small-btn" onclick="loadNotes()">🔄 تحديث</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-box">
+    <div class="filter-btn active" onclick="applyFilter('all', this)">الكل</div>
+    <div class="filter-btn" onclick="applyFilter('new', this)">الجديدة</div>
+    <div class="filter-btn" onclick="applyFilter('replied', this)">تم الرد</div>
+    <div class="filter-btn" onclick="applyFilter('img', this)">مع صورة</div>
+  </div>
+
+  <!-- Notes List -->
   <div id="notesList"></div>
 
-  <!-- إدخال الرد -->
   <textarea id="replyText" placeholder="أدخل الرد…" rows="4"></textarea>
-
   <button onclick="sendReply()">💬 إرسال الرد على المحددة</button>
-  <button class="delete-btn" onclick="deleteSelected()">🗑 حذف الملاحظات المحددة</button>
-
-  <p id="status"></p>
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";  
-const adminPassword = "Aysha123";   
-let allData = [];
+const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
+const adminPassword = "Aysha123";
+let allNotes = [];
+let filteredNotes = [];
 
-/* Dark mode */
+/* Dark Mode */
 const modeBtn = document.getElementById("modeToggle");
 modeBtn.onclick = () => {
   document.body.classList.toggle("dark-mode");
@@ -163,7 +244,6 @@ modeBtn.onclick = () => {
   modeBtn.textContent = dark ? "☀️" : "🌙";
   localStorage.setItem("adminDarkMode", dark);
 };
-
 window.onload = () => {
   if(localStorage.getItem("adminDarkMode") === "true"){
     document.body.classList.add("dark-mode");
@@ -182,89 +262,118 @@ function popup(msg){
 /* Login */
 function login(){
   const pass = document.getElementById("adminPass").value.trim();
-
-  if(pass === adminPassword){
-    document.getElementById("adminPanel").style.display="block";
-    document.getElementById("loginBox").style.display="none";
-    popup("✔ تسجيل الدخول ناجح");
-    loadNotes();
-  } else {
+  if(pass !== adminPassword){
     document.getElementById("loginStatus").innerText = "❌ كلمة مرور غير صحيحة";
+    return;
   }
+  document.getElementById("adminPanel").style.display="block";
+  document.getElementById("loginBox").style.display="none";
+  loadNotes();
 }
 
 /* Load notes */
 async function loadNotes(){
   const res = await fetch(scriptURL + "?getData");
-  allData = await res.json();
+  allNotes = await res.json();
+  filteredNotes = allNotes;
+  updateCounters();
+  renderNotes();
+}
 
-  let box = document.getElementById("notesList");
+/* Render notes */
+function renderNotes(){
+  const box = document.getElementById("notesList");
   box.innerHTML = "";
 
-  allData.forEach((r, i)=>{
+  filteredNotes.forEach((note, index) => {
     box.innerHTML += `
-      <div style="
-        background:var(--card);
-        border:1px solid var(--card-border);
-        padding:10px;
-        margin:8px 0;
-        border-radius:10px;
-      ">
-        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-          
-          <input type="checkbox" class="noteCheck" value="${i+1}" style="transform:scale(1.4);">
-          
-          <div>
-            <b>${r.name}</b><br>
-            <span style="color:#aaa;">${r.message.substring(0,40)}...</span>
-          </div>
+      <div class="note-box">
+        <input type="checkbox" class="noteCheck" value="${index}" style="transform:scale(1.4); margin-top:10px;">
+        
+        <div class="note-content">
+          <b style="font-size:18px;">${note.name}</b>
+          <p style="margin:6px 0;">${note.message}</p>
 
-        </label>
+          ${note.image ? `<img src="${note.image}" class="note-img">` : ""}
+          
+          ${note.reply 
+            ? `<p style="color:var(--reply); margin-top:10px;"><b>رد المشرف:</b> ${note.reply}</p>`
+            : `<p style="color:#999; margin-top:10px;">⏳ بانتظار الرد</p>`}
+        </div>
       </div>
     `;
   });
 }
 
-/* إرسال الرد */
-async function sendReply(){
-  const selected = [...document.querySelectorAll(".noteCheck:checked")]
-                   .map(cb => cb.value);
+/* Counters */
+function updateCounters(){
+  document.getElementById("countTotal").innerText = "الإجمالي: " + allNotes.length;
+  document.getElementById("countNew").innerText = "الجديدة: " +
+    allNotes.filter(n => !n.reply).length;
+  document.getElementById("countReplied").innerText = "المردود عليها: " +
+    allNotes.filter(n => n.reply).length;
+  document.getElementById("countWithImg").innerText = "مع صورة: " +
+    allNotes.filter(n => n.image).length;
+}
 
-  if(selected.length !== 1){
-    return popup("⚠️ اختر ملاحظة واحدة فقط للرد عليها");
+/* Filters */
+function applyFilter(type, btn){
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  if(type === "all") filteredNotes = allNotes;
+  else if(type === "new") filteredNotes = allNotes.filter(n => !n.reply);
+  else if(type === "replied") filteredNotes = allNotes.filter(n => n.reply);
+  else if(type === "img") filteredNotes = allNotes.filter(n => n.image);
+
+  renderNotes();
+}
+
+/* Select helpers */
+function selectAll(){
+  document.querySelectorAll(".noteCheck").forEach(cb => cb.checked = true);
+}
+function unselectAll(){
+  document.querySelectorAll(".noteCheck").forEach(cb => cb.checked = false);
+}
+
+/* Delete Selected */
+async function deleteSelected(){
+  const selected = [...document.querySelectorAll(".noteCheck:checked")]
+                   .map(cb => Number(cb.value));
+
+  if(selected.length === 0) return popup("⚠️ اختر ملاحظة واحدة على الأقل");
+
+  if(!confirm("هل تريد حذف الملاحظات المحددة؟")) return;
+
+  for(let index of selected){
+    await fetch(scriptURL, {
+      method:"POST",
+      body: JSON.stringify({ type:"delete", row:index+1 })
+    });
   }
 
+  popup("🗑 تم حذف الملاحظات");
+  loadNotes();
+}
+
+/* Reply */
+async function sendReply(){
+  const selected = [...document.querySelectorAll(".noteCheck:checked")]
+                   .map(cb => Number(cb.value));
+
+  if(selected.length !== 1) return popup("⚠️ اختر ملاحظة واحدة للرد عليها");
+
   const reply = document.getElementById("replyText").value.trim();
+
   if(!reply) return popup("⚠️ أدخل الرد أولاً");
 
   await fetch(scriptURL, {
     method:"POST",
-    body:JSON.stringify({ type:"reply", row:selected[0], reply })
+    body: JSON.stringify({ type:"reply", row:selected[0]+1, reply })
   });
 
-  popup("✔ تم إرسال الرد");
-  loadNotes();
-}
-
-/* حذف عدة ملاحظات */
-async function deleteSelected(){
-  const selected = [...document.querySelectorAll(".noteCheck:checked")]
-                   .map(cb => cb.value);
-
-  if(selected.length === 0){
-    return popup("⚠️ اختر على الأقل ملاحظة واحدة");
-  }
-
-  if(!confirm("هل تريد حذف الملاحظات المحددة؟")) return;
-
-  for (let row of selected){
-    await fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify({ type:"delete", row })
-    });
-  }
-
-  popup("🗑 تم حذف الملاحظات المحددة");
+  popup("✔️ تم إرسال الرد");
   loadNotes();
 }
 </script>
