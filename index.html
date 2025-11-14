@@ -32,9 +32,10 @@ body {
   color:white;
   font-weight:700;
   text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* Form Box */
+/* Form Card */
 .card {
   max-width:520px;
   margin:auto;
@@ -65,9 +66,10 @@ button {
   font-size:16px;
   font-weight:700;
   margin-top:10px;
+  cursor:pointer;
 }
 
-/* Chat message style */
+/* Chat bubble style */
 .msg {
   max-width:75%;
   padding:12px;
@@ -78,40 +80,39 @@ button {
   line-height:1.6;
 }
 
-.me { 
-  background:var(--my); 
-  margin-left:auto;
-}
+.other { background:var(--other); margin-right:auto; }
+.me    { background:var(--my);    margin-left:auto;  }
 
-.other {
-  background:var(--other);
-  margin-right:auto;
-}
-
-.reply {
+/* reply design */
+.reply-box {
   background:#e6f7ff;
   border-right:4px solid #0084ff;
-  margin-top:10px;
-  padding:10px;
+  padding:12px;
   border-radius:10px;
+  margin-top:12px;
 }
 
+.chat-wrapper {
+  max-width:520px;
+  margin:auto;
+  margin-top:22px;
+}
+
+/* Image style */
 img {
   width:100%;
   border-radius:10px;
   margin-top:10px;
 }
 
+/* Footer */
 .footer {
   text-align:center;
-  margin-top:20px;
+  margin:20px 0;
   font-weight:700;
 }
 
-.footer a {
-  color:#0084ff;
-  text-decoration:none;
-}
+.footer a { color:#0084ff; text-decoration:none; }
 
 </style>
 </head>
@@ -122,16 +123,14 @@ img {
 
 <div class="card">
   <h3>أرسل ملاحظتك</h3>
-
   <input id="name" placeholder="اسمك الكريم">
   <textarea id="msg" rows="3" placeholder="اكتب ملاحظتك…"></textarea>
   <input type="file" id="img" accept="image/*">
-
   <button onclick="sendNote()">إرسال</button>
-  <p id="status" style="color:green;"></p>
+  <p id="status" style="color:green;font-weight:600;"></p>
 </div>
 
-<div style="max-width:520px; margin:auto; margin-top:20px;">
+<div class="chat-wrapper">
   <h3>آخر الملاحظات</h3>
   <div id="chat"></div>
 </div>
@@ -143,7 +142,8 @@ img {
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbx6VNysf7TZXvV7t6foklAA8B1eNbhXm8XAZV5_y8v_gOCoGN8oIe0BMb9dCluWDzrm/exec";
 
-function compress(base64, limit=180000) {
+/* ضغط الصورة (اختياري) */
+function compress(base64, limit=250000) {
   if (!base64) return "";
   return base64.length <= limit ? base64 : base64.substring(0, limit);
 }
@@ -154,7 +154,7 @@ async function sendNote() {
   const file = document.getElementById("img").files[0];
 
   if (!name || !msg) {
-    status.textContent = "❗ أدخل جميع الحقول";
+    status.textContent = "❗ أدخل الاسم والملاحظة";
     return;
   }
 
@@ -169,16 +169,22 @@ async function sendNote() {
   }
 }
 
-async function submit(name, msg, image) {
+async function submit(name, msg, base64) {
   await fetch(scriptURL, {
     method:"POST",
-    body:JSON.stringify({ type:"note", name, message:msg, image })
+    body:JSON.stringify({
+      type:"note",
+      name,
+      message:msg,
+      image: base64
+    })
   });
+
+  status.textContent = "✔ تم إرسال الملاحظة!";
 
   document.getElementById("name").value = "";
   document.getElementById("msg").value = "";
   document.getElementById("img").value = "";
-  status.textContent = "✔ تم الإرسال";
 
   load();
 }
@@ -190,27 +196,34 @@ async function load() {
   const box = document.getElementById("chat");
   box.innerHTML = "";
 
-  const frag = document.createDocumentFragment();
+  const fragment = document.createDocumentFragment();
 
   data.forEach(n => {
     const div = document.createElement("div");
     div.className = "msg other";
 
     let html = `<b>${n.name}</b><br>${n.message}`;
-    if (n.image) html += `<img src='${n.image.split('"')[1]}'>`;
+
+    if (n.image) {
+      const url = n.image.split('"')[1];
+      html += `<img src="${url}">`;
+    }
 
     if (n.reply || n.replyImage) {
-      html += `<div class='reply'>`;
+      html += `<div class="reply-box">`;
       if (n.reply) html += `<b>رد المشرف:</b><br>${n.reply}<br>`;
-      if (n.replyImage) html += `<img src='${n.replyImage.split('"')[1]}'>`;
+      if (n.replyImage) {
+        const url2 = n.replyImage.split('"')[1];
+        html += `<img src="${url2}">`;
+      }
       html += `</div>`;
     }
 
     div.innerHTML = html;
-    frag.appendChild(div);
+    fragment.appendChild(div);
   });
 
-  box.appendChild(frag);
+  box.appendChild(fragment);
 }
 
 load();
