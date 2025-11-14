@@ -11,37 +11,24 @@
 :root {
   --bg:#f2f4f7;
   --header:#2563eb;
-  --header-dark:#1e40af;
   --text:#1e293b;
   --bubble:#ffffff;
   --shadow:rgba(0,0,0,0.07);
 }
 
-body {
-  margin:0;
-  background:var(--bg);
-  font-family:"Cairo",sans-serif;
-}
+body { margin:0; background:var(--bg); font-family:"Cairo",sans-serif; }
 
-/* رأس الصفحة */
 .app-header {
   background:var(--header);
   padding:18px;
   text-align:center;
+  color:white;
   font-size:22px;
   font-weight:700;
-  color:white;
-  box-shadow:0 2px 8px rgba(0,0,0,0.2);
 }
 
-/* المحتوى */
-.container {
-  max-width:520px;
-  margin:auto;
-  padding:16px;
-}
+.container { max-width:520px; margin:auto; padding:16px; }
 
-/* صندوق الإدخال */
 .input-card {
   background:var(--bubble);
   padding:18px;
@@ -55,8 +42,6 @@ input, textarea {
   margin:8px 0;
   border-radius:10px;
   border:1px solid #cbd5e1;
-  background:#f8fafc;
-  font-size:16px;
 }
 
 .send-btn {
@@ -67,17 +52,12 @@ input, textarea {
   border:none;
   border-radius:12px;
   font-size:18px;
-  font-weight:600;
   cursor:pointer;
 }
-.send-btn:disabled {
-  background:gray;
-  cursor:not-allowed;
-}
+.send-btn:disabled { background:gray; cursor:not-allowed; }
 
-/* تنبيه */
 #popup {
-  position: fixed;
+  position:fixed;
   top:20px;
   left:50%;
   transform:translateX(-50%);
@@ -87,40 +67,24 @@ input, textarea {
   border-radius:10px;
   display:none;
   font-weight:600;
-  z-index:9999;
+  z-index:999;
 }
 
-/* الملاحظة */
 .note {
-  background:var(--bubble);
+  background:white;
   padding:18px;
   border-radius:14px;
+  margin:18px 0;
   box-shadow:0 3px 10px var(--shadow);
-  margin:16px 0;
 }
 
 .reply-box {
   background:#e7fff4;
   border-right:5px solid #10b981;
   padding:12px;
-  border-radius:10px;
   margin-top:14px;
 }
-.wait {
-  color:#777;
-  margin-top:10px;
-}
 
-.footer-nav {
-  text-align:center;
-  margin-top:25px;
-  font-size:15px;
-}
-.footer-nav a {
-  color:#2563eb;
-  font-weight:700;
-  text-decoration:none;
-}
 </style>
 </head>
 
@@ -145,53 +109,53 @@ input, textarea {
   <h3 style="margin-top:25px;">آخر الملاحظات:</h3>
   <div id="notes"></div>
 
-  <div class="footer-nav">
-    إدارة الردود ↦ <a href="admin.html">لوحة التحكم</a>
+  <div style="text-align:center; margin-top:30px;">
+    إدارة الردود → <a href="admin.html">لوحة التحكم</a>
   </div>
-
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxfK_7ByFDvHAEj8d-jqd6rPYWQivXNk9sE9bwjM6iDYNGLiu6h59x1G5X42X3XNeIh/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbxstb-oYh8eSk1bUYXPyZiRyG5JkR1g5PImp4W26BXXet7_It_-hgqZB5bPCCyGksx6/exec";
 
-/* تنبيه بسيط */
-function popup(msg, color="#10b981") {
+function popup(msg) {
   const p = document.getElementById("popup");
   p.innerText = msg;
-  p.style.background = color;
   p.style.display = "block";
   setTimeout(() => p.style.display = "none", 2200);
 }
 
-/* إرسال ملاحظة */
+function toBase64(f) {
+  return new Promise(res => {
+    let r = new FileReader();
+    r.onloadend = () => res(r.result);
+    r.readAsDataURL(f);
+  });
+}
+
 async function sendNote() {
-
+  let name = document.getElementById("name").value.trim();
+  let msg  = document.getElementById("message").value.trim();
+  let file = document.getElementById("image").files[0];
   let btn = document.getElementById("sendBtn");
-  let nameVal = document.getElementById("name").value.trim();
-  let msgVal  = document.getElementById("message").value.trim();
-  let file    = document.getElementById("image").files[0];
 
-  if (!nameVal || !msgVal) return popup("❗ يرجى كتابة الاسم والملاحظة", "red");
+  if (!name || !msg) return popup("❗ يرجى كتابة الاسم والملاحظة");
 
   btn.disabled = true;
   btn.innerText = "⏳ جاري الإرسال…";
 
-  let img64 = "";
-  if (file) {
-    img64 = await toBase64(file);
-  }
+  let img64 = file ? await toBase64(file) : "";
 
   await fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({
-      type: "note",
-      Name: nameVal,
-      Message: msgVal,
+    method:"POST",
+    body:JSON.stringify({
+      type:"note",
+      Name: name,
+      Message: msg,
       image: img64
     })
   });
 
-  popup("✔ تم إرسال الملاحظة بنجاح");
+  popup("✔ تم إرسال الملاحظة");
 
   document.getElementById("name").value = "";
   document.getElementById("message").value = "";
@@ -203,45 +167,28 @@ async function sendNote() {
   loadNotes();
 }
 
-/* تحويل الصورة Base64 */
-function toBase64(file) {
-  return new Promise((resolve) => {
-    let r = new FileReader();
-    r.onloadend = () => resolve(r.result);
-    r.readAsDataURL(file);
-  });
-}
-
-/* تحميل الملاحظات */
 async function loadNotes() {
   const res = await fetch(scriptURL + "?getData");
   const data = await res.json();
 
   let out = "";
-
   data.forEach(r => {
     out += `
-      <div class="note">
-        <b>${r.Name}</b>
-        <p>${r.Message}</p>
+    <div class="note">
+      <b>${r.Name}</b>
+      <p>${r.Message}</p>
 
-        ${r.imageURL
-          ? `<img src="${r.imageURL}" style="width:100%; margin-top:10px; border-radius:10px;">`
-          : ""
-        }
+      ${r.imageURL ? `<img src="${r.imageURL}" style="width:100%; border-radius:10px;">` : ""}
 
-        ${
-          r.reply || r.replyImageURL
-          ? `
-            <div class="reply-box">
-              ${r.reply ? `<b>رد المشرف:</b> ${r.reply}<br><br>` : ""}
-              ${r.replyImageURL ? `<img src="${r.replyImageURL}" style="width:100%; border-radius:10px;">` : ""}
-            </div>
-          `
-          : `<div class="wait">⏳ بانتظار الرد</div>`
-        }
-      </div>
-    `;
+      ${
+        r.reply || r.replyImageURL
+          ? `<div class="reply-box">
+               ${r.reply ? `<b>رد المشرف:</b> ${r.reply}<br><br>` : ""}
+               ${r.replyImageURL ? `<img src="${r.replyImageURL}" style="width:100%; border-radius:10px;">` : ""}
+             </div>`
+          : `⏳ بانتظار الرد`
+      }
+    </div>`;
   });
 
   document.getElementById("notes").innerHTML = out;
