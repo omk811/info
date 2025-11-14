@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام الملاحظات والاقتراحات</title>
+
+<style>
+body {
+  background: #f4f6f8;
+  font-family: "Cairo", sans-serif;
+  padding: 20px;
+}
+
+.container {
+  max-width: 520px;
+  margin: auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #15803d;
+  color: white;
+  border: none;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.note-card {
+  background: #fff;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 14px;
+  max-width: 520px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.note-name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.note-text {
+  margin: 10px 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.reply-box {
+  margin-top: 15px;
+  padding: 12px;
+  border-right: 4px solid #15803d;
+  background: #ecfdf5;
+}
+
+img {
+  max-width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+.admin-box {
+  background: #fff8e1;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- نموذج الملاحظة -->
+<div class="container">
+  <h2 style="text-align:center;">📬 إرسال ملاحظة أو اقتراح</h2>
+
+  <input id="name" placeholder="اسم المتابع">
+  <textarea id="message" placeholder="الملاحظة" rows="5"></textarea>
+  <input type="file" id="image">
+
+  <button onclick="sendNote()">إرسال الملاحظة</button>
+  <p id="status"></p>
+</div>
+
+<hr>
+
+<!-- لوحة التحكم -->
+<div class="container" id="adminLoginBox">
+  <h3>🔐 تسجيل دخول المشرف</h3>
+  <input id="adminPass" placeholder="ادخل كلمة المرور">
+  <button onclick="login()">دخول</button>
+  <p id="loginStatus"></p>
+</div>
+
+<div class="container" id="adminPanel" style="display:none;">
+  <h3>🛠 لوحة تحكم المشرف</h3>
+  <p>اختر الملاحظة التي تريد الرد عليها:</p>
+
+  <select id="noteSelect"></select>
+  <textarea id="replyText" placeholder="اكتب الرد هنا" rows="4"></textarea>
+
+  <button style="background:#2563eb;" onclick="sendReply()">إرسال الرد</button>
+  <p id="replyStatus"></p>
+</div>
+
+<h2 style="margin-top:40px;">📌 الملاحظات والردود</h2>
+<div id="notes"></div>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbxjYH9nm0VsGuD0qz7MVLUD8CqLpVlI2dPqCOX5qd1qVITw2APMYruvoOF3WVM88w/exec";
+const adminPassword = "Aysha123";
+
+// --------------------------------------------------
+// إرسال ملاحظة
+// --------------------------------------------------
+async function sendNote() {
+  const name = document.getElementById("name").value.trim();
+  const message = document.getElementById("message").value.trim();
+  const imgFile = document.getElementById("image").files[0];
+
+  if (!name || !message) {
+    document.getElementById("status").innerText = "❗ الرجاء تعبئة كل الحقول";
+    return;
+  }
+
+  document.getElementById("status").innerText = "⏳ يتم الإرسال...";
+
+  let base64 = "";
+  if (imgFile) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      base64 = reader.result;
+      submitNote(name, message, base64);
+    };
+    reader.readAsDataURL(imgFile);
+  } else {
+    submitNote(name, message, "");
+  }
+}
+
+async function submitNote(name, message, image) {
+  await fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({
+      type: "note",
+      name,
+      message,
+      image
+    })
+  });
+
+  document.getElementById("status").innerText = "✔ تم إرسال الملاحظة!";
+  loadNotes();
+}
+
+// --------------------------------------------------
+// تسجيل دخول المشرف
+// --------------------------------------------------
+function login() {
+  const pass = document.getElementById("adminPass").value.trim();
+
+  if (pass === adminPassword) {
+    document.getElementById("adminPanel").style.display = "block";
+    document.getElementById("adminLoginBox").style.display = "none";
+  } else {
+    document.getElementById("loginStatus").innerText = "❌ كلمة مرور غير صحيحة";
+  }
+}
+
+// --------------------------------------------------
+// إرسال الرد
+// --------------------------------------------------
+async function sendReply() {
+  const row = document.getElementById("noteSelect").value;
+  const reply = document.getElementById("replyText").value.trim();
+
+  if (!reply) {
+    document.getElementById("replyStatus").innerText = "❗ أدخل الرد أولاً";
+    return;
+  }
+
+  await fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({
+      type: "reply",
+      row,
+      reply
+    })
+  });
+
+  document.getElementById("replyStatus").innerText = "✔ تم إرسال الرد!";
+  loadNotes();
+}
+
+// --------------------------------------------------
+// تحميل وعرض الملاحظات
+// --------------------------------------------------
+async function loadNotes() {
+  const res = await fetch(scriptURL + "?getData");
+  const data = await res.json();
+
+  let box = document.getElementById("notes");
+  let select = document.getElementById("noteSelect");
+
+  box.innerHTML = "";
+  select.innerHTML = "";
+
+  data.forEach((r, i) => {
+    select.innerHTML += `<option value="${i+1}">${r.name} - ${r.message.substring(0,20)}...</option>`;
+
+    box.innerHTML += `
+      <div class="note-card">
+        <div class="note-name">${r.name}</div>
+        <div class="note-text">${r.message}</div>
+        ${r.image ? `<img src="${r.image}">` : ""}
+        ${
+          r.reply
+            ? `<div class="reply-box"><b>رد المشرف:</b> ${r.reply}</div>`
+            : `<div style="color:#777;">⏳ بانتظار الرد</div>`
+        }
+      </div>
+    `;
+  });
+}
+
+// تشغيل عند فتح الصفحة
+loadNotes();
+</script>
+
+</body>
+</html>
