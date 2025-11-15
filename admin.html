@@ -657,247 +657,183 @@
         </div>
     </div>
 
-    <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwpdHdns8jEOeOf6qZpUNawAU9cL6q_PQx2_1InjIRnZ6iSyPm7se9sxcsjesZYM6wh/exec";
-        const adminPassword = "Aysha123";
+   <!-- نفس الهيدر والـ CSS كما في الملف الأصلي (احتفظ به دون تغيير) -->
+<!-- فقط غيّر الجزء التالي من الـ <script> -->
 
-        let allNotes = [];
-        let filteredNotes = [];
-        let selectedNote = null;
-
-        // إظهار رسالة منبثقة
-        function popup(msg, type = "success") {
-            const p = document.getElementById("popup");
-            p.innerText = msg;
-            p.className = type === "success" ? "popup-success" : "popup-error";
-            p.style.display = 'block';
-            
-            setTimeout(() => {
-                p.style.display = 'none';
-            }, 2500);
-        }
-
-        // تسجيل الدخول
-        function login() {
-            const pass = document.getElementById("adminPass").value.trim();
-            const loginStatus = document.getElementById("loginStatus");
-            
-            if (pass !== adminPassword) {
-                loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
-                loginStatus.className = "status-message status-error";
-                loginStatus.style.display = "block";
-                return;
-            }
-            
-            document.getElementById("adminPanel").style.display = "block";
-            document.getElementById("loginBox").style.display = "none";
-            loadNotes();
-        }
-
-        // تحميل الملاحظات
-async function loadNotes() {
-  const notesList = document.getElementById("notesList");
-  
-  try {
-    notesList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل الملاحظات...</p></div>';
-
-    const res = await fetch(scriptURL + "?getData");
-    
-    if (!res.ok) {
-      throw new Error(`خطأ في الاتصال: ${res.status}`);
+<script>
+    // دالة escape لمنع XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
-    
-    const result = await res.json();
-    console.log("البيانات في Admin:", result); // للت Debug
-    
-    // الحصول على المصفوفة الفعلية
-    let notes = [];
-    
-    if (result && result.data) {
-      notes = result.data;
-    } else if (Array.isArray(result)) {
-      notes = result;
-    } else {
-      throw new Error("تنسيق البيانات غير متوقع");
+
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwpdHdns8jEOeOf6qZpUNawAU9cL6q_PQx2_1InjIRnZ6iSyPm7se9sxcsjesZYM6wh/exec";
+    const ADMIN_PASSWORD = "Aysha123"; // ← نفس كلمة المرور في السكربت
+
+    let allNotes = [];
+    let filteredNotes = [];
+    let selectedNote = null;
+
+    function popup(msg, type = "success") {
+        const p = document.getElementById("popup");
+        p.innerText = msg;
+        p.className = type === "success" ? "popup-success" : "popup-error";
+        p.style.display = 'block';
+        setTimeout(() => p.style.display = 'none', 2500);
     }
-    
-    allNotes = notes;
-    filteredNotes = allNotes;
-    updateCounters();
-    renderNotes();
-    
-  } catch (error) {
-    console.error("Error loading notes:", error);
-    notesList.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-exclamation-triangle"></i>
-        <p>حدث خطأ في تحميل الملاحظات</p>
-        <small>${error.message}</small>
-        <button onclick="loadNotes()" style="margin-top: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
-          إعادة المحاولة
-        </button>
-      </div>
-    `;
-  }
-}
-        // عرض الملاحظات
-        function renderNotes() {
-            const notesList = document.getElementById("notesList");
-            
-            if (filteredNotes.length === 0) {
-                notesList.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات لعرضها</p></div>';
-                return;
-            }
 
-            let out = "";
-            filteredNotes.forEach((note, index) => {
-                const hasReply = note.reply || note.replyImageURL;
-                out += `
-                <div class="note-box ${hasReply ? 'replied' : 'unreplied'}" onclick="selectNote(${index})" 
-                     style="cursor: pointer; ${selectedNote === index ? 'background: #f0f9ff;' : ''}">
-                    <div class="note-header">
-                        <div class="note-author">${note.Name}</div>
-                        <div class="note-date">${note.date || ""}</div>
-                    </div>
-                    <div class="note-content">${note.Message}</div>
-
-                    ${note.imageURL
-                        ? `<img src="${note.imageURL}" class="note-image" alt="صورة الملاحظة">`
-                        : ""}
-
-                    ${
-                        hasReply
-                        ? `<div class="reply-box">
-                            <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
-                            ${note.reply ? `<div class="reply-content">${note.reply}</div>` : ""}
-                            ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" alt="صورة الرد">` : ""}
-                        </div>`
-                        : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
-                    }
-                </div>`;
-            });
-
-            notesList.innerHTML = out;
+    function login() {
+        const pass = document.getElementById("adminPass").value.trim();
+        const loginStatus = document.getElementById("loginStatus");
+        if (pass !== ADMIN_PASSWORD) {
+            loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
+            loginStatus.className = "status-message status-error";
+            loginStatus.style.display = "block";
+            return;
         }
+        document.getElementById("adminPanel").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+        loadNotes();
+    }
 
-        // تحديث العدادات
-        function updateCounters() {
-            document.getElementById("countTotal").textContent = allNotes.length;
-            document.getElementById("countNew").textContent = allNotes.filter(n => !n.reply).length;
-            document.getElementById("countReplied").textContent = allNotes.filter(n => n.reply).length;
-            document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
-        }
+    async function loadNotes() {
+        const notesList = document.getElementById("notesList");
+        try {
+            notesList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل الملاحظات...</p></div>';
+            const res = await fetch(scriptURL + "?getData");
+            if (!res.ok) throw new Error(`خطأ: ${res.status}`);
+            const result = await res.json();
 
-        // تطبيق الفلتر
-        function applyFilter(type, el) {
-            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-            el.classList.add("active");
+            let notes = [];
+            if (result && result.data) notes = result.data;
+            else if (Array.isArray(result)) notes = result;
+            else throw new Error("تنسيق غير متوقع");
 
-            if (type === "all") filteredNotes = allNotes;
-            else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
-            else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
-            else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
-
-            selectedNote = null;
+            allNotes = notes;
+            filteredNotes = allNotes;
+            updateCounters();
             renderNotes();
+        } catch (error) {
+            console.error("Error:", error);
+            notesList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ في التحميل</p></div>`;
+        }
+    }
+
+    function renderNotes() {
+        const notesList = document.getElementById("notesList");
+        if (filteredNotes.length === 0) {
+            notesList.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات</p></div>';
+            return;
         }
 
-        // تحديد ملاحظة للرد
-        function selectNote(index) {
-            selectedNote = index;
-            renderNotes();
-            
-            // تمرير الملاحظة المحددة إلى الأعلى
-            document.getElementById('notesList').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // إرسال الرد
-        async function sendReply() {
-            const reply = document.getElementById("replyText").value.trim();
-            const imgFile = document.getElementById("replyImage").files[0];
-            const replyStatus = document.getElementById("replyStatus");
-            const sendBtn = document.getElementById("sendReplyBtn");
-
-            if (selectedNote === null || filteredNotes.length === 0) {
-                popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
-                return;
-            }
-
-            if (!reply && !imgFile) {
-                popup("⚠️ اكتب الرد أو أرفق صورة", "error");
-                return;
-            }
-
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-
-            replyStatus.textContent = "⏳ يتم الإرسال…";
-            replyStatus.className = "status-message status-loading";
-            replyStatus.style.display = "block";
-
-            let img64 = "";
-            if (imgFile) {
-                img64 = await toBase64(imgFile);
-            }
-
-            try {
-                await fetch(scriptURL, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        type: "reply",
-                        row: filteredNotes[selectedNote].row,
-                        reply,
-                        replyImage: img64
-                    })
-                });
-
-                replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
-                replyStatus.className = "status-message status-success";
-                
-                popup("✔ تم إرسال الرد بنجاح");
-                
-                // إعادة تعيين الحقول
-                document.getElementById("replyText").value = "";
-                document.getElementById("replyImage").value = "";
-                document.getElementById("replyFileName").textContent = "";
-                
-                // إعادة تحميل الملاحظات
-                loadNotes();
-            } catch (error) {
-                replyStatus.textContent = "❌ حدث خطأ أثناء الإرسال";
-                replyStatus.className = "status-message status-error";
-                popup("❌ حدث خطأ أثناء الإرسال", "error");
-                console.error("Error sending reply:", error);
-            } finally {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
-            }
-        }
-
-        // تحويل الصورة إلى Base64
-        function toBase64(file) {
-            return new Promise((resolve) => {
-                const r = new FileReader();
-                r.onloadend = () => resolve(r.result);
-                r.readAsDataURL(file);
-            });
-        }
-
-        // إعداد مستمعي الأحداث عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            // تحديث اسم الملف المختار للرد
-            document.getElementById('replyImage').addEventListener('change', function(e) {
-                const fileName = e.target.files[0] ? e.target.files[0].name : '';
-                document.getElementById('replyFileName').textContent = fileName;
-            });
-            
-            // السماح بالدخول باستخدام زر Enter في حقل كلمة المرور
-            document.getElementById('adminPass').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    login();
+        let out = "";
+        filteredNotes.forEach((note, index) => {
+            const hasReply = note.reply || note.replyImageURL;
+            out += `
+            <div class="note-box ${hasReply ? 'replied' : 'unreplied'}" onclick="selectNote(${index})" 
+                 style="cursor: pointer; ${selectedNote === index ? 'background: #e0f2fe;' : ''}">
+                <div class="note-header">
+                    <div class="note-author">${escapeHtml(note.Name)}</div>
+                    <div class="note-date">${escapeHtml(note.date || "")}</div>
+                </div>
+                <div class="note-content">${escapeHtml(note.Message)}</div>
+                ${note.imageURL ? `<img src="${note.imageURL}" class="note-image" loading="lazy" alt="صورة">` : ""}
+                ${
+                  hasReply
+                  ? `<div class="reply-box">
+                      <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
+                      ${note.reply ? `<div class="reply-content">${escapeHtml(note.reply)}</div>` : ""}
+                      ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" loading="lazy" alt="رد">` : ""}
+                    </div>`
+                  : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
                 }
-            });
+            </div>`;
         });
-    </script>
-</body>
-</html>
+        notesList.innerHTML = out;
+    }
+
+    function updateCounters() {
+        document.getElementById("countTotal").textContent = allNotes.length;
+        document.getElementById("countNew").textContent = allNotes.filter(n => !n.reply).length;
+        document.getElementById("countReplied").textContent = allNotes.filter(n => n.reply).length;
+        document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
+    }
+
+    function applyFilter(type, el) {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        el.classList.add("active");
+        if (type === "all") filteredNotes = allNotes;
+        else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
+        else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
+        else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
+        selectedNote = null;
+        renderNotes();
+    }
+
+    function selectNote(index) {
+        selectedNote = index;
+        renderNotes();
+    }
+
+    function toBase64(file) {
+        return new Promise(res => {
+            const r = new FileReader();
+            r.onloadend = () => res(r.result);
+            r.readAsDataURL(file);
+        });
+    }
+
+    async function sendReply() {
+        const reply = document.getElementById("replyText").value.trim();
+        const imgFile = document.getElementById("replyImage").files[0];
+        const sendBtn = document.getElementById("sendReplyBtn");
+
+        if (selectedNote === null) {
+            popup("⚠️ اختر ملاحظة أولاً", "error");
+            return;
+        }
+        if (!reply && !imgFile) {
+            popup("⚠️ اكتب ردًا أو أرفق صورة", "error");
+            return;
+        }
+
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+
+        let img64 = imgFile ? await toBase64(imgFile) : "";
+
+        try {
+            await fetch(scriptURL, {
+                method: "POST",
+                body: JSON.stringify({
+                    type: "reply",
+                    row: filteredNotes[selectedNote].row,
+                    reply,
+                    replyImage: img64,
+                    password: ADMIN_PASSWORD // ← إرسال كلمة المرور
+                })
+            });
+            popup("✔ تم الرد بنجاح");
+            document.getElementById("replyText").value = "";
+            document.getElementById("replyImage").value = "";
+            document.getElementById("replyFileName").textContent = "";
+            loadNotes();
+        } catch (error) {
+            popup("❌ فشل في إرسال الرد", "error");
+            console.error(error);
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('replyImage').addEventListener('change', e => {
+            document.getElementById('replyFileName').textContent = e.target.files[0]?.name || '';
+        });
+        document.getElementById('adminPass').addEventListener('keypress', e => {
+            if (e.key === 'Enter') login();
+        });
+    });
+</script>
