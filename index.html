@@ -300,6 +300,18 @@
             transform: translateY(-2px);
         }
 
+        .auto-refresh-indicator {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse 2s infinite;
+        }
+
         .notes-container {
             display: grid;
             gap: 20px;
@@ -395,7 +407,7 @@
         }
 
         .reply-box::before {
-            content: 'رد الأستاذ';
+            content: 'رد المشرف';
             position: absolute;
             top: -10px;
             right: 20px;
@@ -575,10 +587,16 @@
             .section-header {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 10px;
             }
             
             .refresh-btn {
                 align-self: stretch;
+            }
+            
+            .auto-refresh-indicator {
+                align-self: stretch;
+                justify-content: center;
             }
             
             .note-header {
@@ -610,6 +628,14 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .last-update {
+            color: var(--white);
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
     </style>
 </head>
 
@@ -628,8 +654,8 @@
                 مرحباً بكم في قناتنا التعليمية
             </h2>
             <p class="welcome-text">
-                نرحب بملاحظاتكم واستفساراتكم حول دروس مادة اللغة العربية للصف الخامس. فسأقوم بالرد على جميع استفساراتكم 
-                وتلقي ملاحظاتكم القيمة لتحسين تجربة التعليم بأسرع وقت ممكن.
+                نرحب بملاحظاتكم واستفساراتكم حول دروس منهج الصف الخامس في مادة اللغة العربية. سأقوم بالرد على جميع استفساراتكم 
+                وتلقي ملاحظاتكم القيمة لتحسين تجربة التعليم.
             </p>
         </div>
 
@@ -680,9 +706,23 @@
                     <i class="fas fa-list-alt"></i>
                     آخر الملاحظات والاستفسارات
                 </h3>
-                <button class="refresh-btn" onclick="loadNotes()">
-                    <i class="fas fa-sync-alt"></i> تحديث القائمة
-                </button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="refresh-btn" onclick="loadNotes(true)">
+                        <i class="fas fa-sync-alt"></i> تحديث الآن
+                    </button>
+                    <div class="auto-refresh-indicator">
+                        <i class="fas fa-clock"></i>
+                        <span id="refreshTimer">02:00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="last-update">
+                <i class="fas fa-info-circle"></i>
+                <span>سيتم التحديث التلقائي خلال: </span>
+                <span id="nextUpdateTime">--:--</span>
+                <span> | آخر تحديث: </span>
+                <span id="lastUpdateTime">--:--</span>
             </div>
             
             <div id="notes" class="notes-container">
@@ -704,6 +744,11 @@
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbwFSBO_y4QL-HswJ9Rbnb5QFchewWDAxyEtxqyrYmjIijP0oQJ6VJB3wY5bv1gdgUwv/exec";
+        
+        // متغيرات التحديث التلقائي
+        let autoRefreshInterval;
+        let refreshCountdown = 120; // 2 دقائق بالثواني
+        let lastUpdateTime = null;
 
         // دالة لتحويل الروابط النصية إلى روابط قابلة للنقر
         function convertLinksToClickable(text) {
@@ -720,6 +765,41 @@
                         ${cleanUrl}
                         </a>`;
             });
+        }
+
+        // دالة لتحديث العداد
+        function updateRefreshTimer() {
+            refreshCountdown--;
+            
+            if (refreshCountdown <= 0) {
+                refreshCountdown = 120; // إعادة التعيين إلى دقيقتين
+                loadNotes(false); // تحميل الملاحظات بدون إظهار رسالة
+            }
+            
+            // تحديث عرض العداد
+            const minutes = Math.floor(refreshCountdown / 60);
+            const seconds = refreshCountdown % 60;
+            document.getElementById('refreshTimer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // تحديث وقت التحديث القادم
+            const nextUpdate = new Date(Date.now() + refreshCountdown * 1000);
+            document.getElementById('nextUpdateTime').textContent = 
+                nextUpdate.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // بدء التحديث التلقائي
+        function startAutoRefresh() {
+            // إيقاف أي interval سابق
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            
+            // بدء interval جديد كل ثانية
+            autoRefreshInterval = setInterval(updateRefreshTimer, 1000);
+            
+            // تحديث وقت التحديث القادم
+            updateRefreshTimer();
         }
 
         // إظهار رسالة منبثقة
@@ -790,9 +870,10 @@
                     document.getElementById("image").value = "";
                     document.getElementById("fileName").textContent = "";
 
-                    // إعادة تحميل الملاحظات
+                    // إعادة تعيين العداد وإعادة تحميل الملاحظات
+                    refreshCountdown = 120;
                     setTimeout(() => {
-                        loadNotes();
+                        loadNotes(false);
                     }, 1500);
                 } else {
                     throw new Error(result.error || "حدث خطأ أثناء الإرسال");
@@ -808,16 +889,18 @@
         }
 
         // تحميل الملاحظات
-        async function loadNotes() {
+        async function loadNotes(showNotification = false) {
             const notesContainer = document.getElementById("notes");
             
             try {
-                notesContainer.innerHTML = `
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>جاري تحديث الملاحظات...</span>
-                    </div>
-                `;
+                if (showNotification) {
+                    notesContainer.innerHTML = `
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>جاري تحديث الملاحظات...</span>
+                        </div>
+                    `;
+                }
 
                 const response = await fetch(scriptURL + "?getData");
                 
@@ -837,6 +920,11 @@
                 } else {
                     throw new Error("تنسيق البيانات غير متوقع");
                 }
+                
+                // تحديث وقت آخر تحديث
+                lastUpdateTime = new Date();
+                document.getElementById('lastUpdateTime').textContent = 
+                    lastUpdateTime.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                 
                 if (notes.length === 0) {
                     notesContainer.innerHTML = `
@@ -901,6 +989,10 @@
 
                 notesContainer.innerHTML = out;
                 
+                if (showNotification) {
+                    popup("✅ تم تحديث الملاحظات بنجاح");
+                }
+                
             } catch (error) {
                 console.error("Error loading notes:", error);
                 notesContainer.innerHTML = `
@@ -909,7 +1001,7 @@
                         <p>حدث خطأ في تحميل الملاحظات</p>
                         <small>${error.message}</small>
                         <br><br>
-                        <button onclick="loadNotes()" class="refresh-btn" style="background: var(--white); color: var(--dark);">
+                        <button onclick="loadNotes(true)" class="refresh-btn" style="background: var(--white); color: var(--dark);">
                             <i class="fas fa-redo"></i> إعادة المحاولة
                         </button>
                     </div>
@@ -926,7 +1018,10 @@
             });
             
             // تحميل الملاحظات عند فتح الصفحة
-            loadNotes();
+            loadNotes(false);
+            
+            // بدء التحديث التلقائي
+            startAutoRefresh();
             
             // إضافة تأثيرات للعناصر
             const cards = document.querySelectorAll('.card, .welcome-card');
@@ -935,8 +1030,12 @@
             });
         });
 
-        // تحديث تلقائي كل 60 ثانية
-        setInterval(loadNotes, 60000);
+        // تنظيف الـ interval عند إغلاق الصفحة
+        window.addEventListener('beforeunload', function() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        });
     </script>
 </body>
 </html>
