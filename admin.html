@@ -744,7 +744,13 @@
                   ? `<div class="reply-box">
                       <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
                       ${note.reply ? `<div class="reply-content">${escapeHtml(note.reply)}</div>` : ""}
-                      ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" loading="lazy" alt="رد">` : ""}
+                    ${note.replyImageURL ? `
+  <img src="${note.replyImageURL}" 
+       class="reply-image" 
+       alt="صورة الرد"
+       onerror="console.log('فشل تحميل صورة الرد:', this.src)"
+       style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
+` : ""}
                     </div>`
                   : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
                 }
@@ -805,49 +811,97 @@ async function debugImages() {
 }
     
     async function sendReply() {
-        const reply = document.getElementById("replyText").value.trim();
-        const imgFile = document.getElementById("replyImage").files[0];
-        const sendBtn = document.getElementById("sendReplyBtn");
+  const reply = document.getElementById("replyText").value.trim();
+  const imgFile = document.getElementById("replyImage").files[0];
+  const replyStatus = document.getElementById("replyStatus");
+  const sendBtn = document.getElementById("sendReplyBtn");
 
-        if (selectedNote === null) {
-            popup("⚠️ اختر ملاحظة أولاً", "error");
-            return;
-        }
-        if (!reply && !imgFile) {
-            popup("⚠️ اكتب ردًا أو أرفق صورة", "error");
-            return;
-        }
+  if (selectedNote === null || filteredNotes.length === 0) {
+    popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
+    return;
+  }
 
-        sendBtn.disabled = true;
-        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+  if (!reply && !imgFile) {
+    popup("⚠️ اكتب الرد أو أرفق صورة", "error");
+    return;
+  }
 
-        let img64 = imgFile ? await toBase64(imgFile) : "";
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
 
-        try {
-            await fetch(scriptURL, {
-                method: "POST",
-                body: JSON.stringify({
-                    type: "reply",
-                    row: filteredNotes[selectedNote].row,
-                    reply,
-                    replyImage: img64,
-                    password: ADMIN_PASSWORD // ← إرسال كلمة المرور
-                })
-            });
-            popup("✔ تم الرد بنجاح");
-            document.getElementById("replyText").value = "";
-            document.getElementById("replyImage").value = "";
-            document.getElementById("replyFileName").textContent = "";
-            loadNotes();
-        } catch (error) {
-            popup("❌ فشل في إرسال الرد", "error");
-            console.error(error);
-        } finally {
-            sendBtn.disabled = false;
-            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
-        }
+  replyStatus.textContent = "⏳ يتم إرسال الرد...";
+  replyStatus.className = "status-message status-loading";
+  replyStatus.style.display = "block";
+
+  let img64 = "";
+  if (imgFile) {
+    try {
+      console.log("جاري تحويل الصورة إلى base64...");
+      img64 = await toBase64(imgFile);
+      console.log("تم تحويل الصورة، الطول:", img64.length);
+    } catch (error) {
+      console.error("خطأ في تحويل الصورة:", error);
     }
+  }
 
+  try {
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({
+        type: "reply",
+        row: filteredNotes[selectedNote].row,
+        reply: reply,
+        replyImage: img64
+      })
+    });
+
+    const result = await response.json();
+    console.log("نتيجة الرد:", result);
+
+    if (result.status === "success") {
+      replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
+      replyStatus.className = "status-message status-success";
+      
+      popup("✔ تم إرسال الرد بنجاح");
+      
+      // إعادة تعيين الحقول
+      document.getElementById("replyText").value = "";
+      document.getElementById("replyImage").value = "";
+      document.getElementById("replyFileName").textContent = "";
+      
+      // إعادة تحميل الملاحظات بعد ثانية
+      setTimeout(() => {
+        loadNotes();
+      }, 1000);
+    } else {
+      throw new Error(result.message || "حدث خطأ غير معروف");
+    }
+  } catch (error) {
+    console.error("خطأ في إرسال الرد:", error);
+    replyStatus.textContent = "❌ حدث خطأ أثناء الإرسال: " + error.message;
+    replyStatus.className = "status-message status-error";
+    popup("❌ حدث خطأ أثناء الإرسال", "error");
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
+  }
+}
+
+// دالة محسنة لتحويل الصور إلى base64
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      console.log("تم تحويل الملف إلى base64");
+      resolve(reader.result);
+    };
+    reader.onerror = error => {
+      console.error("خطأ في تحويل الملف:", error);
+      reject(error);
+    };
+    reader.readAsDataURL(file);
+  });
+}
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('replyImage').addEventListener('change', e => {
             document.getElementById('replyFileName').textContent = e.target.files[0]?.name || '';
