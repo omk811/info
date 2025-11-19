@@ -362,6 +362,18 @@
             line-height: 1.7;
         }
 
+        .reply-content a {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .reply-content a:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
         .reply-image {
             width: 100%;
             max-height: 300px;
@@ -708,7 +720,10 @@
                     
                     <div class="form-group">
                         <label for="replyText">نص الرد</label>
-                        <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا..."></textarea>
+                        <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا... يمكنك إضافة روابط وسيتم تحويلها تلقائياً إلى روابط قابلة للنقر"></textarea>
+                        <small style="color: var(--gray); margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> سيتم تحويل الروابط تلقائياً إلى روابط قابلة للنقر
+                        </small>
                     </div>
                     
                     <div class="form-group">
@@ -740,6 +755,23 @@
         let allNotes = [];
         let filteredNotes = [];
         let selectedNote = null;
+
+        // دالة لتحويل الروابط النصية إلى روابط قابلة للنقر
+        function convertLinksToClickable(text) {
+            if (!text) return '';
+            
+            // نمط للتعرف على الروابط (يشمل http و https)
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            
+            return text.replace(urlRegex, function(url) {
+                // تنظيف الرابط من أي علامات ترقيم في النهاية
+                const cleanUrl = url.replace(/[.,!?;:]$/, '');
+                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" 
+                        style="color: #2563eb; text-decoration: underline; font-weight: 600;">
+                        ${cleanUrl}
+                        </a>`;
+            });
+        }
 
         // إظهار رسالة منبثقة
         function popup(msg, type = "success") {
@@ -824,7 +856,7 @@
                         hasReply
                         ? `<div class="reply-box">
                             <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
-                            ${note.reply ? `<div class="reply-content">${note.reply}</div>` : ""}
+                            ${note.reply ? `<div class="reply-content">${convertLinksToClickable(note.reply)}</div>` : ""}
                             ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" alt="صورة الرد" onerror="this.style.display='none'">` : ""}
                         </div>`
                         : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
