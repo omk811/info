@@ -798,7 +798,147 @@ function checkImage(url) {
     img.src = url;
   });
 }
+// دالة لفحص الخطأ بالتفصيل
+async function debugSendReply() {
+  const reply = document.getElementById("replyText").value.trim();
+  const imgFile = document.getElementById("replyImage").files[0];
+  
+  console.log("=== بدء التصحيح ===");
+  console.log("النص:", reply);
+  console.log("الملف:", imgFile);
+  console.log("الملاحظة المحددة:", selectedNote);
+  
+  if (selectedNote !== null) {
+    console.log("رقم الصف:", filteredNotes[selectedNote].row);
+  }
+  
+  let img64 = "";
+  if (imgFile) {
+    img64 = await toBase64(imgFile);
+    console.log("طول base64:", img64.length);
+    console.log("أول 100 حرف من base64:", img64.substring(0, 100));
+  }
+  
+  const payload = {
+    type: "reply",
+    row: filteredNotes[selectedNote].row,
+    reply: reply,
+    replyImage: img64,
+    password: "Aysha123"
+  };
+  
+  console.log("البيانات المرسلة:", payload);
+  
+  try {
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+    
+    console.log("حالة الرد:", response.status);
+    const result = await response.text();
+    console.log("الرد الخام:", result);
+    
+    const parsedResult = JSON.parse(result);
+    console.log("النتيجة بعد التحويل:", parsedResult);
+    
+    return parsedResult;
+  } catch (error) {
+    console.error("خطأ في الإرسال:", error);
+    return { success: false, error: error.message };
+  }
+}
 
+// استبدل دالة sendReply الحالية بهذه النسخة المحسنة:
+async function sendReply() {
+  const reply = document.getElementById("replyText").value.trim();
+  const imgFile = document.getElementById("replyImage").files[0];
+  const replyStatus = document.getElementById("replyStatus");
+  const sendBtn = document.getElementById("sendReplyBtn");
+
+  // التحقق من البيانات
+  if (selectedNote === null || filteredNotes.length === 0) {
+    popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
+    return;
+  }
+
+  if (!reply && !imgFile) {
+    popup("⚠️ اكتب الرد أو أرفق صورة", "error");
+    return;
+  }
+
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+
+  try {
+    console.log("بدء إرسال الرد...");
+    
+    let img64 = "";
+    if (imgFile) {
+      console.log("جاري تحويل الصورة...");
+      img64 = await toBase64(imgFile);
+      console.log("تم تحويل الصورة");
+    }
+
+    const payload = {
+      type: "reply",
+      row: filteredNotes[selectedNote].row,
+      reply: reply,
+      replyImage: img64,
+      password: "Aysha123"
+    };
+
+    console.log("إرسال البيانات إلى:", scriptURL);
+    console.log("الحمولة:", payload);
+
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    console.log("تم استلام الرد، الحالة:", response.status);
+    
+    if (!response.ok) {
+      throw new Error(`خطأ في الشبكة: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("نتيجة السكربت:", result);
+
+    if (result.success) {
+      popup("✔ تم إرسال الرد بنجاح");
+      replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
+      replyStatus.className = "status-message status-success";
+      replyStatus.style.display = "block";
+      
+      // إعادة تعيين الحقول
+      document.getElementById("replyText").value = "";
+      document.getElementById("replyImage").value = "";
+      document.getElementById("replyFileName").textContent = "";
+      
+      // إعادة تحميل الملاحظات بعد ثانية
+      setTimeout(() => {
+        loadNotes();
+        selectedNote = null; // إلغاء التحديد
+      }, 1000);
+    } else {
+      throw new Error(result.error || "حدث خطأ غير معروف");
+    }
+
+  } catch (error) {
+    console.error("❌ خطأ مفصل:", error);
+    replyStatus.textContent = "❌ خطأ: " + error.message;
+    replyStatus.className = "status-message status-error";
+    replyStatus.style.display = "block";
+    popup("❌ " + error.message, "error");
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
+  }
+}
 // فحص جميع الصور
 async function debugImages() {
   const notes = await loadNotes();
@@ -809,7 +949,6 @@ async function debugImages() {
     }
   }
 }
-    
     async function sendReply() {
   const reply = document.getElementById("replyText").value.trim();
   const imgFile = document.getElementById("replyImage").files[0];
@@ -829,19 +968,9 @@ async function debugImages() {
   sendBtn.disabled = true;
   sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
 
-  replyStatus.textContent = "⏳ يتم إرسال الرد...";
-  replyStatus.className = "status-message status-loading";
-  replyStatus.style.display = "block";
-
   let img64 = "";
   if (imgFile) {
-    try {
-      console.log("جاري تحويل الصورة إلى base64...");
-      img64 = await toBase64(imgFile);
-      console.log("تم تحويل الصورة، الطول:", img64.length);
-    } catch (error) {
-      console.error("خطأ في تحويل الصورة:", error);
-    }
+    img64 = await toBase64(imgFile);
   }
 
   try {
@@ -851,36 +980,27 @@ async function debugImages() {
         type: "reply",
         row: filteredNotes[selectedNote].row,
         reply: reply,
-        replyImage: img64
+        replyImage: img64,
+        password: "Aysha123" // ← إضافة كلمة المرور هنا
       })
     });
 
     const result = await response.json();
-    console.log("نتيجة الرد:", result);
-
-    if (result.status === "success") {
-      replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
-      replyStatus.className = "status-message status-success";
-      
+    
+    if (result.success) {
       popup("✔ تم إرسال الرد بنجاح");
-      
       // إعادة تعيين الحقول
       document.getElementById("replyText").value = "";
       document.getElementById("replyImage").value = "";
       document.getElementById("replyFileName").textContent = "";
       
-      // إعادة تحميل الملاحظات بعد ثانية
-      setTimeout(() => {
-        loadNotes();
-      }, 1000);
+      // إعادة تحميل الملاحظات
+      setTimeout(() => loadNotes(), 1000);
     } else {
-      throw new Error(result.message || "حدث خطأ غير معروف");
+      throw new Error(result.error);
     }
   } catch (error) {
-    console.error("خطأ في إرسال الرد:", error);
-    replyStatus.textContent = "❌ حدث خطأ أثناء الإرسال: " + error.message;
-    replyStatus.className = "status-message status-error";
-    popup("❌ حدث خطأ أثناء الإرسال", "error");
+    popup("❌ " + error.message, "error");
   } finally {
     sendBtn.disabled = false;
     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
