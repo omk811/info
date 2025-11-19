@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قناة الأستاذ خليل البلوشي – الملاحظات</title>
+    <title>قناة الأستاذ خليل البلوشي – الملاحظات والاستفسارات</title>
     
     <!-- الخطوط -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <style>
         :root {
             --primary: #2563eb;
-            --primary-dark: #1d4ed8;
+            --primary-dark: #1e40af;
             --secondary: #10b981;
             --light: #f8fafc;
             --dark: #1e293b;
@@ -25,6 +25,7 @@
             --shadow-hover: rgba(0, 0, 0, 0.1);
             --error: #ef4444;
             --success: #10b981;
+            --warning: #f59e0b;
         }
 
         * {
@@ -34,7 +35,8 @@
         }
 
         body {
-            background: var(--light);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             font-family: "Cairo", sans-serif;
             color: var(--dark);
             line-height: 1.6;
@@ -42,76 +44,136 @@
 
         .app-header {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
             color: var(--white);
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            box-shadow: 0 4px 12px var(--shadow);
-            position: sticky;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
             top: 0;
-            z-index: 100;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
+        }
+
+        .welcome-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .welcome-text {
+            color: var(--gray);
+            font-size: 16px;
+            line-height: 1.8;
         }
 
         .card {
             background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 4px 12px var(--shadow);
-            padding: 24px;
-            margin-bottom: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow-hover);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .card-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
         }
 
         .card-title i {
-            font-size: 22px;
+            font-size: 24px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             color: var(--dark);
+            font-size: 16px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 18px;
         }
 
         input, textarea {
             width: 100%;
-            padding: 14px;
+            padding: 16px 50px 16px 20px;
             border-radius: 12px;
             border: 2px solid var(--light-gray);
             font-family: "Cairo", sans-serif;
             font-size: 16px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            background: var(--light);
         }
 
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: var(--white);
         }
 
         .file-input-container {
@@ -135,36 +197,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 14px;
+            gap: 12px;
+            padding: 18px;
             background: var(--light);
             border: 2px dashed var(--light-gray);
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
         }
 
         .file-input-label:hover {
             background: var(--light-gray);
             border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .file-input-label i {
             color: var(--primary);
-            font-size: 20px;
+            font-size: 22px;
         }
 
         .file-name {
-            margin-top: 8px;
+            margin-top: 10px;
             font-size: 14px;
             color: var(--gray);
             text-align: center;
+            padding: 8px;
+            background: var(--light);
+            border-radius: 8px;
         }
 
         .send-btn {
             width: 100%;
-            padding: 16px;
-            background: var(--primary);
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: var(--white);
             border: none;
             border-radius: 12px;
@@ -175,13 +242,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
         .send-btn:hover:not(:disabled) {
-            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
         }
 
         .send-btn:disabled {
@@ -191,25 +258,35 @@
             box-shadow: none;
         }
 
-        .notes-header {
+        .notes-section {
+            margin-top: 40px;
+        }
+
+        .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: 30px 0 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .notes-title {
-            font-size: 22px;
+        .section-title {
+            font-size: 24px;
             font-weight: 700;
-            color: var(--dark);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .refresh-btn {
-            background: var(--light);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 20px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -219,189 +296,305 @@
         }
 
         .refresh-btn:hover {
-            background: var(--primary);
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .notes-container {
+            display: grid;
+            gap: 20px;
         }
 
         .note {
             background: var(--white);
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px var(--shadow);
+            padding: 25px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             position: relative;
-            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
         }
 
         .note:hover {
             transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .note.replied::before {
+            background: var(--success);
+        }
+
+        .note.pending::before {
+            background: var(--warning);
         }
 
         .note-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .note-author {
             font-weight: 700;
             font-size: 18px;
             color: var(--primary);
-        }
-
-        .note-date {
-            font-size: 14px;
-            color: var(--gray);
-        }
-
-        .note-content {
-            margin-bottom: 16px;
-            line-height: 1.7;
-        }
-
-        .note-image {
-            width: 100%;
-            border-radius: 12px;
-            margin-top: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .reply-box {
-            background: #f0fdf4;
-            border-right: 5px solid var(--success);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .reply-title {
-            font-weight: 700;
-            color: var(--success);
-            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .note-date {
+            font-size: 14px;
+            color: var(--gray);
+            background: var(--light);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .note-content {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--dark);
+            font-size: 16px;
+        }
+
+        .note-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .note-image:hover {
+            transform: scale(1.02);
+        }
+
+        .reply-box {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border-right: 5px solid var(--success);
+            position: relative;
+        }
+
+        .reply-box::before {
+            content: 'رد المشرف';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
         .reply-content {
-            line-height: 1.7;
+            line-height: 1.8;
+            color: var(--dark);
+            margin-top: 10px;
         }
 
         .reply-image {
             width: 100%;
+            max-height: 400px;
+            object-fit: contain;
             border-radius: 12px;
-            margin-top: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .pending {
-            background: #fef3c7;
-            border-right: 5px solid #f59e0b;
+        .pending-reply {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
             border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
+            padding: 20px;
+            margin-top: 20px;
             text-align: center;
             color: #92400e;
             font-weight: 600;
-        }
-
-        .pending i {
-            margin-left: 8px;
+            border-right: 5px solid var(--warning);
         }
 
         .admin-link {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 4px 12px var(--shadow);
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .admin-link a {
-            color: var(--primary);
+            color: var(--white);
             text-decoration: none;
             font-weight: 700;
-            transition: color 0.3s ease;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
         }
 
         .admin-link a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         #popup {
             position: fixed;
-            top: 20px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 16px 24px;
+            padding: 18px 30px;
             border-radius: 12px;
             font-weight: 600;
             z-index: 1000;
             display: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            animation: fadeInOut 2.5s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: slideDown 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         .popup-success {
             background: var(--success);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .popup-error {
             background: var(--error);
             color: white;
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; top: 0; }
-            20% { opacity: 1; top: 20px; }
-            80% { opacity: 1; top: 20px; }
-            100% { opacity: 0; top: 0; }
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
+            padding: 60px 30px;
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: var(--light-gray);
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.8;
         }
 
         .empty-state p {
-            font-size: 18px;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state small {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 40px;
+            color: var(--white);
+        }
+
+        .loading i {
+            font-size: 24px;
         }
 
         /* تحسينات للهواتف */
         @media (max-width: 768px) {
             .container {
-                padding: 16px;
+                padding: 20px 15px;
+            }
+            
+            .app-header {
+                font-size: 22px;
+                padding: 20px 15px;
             }
             
             .card {
                 padding: 20px;
             }
             
-            .app-header {
+            .welcome-title {
                 font-size: 20px;
-                padding: 16px;
             }
             
-            .notes-header {
+            .section-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
             }
             
             .refresh-btn {
-                align-self: flex-end;
+                align-self: stretch;
             }
+            
+            .note-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            input, textarea {
+                padding: 14px 45px 14px 15px;
+            }
+        }
+
+        /* تأثيرات خاصة */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -410,75 +603,107 @@
     <div id="popup"></div>
 
     <div class="app-header">
-        <i class="fas fa-comments"></i> الملاحظات والاستفسارات
+        <i class="fas fa-comments"></i> الملاحظات والاستفسارات - قناة الأستاذ خليل البلوشي
     </div>
 
     <div class="container">
-        <div class="card">
-            <h3 class="card-title"><i class="fas fa-pen"></i> إرسال ملاحظة جديدة</h3>
+        <!-- بطالة ترحيب -->
+        <div class="welcome-card fade-in">
+            <h2 class="welcome-title">
+                <i class="fas fa-graduation-cap"></i>
+                مرحباً بكم في قناتنا التعليمية
+            </h2>
+            <p class="welcome-text">
+                نرحب بملاحظاتكم واستفساراتكم حول الدروس والمحاضرات. فريقنا متاح للرد على جميع استفساراتكم 
+                وتلقي ملاحظاتكم القيمة لتحسين تجربة التعليم.
+            </p>
+        </div>
+
+        <!-- نموذج إرسال ملاحظة جديدة -->
+        <div class="card fade-in">
+            <h3 class="card-title">
+                <i class="fas fa-pen-fancy"></i>
+                إرسال ملاحظة جديدة
+            </h3>
             
             <div class="form-group">
                 <label for="name">اسمك الكريم</label>
-                <input type="text" id="name" placeholder="اكتب اسمك هنا">
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="name" placeholder="اكتب اسمك الثلاثي هنا...">
+                </div>
             </div>
             
             <div class="form-group">
                 <label for="message">ملاحظتك أو استفسارك</label>
-                <textarea id="message" placeholder="اكتب ملاحظتك أو استفسارك هنا..." rows="4"></textarea>
+                <div class="input-with-icon">
+                    <i class="fas fa-comment-dots"></i>
+                    <textarea id="message" placeholder="اكتب ملاحظتك أو استفسارك هنا بشكل مفصل..." rows="5"></textarea>
+                </div>
             </div>
             
             <div class="form-group">
-                <label>إضافة صورة (اختياري)</label>
+                <label>إضافة صورة توضيحية (اختياري)</label>
                 <div class="file-input-container">
                     <div class="file-input-label">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <span>اختر صورة</span>
+                        <span>انقر لاختيار صورة</span>
                     </div>
                     <input type="file" id="image" class="file-input" accept="image/*">
                 </div>
                 <div class="file-name" id="fileName"></div>
             </div>
             
-            <button class="send-btn" id="sendBtn" onclick="sendNote()">
+            <button class="send-btn pulse" id="sendBtn" onclick="sendNote()">
                 <i class="fas fa-paper-plane"></i> إرسال الملاحظة
             </button>
         </div>
 
-        <div class="notes-header">
-            <h3 class="notes-title">آخر الملاحظات</h3>
-            <button class="refresh-btn" onclick="loadNotes()">
-                <i class="fas fa-sync-alt"></i> تحديث
-            </button>
-        </div>
-        
-        <div id="notes">
-            <!-- سيتم تحميل الملاحظات هنا -->
+        <!-- قسم الملاحظات -->
+        <div class="notes-section fade-in">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="fas fa-list-alt"></i>
+                    آخر الملاحظات والاستفسارات
+                </h3>
+                <button class="refresh-btn" onclick="loadNotes()">
+                    <i class="fas fa-sync-alt"></i> تحديث القائمة
+                </button>
+            </div>
+            
+            <div id="notes" class="notes-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>جاري تحميل الملاحظات...</span>
+                </div>
+            </div>
         </div>
 
-        <div class="admin-link">
-            <i class="fas fa-cog"></i> إدارة الردود → 
-            <a href="admin.html"> . </a>
+        <!-- رابط الإدارة -->
+        <div class="admin-link fade-in">
+            <a href="admin.html">
+                <i class="fas fa-cog"></i>
+                الدخول إلى لوحة إدارة الردود
+            </a>
         </div>
     </div>
 
     <script>
-        // دالة escape لمنع XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
         const scriptURL = "https://script.google.com/macros/s/AKfycbwFSBO_y4QL-HswJ9Rbnb5QFchewWDAxyEtxqyrYmjIijP0oQJ6VJB3wY5bv1gdgUwv/exec";
 
+        // إظهار رسالة منبثقة
         function popup(msg, type = "success") {
             const p = document.getElementById("popup");
             p.innerText = msg;
             p.className = type === "success" ? "popup-success" : "popup-error";
-            p.style.display = "block";
-            setTimeout(() => p.style.display = "none", 2500);
+            p.style.display = 'block';
+            
+            setTimeout(() => {
+                p.style.display = 'none';
+            }, 3000);
         }
 
+        // تحويل الصورة إلى Base64
         function toBase64(f) {
             return new Promise(res => {
                 let r = new FileReader();
@@ -487,23 +712,33 @@
             });
         }
 
+        // إرسال ملاحظة جديدة
         async function sendNote() {
             let name = document.getElementById("name").value.trim();
             let msg  = document.getElementById("message").value.trim();
             let file = document.getElementById("image").files[0];
             let btn = document.getElementById("sendBtn");
 
-            if (!name || !msg) {
-                return popup("❗ يرجى كتابة الاسم والملاحظة", "error");
+            // التحقق من البيانات
+            if (!name) {
+                popup("❗ يرجى كتابة اسمك الكريم", "error");
+                document.getElementById("name").focus();
+                return;
+            }
+
+            if (!msg) {
+                popup("❗ يرجى كتابة الملاحظة أو الاستفسار", "error");
+                document.getElementById("message").focus();
+                return;
             }
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال…';
 
-            let img64 = file ? await toBase64(file) : "";
-
             try {
-                await fetch(scriptURL, {
+                let img64 = file ? await toBase64(file) : "";
+
+                const response = await fetch(scriptURL, {
                     method: "POST",
                     body: JSON.stringify({
                         type: "note",
@@ -513,81 +748,164 @@
                     })
                 });
 
-                popup("✔ تم إرسال الملاحظة بنجاح");
-                document.getElementById("name").value = "";
-                document.getElementById("message").value = "";
-                document.getElementById("image").value = "";
-                document.getElementById("fileName").textContent = "";
-                loadNotes();
+                const result = await response.json();
+                
+                if (result.success) {
+                    popup("✔ تم إرسال الملاحظة بنجاح، شكراً لك!");
+
+                    // إعادة تعيين الحقول
+                    document.getElementById("name").value = "";
+                    document.getElementById("message").value = "";
+                    document.getElementById("image").value = "";
+                    document.getElementById("fileName").textContent = "";
+
+                    // إعادة تحميل الملاحظات
+                    setTimeout(() => {
+                        loadNotes();
+                    }, 1500);
+                } else {
+                    throw new Error(result.error || "حدث خطأ أثناء الإرسال");
+                }
+
             } catch (error) {
-                popup("❌ حدث خطأ أثناء الإرسال", "error");
                 console.error("Error:", error);
+                popup("❌ حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى", "error");
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الملاحظة';
             }
         }
 
+        // تحميل الملاحظات
         async function loadNotes() {
             const notesContainer = document.getElementById("notes");
+            
             try {
-                notesContainer.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل الملاحظات...</p></div>';
-                const res = await fetch(scriptURL + "?getData");
-                if (!res.ok) throw new Error(`خطأ: ${res.status}`);
-                const result = await res.json();
+                notesContainer.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>جاري تحديث الملاحظات...</span>
+                    </div>
+                `;
 
+                const response = await fetch(scriptURL + "?getData");
+                
+                if (!response.ok) {
+                    throw new Error(`خطأ في الاتصال: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // الحصول على المصفوفة الفعلية من الرد
                 let notes = [];
-                if (result && result.data) notes = result.data;
-                else if (Array.isArray(result)) notes = result;
-                else throw new Error("تنسيق غير متوقع");
-
+                
+                if (result && result.data) {
+                    notes = result.data;
+                } else if (Array.isArray(result)) {
+                    notes = result;
+                } else {
+                    throw new Error("تنسيق البيانات غير متوقع");
+                }
+                
                 if (notes.length === 0) {
-                    notesContainer.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات حتى الآن</p></div>';
+                    notesContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="far fa-comment-dots"></i>
+                            <p>لا توجد ملاحظات حتى الآن</p>
+                            <small>كن أول من يشارك بملاحظته!</small>
+                        </div>
+                    `;
                     return;
                 }
 
                 let out = "";
-                notes.forEach(r => {
+                notes.forEach(note => {
+                    const hasReply = note.reply || note.replyImageURL;
+                    
                     out += `
-                    <div class="note">
+                    <div class="note ${hasReply ? 'replied' : 'pending'} fade-in">
                         <div class="note-header">
-                            <div class="note-author">${escapeHtml(r.Name || "بدون اسم")}</div>
-                            <div class="note-date">${escapeHtml(r.date || r.Time || "")}</div>
+                            <div class="note-author">
+                                <i class="fas fa-user-circle"></i>
+                                ${note.Name || "مستخدم"}
+                            </div>
+                            <div class="note-date">
+                                <i class="far fa-clock"></i>
+                                ${note.date || note.Time || ""}
+                            </div>
                         </div>
-                        <div class="note-content">${escapeHtml(r.Message || "لا يوجد محتوى")}</div>
-                        ${r.imageURL ? `<img src="${r.imageURL}" class="note-image" alt="صورة الملاحظة" loading="lazy" onerror="this.style.display='none'">` : ""}
+                        <div class="note-content">${note.Message || ""}</div>
+
+                        ${note.imageURL ? `
+                            <img src="${note.imageURL}" 
+                                 class="note-image" 
+                                 alt="صورة الملاحظة"
+                                 onerror="this.style.display='none'"
+                                 loading="lazy">
+                        ` : ""}
+
                         ${
-                          r.reply || r.replyImageURL
-                          ? `<div class="reply-box">
-                               <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
-                               ${r.reply ? `<div class="reply-content">${escapeHtml(r.reply)}</div>` : ""}
-                               ${r.replyImageURL ? `<img src="${r.replyImageURL}" class="reply-image" alt="صورة الرد" loading="lazy" onerror="this.style.display='none'">` : ""}
-                             </div>`
-                          : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
+                            hasReply
+                            ? `
+                            <div class="reply-box">
+                                ${note.reply ? `<div class="reply-content">${note.reply}</div>` : ""}
+                                ${note.replyImageURL ? `
+                                    <img src="${note.replyImageURL}" 
+                                         class="reply-image" 
+                                         alt="صورة الرد"
+                                         onerror="this.style.display='none'"
+                                         loading="lazy">
+                                ` : ""}
+                            </div>
+                            `
+                            : `
+                            <div class="pending-reply">
+                                <i class="fas fa-clock"></i>
+                                الملاحظة قيد المراجعة والرد من المشرف
+                            </div>
+                            `
                         }
                     </div>`;
                 });
+
                 notesContainer.innerHTML = out;
+                
             } catch (error) {
                 console.error("Error loading notes:", error);
                 notesContainer.innerHTML = `
-                  <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>حدث خطأ في تحميل الملاحظات</p>
-                    <button onclick="loadNotes()" style="margin-top: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
-                      إعادة المحاولة
-                    </button>
-                  </div>
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>حدث خطأ في تحميل الملاحظات</p>
+                        <small>${error.message}</small>
+                        <br><br>
+                        <button onclick="loadNotes()" class="refresh-btn" style="background: var(--white); color: var(--dark);">
+                            <i class="fas fa-redo"></i> إعادة المحاولة
+                        </button>
+                    </div>
                 `;
             }
         }
 
+        // إعداد مستمعي الأحداث عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
+            // تحديث اسم الملف المختار
             document.getElementById('image').addEventListener('change', function(e) {
-                document.getElementById('fileName').textContent = e.target.files[0]?.name || '';
+                const fileName = e.target.files[0] ? e.target.files[0].name : 'لم يتم اختيار ملف';
+                document.getElementById('fileName').textContent = fileName;
             });
+            
+            // تحميل الملاحظات عند فتح الصفحة
             loadNotes();
+            
+            // إضافة تأثيرات للعناصر
+            const cards = document.querySelectorAll('.card, .welcome-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
         });
+
+        // تحديث تلقائي كل 30 ثانية
+        setInterval(loadNotes, 30000);
     </script>
 </body>
 </html>
