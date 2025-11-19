@@ -395,7 +395,7 @@
         }
 
         .reply-box::before {
-            content: 'رد المشرف';
+            content: 'رد الأستاذ';
             position: absolute;
             top: -10px;
             right: 20px;
@@ -411,6 +411,20 @@
             line-height: 1.8;
             color: var(--dark);
             margin-top: 10px;
+        }
+
+        /* تنسيق الروابط في الردود */
+        .reply-content a {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            word-break: break-all;
+        }
+
+        .reply-content a:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
         }
 
         .reply-image {
@@ -614,7 +628,7 @@
                 مرحباً بكم في قناتنا التعليمية
             </h2>
             <p class="welcome-text">
-                نرحب بملاحظاتكم واستفساراتكم حول دروس منهج الصف الخامس. سأقوم بالرد على جميع استفساراتكم 
+                نرحب بملاحظاتكم واستفساراتكم حول الدروس والمحاضرات. فريقنا متاح للرد على جميع استفساراتكم 
                 وتلقي ملاحظاتكم القيمة لتحسين تجربة التعليم.
             </p>
         </div>
@@ -690,6 +704,23 @@
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbwFSBO_y4QL-HswJ9Rbnb5QFchewWDAxyEtxqyrYmjIijP0oQJ6VJB3wY5bv1gdgUwv/exec";
+
+        // دالة لتحويل الروابط النصية إلى روابط قابلة للنقر
+        function convertLinksToClickable(text) {
+            if (!text) return '';
+            
+            // نمط للتعرف على الروابط (يشمل http و https)
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            
+            return text.replace(urlRegex, function(url) {
+                // تنظيف الرابط من أي علامات ترقيم في النهاية
+                const cleanUrl = url.replace(/[.,!?;:]$/, '');
+                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" 
+                        style="color: #2563eb; text-decoration: underline; font-weight: 600;">
+                        ${cleanUrl}
+                        </a>`;
+            });
+        }
 
         // إظهار رسالة منبثقة
         function popup(msg, type = "success") {
@@ -848,7 +879,7 @@
                             hasReply
                             ? `
                             <div class="reply-box">
-                                ${note.reply ? `<div class="reply-content">${note.reply}</div>` : ""}
+                                ${note.reply ? `<div class="reply-content">${convertLinksToClickable(note.reply)}</div>` : ""}
                                 ${note.replyImageURL ? `
                                     <img src="${note.replyImageURL}" 
                                          class="reply-image" 
