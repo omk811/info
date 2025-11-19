@@ -59,9 +59,18 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
         }
 
         .card {
@@ -265,6 +274,8 @@
 
         .notes-list {
             margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .note-box {
@@ -274,8 +285,9 @@
             background: var(--white);
             margin: 18px 0;
             box-shadow: 0 4px 12px var(--shadow);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
+            cursor: pointer;
         }
 
         .note-box:hover {
@@ -289,6 +301,12 @@
 
         .note-box.replied {
             border-right: 5px solid var(--success);
+        }
+
+        .note-box.selected {
+            background: #f0f9ff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .note-header {
@@ -504,10 +522,52 @@
             border: 1px solid #fcd34d;
         }
 
+        .selected-note-info {
+            background: #f0f9ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-right: 4px solid var(--primary);
+        }
+
+        .selected-note-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .selected-note-content {
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* شريط التمرير المخصص */
+        .notes-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notes-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .notes-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .notes-list::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
         /* تحسينات للهواتف */
         @media (max-width: 768px) {
             .container {
                 padding: 16px;
+                grid-template-columns: 1fr;
             }
             
             .card {
@@ -568,466 +628,361 @@
 
         <!-- لوحة التحكم -->
         <div id="adminPanel" style="display:none;">
-            <div class="card">
-                <div class="action-buttons">
-                    <button class="btn btn-secondary" onclick="location.href='index.html'">
-                        <i class="fas fa-arrow-right"></i> الرجوع للصفحة الرئيسية
-                    </button>
-                    <button class="btn btn-primary" onclick="loadNotes()">
-                        <i class="fas fa-sync-alt"></i> تحديث البيانات
-                    </button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 class="card-title"><i class="fas fa-chart-bar"></i> إحصائيات الملاحظات</h3>
-                
-                <div class="counter-box">
-                    <div class="counter">
-                        <div class="counter-title">إجمالي الملاحظات</div>
-                        <div class="counter-value" id="countTotal">0</div>
-                    </div>
-                    <div class="counter new">
-                        <div class="counter-title">ملاحظات جديدة</div>
-                        <div class="counter-value" id="countNew">0</div>
-                    </div>
-                    <div class="counter replied">
-                        <div class="counter-title">تم الرد عليها</div>
-                        <div class="counter-value" id="countReplied">0</div>
-                    </div>
-                    <div class="counter images">
-                        <div class="counter-title">تحتوي على صور</div>
-                        <div class="counter-value" id="countWithImg">0</div>
+            <!-- العمود الأيسر: قائمة الملاحظات -->
+            <div class="main-content">
+                <div class="card">
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="location.href='index.html'">
+                            <i class="fas fa-arrow-right"></i> الرجوع للصفحة الرئيسية
+                        </button>
+                        <button class="btn btn-primary" onclick="loadNotes()">
+                            <i class="fas fa-sync-alt"></i> تحديث البيانات
+                        </button>
                     </div>
                 </div>
 
-                <div class="filter-box">
-                    <div class="filter-btn active" onclick="applyFilter('all', this)">
-                        <i class="fas fa-list"></i> الكل
-                    </div>
-                    <div class="filter-btn" onclick="applyFilter('new', this)">
-                        <i class="fas fa-clock"></i> الجديدة
-                    </div>
-                    <div class="filter-btn" onclick="applyFilter('replied', this)">
-                        <i class="fas fa-check-circle"></i> تم الرد
-                    </div>
-                    <div class="filter-btn" onclick="applyFilter('img', this)">
-                        <i class="fas fa-image"></i> مع صورة
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 class="card-title"><i class="fas fa-comments"></i> قائمة الملاحظات</h3>
-                
-                <div id="notesList" class="notes-list">
-                    <div class="empty-state">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>جاري تحميل الملاحظات...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 class="card-title"><i class="fas fa-reply"></i> الرد على الملاحظة</h3>
-                
-                <div class="form-group">
-                    <label for="replyText">نص الرد</label>
-                    <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>إضافة صورة للرد (اختياري)</label>
-                    <div class="file-input-container">
-                        <div class="file-input-label">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>اختر صورة</span>
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-chart-bar"></i> إحصائيات الملاحظات</h3>
+                    
+                    <div class="counter-box">
+                        <div class="counter">
+                            <div class="counter-title">إجمالي الملاحظات</div>
+                            <div class="counter-value" id="countTotal">0</div>
                         </div>
-                        <input type="file" id="replyImage" class="file-input" accept="image/*">
+                        <div class="counter new">
+                            <div class="counter-title">ملاحظات جديدة</div>
+                            <div class="counter-value" id="countNew">0</div>
+                        </div>
+                        <div class="counter replied">
+                            <div class="counter-title">تم الرد عليها</div>
+                            <div class="counter-value" id="countReplied">0</div>
+                        </div>
+                        <div class="counter images">
+                            <div class="counter-title">تحتوي على صور</div>
+                            <div class="counter-value" id="countWithImg">0</div>
+                        </div>
                     </div>
-                    <div class="file-name" id="replyFileName"></div>
+
+                    <div class="filter-box">
+                        <div class="filter-btn active" onclick="applyFilter('all', this)">
+                            <i class="fas fa-list"></i> الكل
+                        </div>
+                        <div class="filter-btn" onclick="applyFilter('new', this)">
+                            <i class="fas fa-clock"></i> الجديدة
+                        </div>
+                        <div class="filter-btn" onclick="applyFilter('replied', this)">
+                            <i class="fas fa-check-circle"></i> تم الرد
+                        </div>
+                        <div class="filter-btn" onclick="applyFilter('img', this)">
+                            <i class="fas fa-image"></i> مع صورة
+                        </div>
+                    </div>
                 </div>
-                
-                <button class="btn btn-success" onclick="sendReply()" id="sendReplyBtn" style="width: 100%;">
-                    <i class="fas fa-paper-plane"></i> إرسال الرد
-                </button>
-                
-                <div id="replyStatus" class="status-message" style="display: none;"></div>
+
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-comments"></i> قائمة الملاحظات</h3>
+                    
+                    <div id="notesList" class="notes-list">
+                        <div class="empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>جاري تحميل الملاحظات...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- العمود الأيمن: نموذج الرد -->
+            <div class="sidebar">
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-reply"></i> الرد على الملاحظة</h3>
+                    
+                    <div id="selectedNoteInfo" class="selected-note-info" style="display: none;">
+                        <div class="selected-note-title">
+                            <i class="fas fa-sticky-note"></i>
+                            الملاحظة المحددة:
+                        </div>
+                        <div class="selected-note-content" id="selectedNoteContent">
+                            <!-- سيتم عرض محتوى الملاحظة المحددة هنا -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="replyText">نص الرد</label>
+                        <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>إضافة صورة للرد (اختياري)</label>
+                        <div class="file-input-container">
+                            <div class="file-input-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>اختر صورة</span>
+                            </div>
+                            <input type="file" id="replyImage" class="file-input" accept="image/*">
+                        </div>
+                        <div class="file-name" id="replyFileName"></div>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="sendReply()" id="sendReplyBtn" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> إرسال الرد
+                    </button>
+                    
+                    <div id="replyStatus" class="status-message" style="display: none;"></div>
+                </div>
             </div>
         </div>
     </div>
 
-   <!-- نفس الهيدر والـ CSS كما في الملف الأصلي (احتفظ به دون تغيير) -->
-<!-- فقط غيّر الجزء التالي من الـ <script> -->
+    <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwFSBO_y4QL-HswJ9Rbnb5QFchewWDAxyEtxqyrYmjIijP0oQJ6VJB3wY5bv1gdgUwv/exec";
+        const adminPassword = "Aysha123";
 
-<script>
-    // دالة escape لمنع XSS
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
+        let allNotes = [];
+        let filteredNotes = [];
+        let selectedNote = null;
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwFSBO_y4QL-HswJ9Rbnb5QFchewWDAxyEtxqyrYmjIijP0oQJ6VJB3wY5bv1gdgUwv/exec";
-    const ADMIN_PASSWORD = "Aysha123"; // ← نفس كلمة المرور في السكربت
-
-    let allNotes = [];
-    let filteredNotes = [];
-    let selectedNote = null;
-
-    function popup(msg, type = "success") {
-        const p = document.getElementById("popup");
-        p.innerText = msg;
-        p.className = type === "success" ? "popup-success" : "popup-error";
-        p.style.display = 'block';
-        setTimeout(() => p.style.display = 'none', 2500);
-    }
-
-    function login() {
-        const pass = document.getElementById("adminPass").value.trim();
-        const loginStatus = document.getElementById("loginStatus");
-        if (pass !== ADMIN_PASSWORD) {
-            loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
-            loginStatus.className = "status-message status-error";
-            loginStatus.style.display = "block";
-            return;
+        // إظهار رسالة منبثقة
+        function popup(msg, type = "success") {
+            const p = document.getElementById("popup");
+            p.innerText = msg;
+            p.className = type === "success" ? "popup-success" : "popup-error";
+            p.style.display = 'block';
+            
+            setTimeout(() => {
+                p.style.display = 'none';
+            }, 2500);
         }
-        document.getElementById("adminPanel").style.display = "block";
-        document.getElementById("loginBox").style.display = "none";
-        loadNotes();
-    }
 
-    async function loadNotes() {
-        const notesList = document.getElementById("notesList");
-        try {
+        // تسجيل الدخول
+        function login() {
+            const pass = document.getElementById("adminPass").value.trim();
+            const loginStatus = document.getElementById("loginStatus");
+            
+            if (pass !== adminPassword) {
+                loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
+                loginStatus.className = "status-message status-error";
+                loginStatus.style.display = "block";
+                return;
+            }
+            
+            document.getElementById("adminPanel").style.display = "grid";
+            document.getElementById("loginBox").style.display = "none";
+            loadNotes();
+        }
+
+        // تحميل الملاحظات
+        async function loadNotes() {
+            const notesList = document.getElementById("notesList");
             notesList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل الملاحظات...</p></div>';
-            const res = await fetch(scriptURL + "?getData");
-            if (!res.ok) throw new Error(`خطأ: ${res.status}`);
-            const result = await res.json();
 
-            let notes = [];
-            if (result && result.data) notes = result.data;
-            else if (Array.isArray(result)) notes = result;
-            else throw new Error("تنسيق غير متوقع");
-
-            allNotes = notes;
-            filteredNotes = allNotes;
-            updateCounters();
-            renderNotes();
-        } catch (error) {
-            console.error("Error:", error);
-            notesList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ في التحميل</p></div>`;
-        }
-    }
-
-    function renderNotes() {
-        const notesList = document.getElementById("notesList");
-        if (filteredNotes.length === 0) {
-            notesList.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات</p></div>';
-            return;
-        }
-
-        let out = "";
-        filteredNotes.forEach((note, index) => {
-            const hasReply = note.reply || note.replyImageURL;
-            out += `
-            <div class="note-box ${hasReply ? 'replied' : 'unreplied'}" onclick="selectNote(${index})" 
-                 style="cursor: pointer; ${selectedNote === index ? 'background: #e0f2fe;' : ''}">
-                <div class="note-header">
-                    <div class="note-author">${escapeHtml(note.Name)}</div>
-                    <div class="note-date">${escapeHtml(note.date || "")}</div>
-                </div>
-                <div class="note-content">${escapeHtml(note.Message)}</div>
-                ${note.imageURL ? `<img src="${note.imageURL}" class="note-image" loading="lazy" alt="صورة">` : ""}
-                ${
-                  hasReply
-                  ? `<div class="reply-box">
-                      <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
-                      ${note.reply ? `<div class="reply-content">${escapeHtml(note.reply)}</div>` : ""}
-                    ${note.replyImageURL ? `
-  <img src="${note.replyImageURL}" 
-       class="reply-image" 
-       alt="صورة الرد"
-       onerror="console.log('فشل تحميل صورة الرد:', this.src)"
-       style="max-width: 100%; border-radius: 8px; margin-top: 10px;">
-` : ""}
-                    </div>`
-                  : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
+            try {
+                const res = await fetch(scriptURL + "?getData");
+                const result = await res.json();
+                
+                if (result.success && Array.isArray(result.data)) {
+                    allNotes = result.data;
+                    filteredNotes = allNotes;
+                    updateCounters();
+                    renderNotes();
+                } else {
+                    throw new Error(result.error || "تنسيق البيانات غير صحيح");
                 }
-            </div>`;
+            } catch (error) {
+                notesList.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>حدث خطأ في تحميل الملاحظات</p></div>';
+                console.error("Error loading notes:", error);
+            }
+        }
+
+        // عرض الملاحظات
+        function renderNotes() {
+            const notesList = document.getElementById("notesList");
+            
+            if (filteredNotes.length === 0) {
+                notesList.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات لعرضها</p></div>';
+                return;
+            }
+
+            let out = "";
+            filteredNotes.forEach((note, index) => {
+                const hasReply = note.reply || note.replyImageURL;
+                const isSelected = selectedNote === index;
+                
+                out += `
+                <div class="note-box ${hasReply ? 'replied' : 'unreplied'} ${isSelected ? 'selected' : ''}" 
+                     onclick="selectNote(${index})">
+                    <div class="note-header">
+                        <div class="note-author">${note.Name}</div>
+                        <div class="note-date">${note.date || ""}</div>
+                    </div>
+                    <div class="note-content">${note.Message}</div>
+
+                    ${note.imageURL
+                        ? `<img src="${note.imageURL}" class="note-image" alt="صورة الملاحظة" onerror="this.style.display='none'">`
+                        : ""}
+
+                    ${
+                        hasReply
+                        ? `<div class="reply-box">
+                            <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
+                            ${note.reply ? `<div class="reply-content">${note.reply}</div>` : ""}
+                            ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" alt="صورة الرد" onerror="this.style.display='none'">` : ""}
+                        </div>`
+                        : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
+                    }
+                </div>`;
+            });
+
+            notesList.innerHTML = out;
+        }
+
+        // تحديث العدادات
+        function updateCounters() {
+            document.getElementById("countTotal").textContent = allNotes.length;
+            document.getElementById("countNew").textContent = allNotes.filter(n => !n.reply).length;
+            document.getElementById("countReplied").textContent = allNotes.filter(n => n.reply).length;
+            document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
+        }
+
+        // تطبيق الفلتر
+        function applyFilter(type, el) {
+            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+            el.classList.add("active");
+
+            if (type === "all") filteredNotes = allNotes;
+            else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
+            else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
+            else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
+
+            selectedNote = null;
+            updateSelectedNoteInfo();
+            renderNotes();
+        }
+
+        // تحديد ملاحظة للرد
+        function selectNote(index) {
+            selectedNote = index;
+            updateSelectedNoteInfo();
+            renderNotes();
+            
+            // تمرير الملاحظة المحددة إلى الأعلى (في الشاشات الصغيرة)
+            if (window.innerWidth < 1024) {
+                document.querySelector('.sidebar').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // تحديث معلومات الملاحظة المحددة
+        function updateSelectedNoteInfo() {
+            const infoDiv = document.getElementById("selectedNoteInfo");
+            const contentDiv = document.getElementById("selectedNoteContent");
+            
+            if (selectedNote !== null && filteredNotes[selectedNote]) {
+                const note = filteredNotes[selectedNote];
+                contentDiv.innerHTML = `
+                    <strong>${note.Name}</strong><br>
+                    ${note.Message.substring(0, 100)}${note.Message.length > 100 ? '...' : ''}
+                `;
+                infoDiv.style.display = 'block';
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
+
+        // إرسال الرد
+        async function sendReply() {
+            const reply = document.getElementById("replyText").value.trim();
+            const imgFile = document.getElementById("replyImage").files[0];
+            const replyStatus = document.getElementById("replyStatus");
+            const sendBtn = document.getElementById("sendReplyBtn");
+
+            if (selectedNote === null || filteredNotes.length === 0) {
+                popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
+                return;
+            }
+
+            if (!reply && !imgFile) {
+                popup("⚠️ اكتب الرد أو أرفق صورة", "error");
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+
+            let img64 = "";
+            if (imgFile) {
+                img64 = await toBase64(imgFile);
+            }
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        type: "reply",
+                        row: filteredNotes[selectedNote].row,
+                        reply: reply,
+                        replyImage: img64,
+                        password: adminPassword
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    popup("✔ تم إرسال الرد بنجاح");
+                    replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
+                    replyStatus.className = "status-message status-success";
+                    replyStatus.style.display = "block";
+                    
+                    // إعادة تعيين الحقول
+                    document.getElementById("replyText").value = "";
+                    document.getElementById("replyImage").value = "";
+                    document.getElementById("replyFileName").textContent = "";
+                    
+                    // إعادة تحميل الملاحظات
+                    setTimeout(() => {
+                        loadNotes();
+                        selectedNote = null;
+                        updateSelectedNoteInfo();
+                    }, 1000);
+                } else {
+                    throw new Error(result.error || "حدث خطأ غير معروف");
+                }
+            } catch (error) {
+                console.error("خطأ في الإرسال:", error);
+                replyStatus.textContent = "❌ خطأ: " + error.message;
+                replyStatus.className = "status-message status-error";
+                replyStatus.style.display = "block";
+                popup("❌ " + error.message, "error");
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
+            }
+        }
+
+        // تحويل الصورة إلى base64
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // إعداد مستمعي الأحداث عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحديث اسم الملف المختار للرد
+            document.getElementById('replyImage').addEventListener('change', function(e) {
+                const fileName = e.target.files[0] ? e.target.files[0].name : '';
+                document.getElementById('replyFileName').textContent = fileName;
+            });
+            
+            // السماح بالدخول باستخدام زر Enter في حقل كلمة المرور
+            document.getElementById('adminPass').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
         });
-        notesList.innerHTML = out;
-    }
-
-    function updateCounters() {
-        document.getElementById("countTotal").textContent = allNotes.length;
-        document.getElementById("countNew").textContent = allNotes.filter(n => !n.reply).length;
-        document.getElementById("countReplied").textContent = allNotes.filter(n => n.reply).length;
-        document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
-    }
-
-    function applyFilter(type, el) {
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        el.classList.add("active");
-        if (type === "all") filteredNotes = allNotes;
-        else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
-        else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
-        else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
-        selectedNote = null;
-        renderNotes();
-    }
-
-    function selectNote(index) {
-        selectedNote = index;
-        renderNotes();
-    }
-
-    function toBase64(file) {
-        return new Promise(res => {
-            const r = new FileReader();
-            r.onloadend = () => res(r.result);
-            r.readAsDataURL(file);
-        });
-    }
-// للتحقق من الصور
-function checkImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = url;
-  });
-}
-// دالة لفحص الخطأ بالتفصيل
-async function debugSendReply() {
-  const reply = document.getElementById("replyText").value.trim();
-  const imgFile = document.getElementById("replyImage").files[0];
-  
-  console.log("=== بدء التصحيح ===");
-  console.log("النص:", reply);
-  console.log("الملف:", imgFile);
-  console.log("الملاحظة المحددة:", selectedNote);
-  
-  if (selectedNote !== null) {
-    console.log("رقم الصف:", filteredNotes[selectedNote].row);
-  }
-  
-  let img64 = "";
-  if (imgFile) {
-    img64 = await toBase64(imgFile);
-    console.log("طول base64:", img64.length);
-    console.log("أول 100 حرف من base64:", img64.substring(0, 100));
-  }
-  
-  const payload = {
-    type: "reply",
-    row: filteredNotes[selectedNote].row,
-    reply: reply,
-    replyImage: img64,
-    password: "Aysha123"
-  };
-  
-  console.log("البيانات المرسلة:", payload);
-  
-  try {
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    });
-    
-    console.log("حالة الرد:", response.status);
-    const result = await response.text();
-    console.log("الرد الخام:", result);
-    
-    const parsedResult = JSON.parse(result);
-    console.log("النتيجة بعد التحويل:", parsedResult);
-    
-    return parsedResult;
-  } catch (error) {
-    console.error("خطأ في الإرسال:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// استبدل دالة sendReply الحالية بهذه النسخة المحسنة:
-async function sendReply() {
-  const reply = document.getElementById("replyText").value.trim();
-  const imgFile = document.getElementById("replyImage").files[0];
-  const replyStatus = document.getElementById("replyStatus");
-  const sendBtn = document.getElementById("sendReplyBtn");
-
-  // التحقق من البيانات
-  if (selectedNote === null || filteredNotes.length === 0) {
-    popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
-    return;
-  }
-
-  if (!reply && !imgFile) {
-    popup("⚠️ اكتب الرد أو أرفق صورة", "error");
-    return;
-  }
-
-  sendBtn.disabled = true;
-  sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-
-  try {
-    console.log("بدء إرسال الرد...");
-    
-    let img64 = "";
-    if (imgFile) {
-      console.log("جاري تحويل الصورة...");
-      img64 = await toBase64(imgFile);
-      console.log("تم تحويل الصورة");
-    }
-
-    const payload = {
-      type: "reply",
-      row: filteredNotes[selectedNote].row,
-      reply: reply,
-      replyImage: img64,
-      password: "Aysha123"
-    };
-
-    console.log("إرسال البيانات إلى:", scriptURL);
-    console.log("الحمولة:", payload);
-
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    console.log("تم استلام الرد، الحالة:", response.status);
-    
-    if (!response.ok) {
-      throw new Error(`خطأ في الشبكة: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("نتيجة السكربت:", result);
-
-    if (result.success) {
-      popup("✔ تم إرسال الرد بنجاح");
-      replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
-      replyStatus.className = "status-message status-success";
-      replyStatus.style.display = "block";
-      
-      // إعادة تعيين الحقول
-      document.getElementById("replyText").value = "";
-      document.getElementById("replyImage").value = "";
-      document.getElementById("replyFileName").textContent = "";
-      
-      // إعادة تحميل الملاحظات بعد ثانية
-      setTimeout(() => {
-        loadNotes();
-        selectedNote = null; // إلغاء التحديد
-      }, 1000);
-    } else {
-      throw new Error(result.error || "حدث خطأ غير معروف");
-    }
-
-  } catch (error) {
-    console.error("❌ خطأ مفصل:", error);
-    replyStatus.textContent = "❌ خطأ: " + error.message;
-    replyStatus.className = "status-message status-error";
-    replyStatus.style.display = "block";
-    popup("❌ " + error.message, "error");
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
-  }
-}
-// فحص جميع الصور
-async function debugImages() {
-  const notes = await loadNotes();
-  for (let note of notes) {
-    if (note.replyImageURL) {
-      const exists = await checkImage(note.replyImageURL);
-      console.log(`صورة الرد للملاحظة ${note.row}:`, exists, note.replyImageURL);
-    }
-  }
-}
-    async function sendReply() {
-  const reply = document.getElementById("replyText").value.trim();
-  const imgFile = document.getElementById("replyImage").files[0];
-  const replyStatus = document.getElementById("replyStatus");
-  const sendBtn = document.getElementById("sendReplyBtn");
-
-  if (selectedNote === null || filteredNotes.length === 0) {
-    popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
-    return;
-  }
-
-  if (!reply && !imgFile) {
-    popup("⚠️ اكتب الرد أو أرفق صورة", "error");
-    return;
-  }
-
-  sendBtn.disabled = true;
-  sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-
-  let img64 = "";
-  if (imgFile) {
-    img64 = await toBase64(imgFile);
-  }
-
-  try {
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify({
-        type: "reply",
-        row: filteredNotes[selectedNote].row,
-        reply: reply,
-        replyImage: img64,
-        password: "Aysha123" // ← إضافة كلمة المرور هنا
-      })
-    });
-
-    const result = await response.json();
-    
-    if (result.success) {
-      popup("✔ تم إرسال الرد بنجاح");
-      // إعادة تعيين الحقول
-      document.getElementById("replyText").value = "";
-      document.getElementById("replyImage").value = "";
-      document.getElementById("replyFileName").textContent = "";
-      
-      // إعادة تحميل الملاحظات
-      setTimeout(() => loadNotes(), 1000);
-    } else {
-      throw new Error(result.error);
-    }
-  } catch (error) {
-    popup("❌ " + error.message, "error");
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
-  }
-}
-
-// دالة محسنة لتحويل الصور إلى base64
-function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      console.log("تم تحويل الملف إلى base64");
-      resolve(reader.result);
-    };
-    reader.onerror = error => {
-      console.error("خطأ في تحويل الملف:", error);
-      reject(error);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('replyImage').addEventListener('change', e => {
-            document.getElementById('replyFileName').textContent = e.target.files[0]?.name || '';
-        });
-        document.getElementById('adminPass').addEventListener('keypress', e => {
-            if (e.key === 'Enter') login();
-        });
-    });
-</script>
+    </script>
+</body>
+</html>
