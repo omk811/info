@@ -2,215 +2,316 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>صندوق الملاحظات – النسخة 4.0</title>
+<title>صندوق الملاحظات – الطلاب</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ========== ROOT COLORS ========== */
-:root {
-    --primary:#4f46e5;
-    --secondary:#7c3aed;
-    --soft:#eef2ff;
-    --card:rgba(255,255,255,0.75);
+:root{
+  --primary:#4f46e5;
+  --secondary:#7c3aed;
+  --bg1:#e0e7ff;
+  --bg2:#fdf2f8;
+  --card:rgba(255,255,255,0.85);
+  --text:#0f172a;
 }
 
-/* ========== BASE ========== */
-body {
-    font-family:"Cairo",sans-serif;
-    margin:0;
-    padding-bottom:80px;
-    background:linear-gradient(135deg,#e0e7ff,#fdf2f8);
+*{box-sizing:border-box;}
+
+body{
+  font-family:"Cairo",sans-serif;
+  margin:0;
+  padding-bottom:80px;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--text);
 }
 
-.container { width:100%; max-width:620px; margin:auto; padding:15px; }
-
-/* ========== CARD ========== */
-.card {
-    background:var(--card);
-    backdrop-filter:blur(14px);
-    padding:20px;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+.container{
+  width:100%;
+  max-width:640px;
+  margin:auto;
+  padding:15px;
 }
 
-/* INPUTS */
-input,textarea {
-    width:100%;
-    padding:14px;
-    border-radius:14px;
-    border:none;
-    margin:10px 0;
-    background:#f1f5f9;
-    font-size:16px;
-    box-sizing:border-box;
+/* بطاقة رئيسية */
+.card{
+  background:var(--card);
+  backdrop-filter:blur(14px);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 10px 30px rgba(15,23,42,0.18);
 }
 
-/* BUTTON */
-.btn {
-    width:100%;
-    padding:14px;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    color:white;
-    border:none;
-    border-radius:14px;
-    font-size:18px;
+/* الحقول */
+input,textarea{
+  width:100%;
+  padding:13px;
+  border-radius:14px;
+  border:none;
+  background:#eef2ff;
+  margin-top:8px;
+  font-size:15px;
 }
 
-/* NOTES */
-.note {
-    background:white;
-    padding:16px;
-    border-radius:14px;
-    margin:14px 0;
-    border-right:6px solid var(--primary);
-    box-shadow:0 6px 14px rgba(0,0,0,0.08);
+/* زر إرسال */
+.btn{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:14px;
+  border:none;
+  font-size:17px;
+  color:white;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  cursor:pointer;
 }
 
-.note img {
-    width:100%;
-    border-radius:10px;
-    margin-top:10px;
-    cursor:pointer;
+/* الملاحظات */
+.note{
+  background:white;
+  border-radius:16px;
+  padding:14px;
+  margin:14px 0;
+  border-right:6px solid var(--primary);
+  box-shadow:0 6px 16px rgba(15,23,42,0.12);
 }
 
-/* ========== IMAGE MODAL ========== */
-#imgModal {
-    position:fixed; 
-    top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(0,0,0,0.9);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:5000;
-}
-#imgModal img {
-    max-width:95%; 
-    max-height:95%; 
-    border-radius:14px;
+.note-header{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:14px;
+  margin-bottom:6px;
 }
 
-/* ========== BOTTOM NAVIGATION ========== */
-.bottom-nav {
-    position:fixed;
-    bottom:0; left:0;
-    width:100%;
-    background:white;
-    display:flex;
-    justify-content:space-around;
-    padding:10px 0;
-    box-shadow:0 -5px 12px rgba(0,0,0,0.15);
-    z-index:3000;
-}
-.bottom-nav a {
-    text-decoration:none;
-    color:#475569;
-    font-size:14px;
-    text-align:center;
+.note img{
+  width:100%;
+  border-radius:10px;
+  margin-top:8px;
+  cursor:pointer;
 }
 
-/* RESPONSIVE */
-@media(max-width:500px){
-    h1 { font-size:22px; }
-    .card { padding:14px; }
-    .note { padding:12px; }
+/* رد الأستاذ */
+.reply-box{
+  margin-top:10px;
+  border-radius:10px;
+  padding:10px;
+  background:#ecfdf5;
+  color:#064e3b;
+  font-size:14px;
+}
+
+/* Bottom Navigation */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:white;
+  box-shadow:0 -6px 16px rgba(15,23,42,0.18);
+  display:flex;
+  justify-content:space-around;
+  padding:8px 0;
+  z-index:2000;
+}
+
+.bottom-nav a{
+  text-decoration:none;
+  color:#475569;
+  font-size:13px;
+  text-align:center;
+}
+
+/* مودال الصورة */
+#imgModal{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+}
+#imgModal img{
+  max-width:95%;
+  max-height:95%;
+  border-radius:14px;
+}
+
+/* هواتف */
+@media(max-width:600px){
+  .card{padding:14px;border-radius:14px;}
+  .note{padding:12px;border-radius:12px;}
+  input,textarea{font-size:14px;padding:11px;}
+  .btn{font-size:15px;padding:12px;}
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
-<h1 style="text-align:center;color:var(--primary);">📮 صندوق الملاحظات</h1>
+  <h2 style="text-align:center;margin-bottom:10px;color:var(--primary);">
+    📮 صندوق الملاحظات – الأستاذ خليل البلوشي
+  </h2>
 
-<!-- ========== SEND BOX ========== -->
-<div class="card">
-    <input id="name" placeholder="اسمك الكريم">
-    <textarea id="note" rows="4" placeholder="اكتب ملاحظتك..."></textarea>
-    <input type="file" id="image">
+  <!-- نموذج إرسال ملاحظة -->
+  <div class="card" id="form">
+    <label>👤 الاسم (يمكن مستعار)</label>
+    <input id="name" placeholder="مثال: طالب مجتهد">
+
+    <label style="margin-top:10px;">✏️ الملاحظة / السؤال</label>
+    <textarea id="note" rows="4" placeholder="اكتب ملاحظتك أو سؤالك هنا..."></textarea>
+
+    <label style="margin-top:10px;">📷 صورة (اختياري)</label>
+    <input type="file" id="image" accept="image/*">
 
     <button class="btn" onclick="sendNote()">إرسال الملاحظة</button>
+    <p id="formStatus" style="text-align:center;font-size:14px;margin-top:8px;"></p>
+  </div>
+
+  <!-- الملاحظات المردود عليها -->
+  <h3 style="margin-top:22px;margin-bottom:8px;">💬 ملاحظات تم الرد عليها</h3>
+  <div id="replies"></div>
+
 </div>
 
-<h2 style="margin-top:30px;color:#334155;">💬 الملاحظات المردود عليها</h2>
-<div id="replies"></div>
-
-</div>
-
-<!-- ========== BOTTOM NAVIGATION ========== -->
+<!-- Bottom Nav -->
 <div class="bottom-nav">
-    <a href="#top">🏠 الرئيسية</a>
-    <a href="#form">📝 إرسال</a>
-    <a href="#replies">💬 الردود</a>
-    <a href="admin.html">⚙️ الإدارة</a>
+  <a href="#top">🏠 الرئيسية</a>
+  <a href="#form">📝 إرسال</a>
+  <a href="#replies">💬 الردود</a>
+  <a href="admin.html">⚙️ الإدارة</a>
 </div>
 
-<!-- ========== IMAGE MODAL ========== -->
+<!-- Image Modal -->
 <div id="imgModal" onclick="this.style.display='none'">
-    <img id="modalImg">
+  <img id="modalImg">
 </div>
 
 <script>
+// ضع هنا رابط الويب آب بعد النشر
 const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
 
-/* CONVERT IMAGE TO BASE64 */
+function setStatus(msg,color="#0f172a"){
+  const el=document.getElementById("formStatus");
+  el.textContent=msg;
+  el.style.color=color;
+}
+
 function toBase64(file){
-    return new Promise(res=>{
-        let r=new FileReader();
-        r.onload=()=>res(r.result);
-        r.readAsDataURL(file);
-    });
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result);
+    r.readAsDataURL(file);
+  });
 }
 
-/* SEND NOTE */
 async function sendNote(){
-    let name=document.getElementById("name").value.trim();
-    let note=document.getElementById("note").value.trim();
-    let file=document.getElementById("image").files[0];
+  const name=document.getElementById("name").value.trim();
+  const note=document.getElementById("note").value.trim();
+  const file=document.getElementById("image").files[0];
 
-    let img="";
-    if(file) img=await toBase64(file);
+  if(!note){
+    setStatus("❌ يرجى كتابة الملاحظة أولاً","red");
+    return;
+  }
 
-    await fetch(scriptURL,{
-        method:"POST",
-        body:JSON.stringify({type:"add",name,note,image:img})
+  setStatus("⏳ جاري الإرسال...","#2563eb");
+
+  let img="";
+  if(file){
+    img = await toBase64(file);
+  }
+
+  try{
+    const res = await fetch(scriptURL,{
+      method:"POST",
+      body:JSON.stringify({ type:"add", name, note, image:img })
     });
 
-    loadReplies();
+    const result = await res.json();
+    if(result.success){
+      setStatus("✅ تم إرسال الملاحظة بنجاح","#16a34a");
+      document.getElementById("name").value="";
+      document.getElementById("note").value="";
+      document.getElementById("image").value="";
+      loadReplies();
+    }else{
+      setStatus("❌ خطأ: "+(result.error||"غير معروف"),"red");
+    }
+  }catch(e){
+    setStatus("❌ تعذر الاتصال بالخادم","red");
+  }
 }
 
-/* LOAD REPLIES */
 async function loadReplies(){
-    let r=await fetch(scriptURL,{method:"POST",body:JSON.stringify({type:"get"})});
-    let data=await r.json();
-
-    let box=document.getElementById("replies");
+  try{
+    const res = await fetch(scriptURL,{
+      method:"POST",
+      body:JSON.stringify({ type:"get" })
+    });
+    const result = await res.json();
+    const box=document.getElementById("replies");
     box.innerHTML="";
 
-    data.data.filter(n=>n.reply).forEach(n=>{
-        box.innerHTML+=`
-            <div class="note">
-                <strong>👤 ${n.name}</strong><br>
-                ${n.note.replace(/\n/g,"<br>")}
-                ${n.image?`<img src="${n.image}" onclick="showImg('${n.image}')">`:''}
+    if(!result.success || !Array.isArray(result.data)){
+      box.innerHTML="<p>لا توجد بيانات متاحة حالياً</p>";
+      return;
+    }
 
-                <div style="margin-top:10px;color:#16a34a;">
-                    ✔ رد الأستاذ:<br>${n.reply.replace(/\n/g,"<br>")}
-                </div>
+    // نعرض فقط ما يوجد له رد
+    const replied = result.data.filter(n=>n.reply && n.reply.trim()!=="");
 
-                ${n.replyImage?`<img src="${n.replyImage}" onclick="showImg('${n.replyImage}')">`:''}
-            </div>
-        `;
+    if(replied.length===0){
+      box.innerHTML="<p>لا توجد ملاحظات مردود عليها حتى الآن.</p>";
+      return;
+    }
+
+    replied.sort((a,b)=>(b.row||0)-(a.row||0));
+
+    replied.forEach(n=>{
+      box.innerHTML += `
+        <div class="note">
+          <div class="note-header">
+            <span>👤 ${n.name || "مجهول"}</span>
+            <span style="font-size:12px;color:#64748b;">
+              ${formatDate(n.date)}
+            </span>
+          </div>
+          <div>${(n.note||"").replace(/\n/g,"<br>")}</div>
+          ${n.image ? `<img src="${n.image}" onclick="showImg('${n.image}')">` : ""}
+          <div class="reply-box">
+            <strong>✔ رد الأستاذ:</strong><br>
+            ${(n.reply||"").replace(/\n/g,"<br>")}
+            ${n.replyImage ? `<img src="${n.replyImage}" onclick="showImg('${n.replyImage}')">` : ""}
+          </div>
+        </div>
+      `;
     });
+
+  }catch(e){
+    document.getElementById("replies").innerHTML="<p>حدث خطأ أثناء تحميل الردود.</p>";
+  }
 }
 
 function showImg(src){
-    document.getElementById("modalImg").src=src;
-    document.getElementById("imgModal").style.display="flex";
+  document.getElementById("modalImg").src=src;
+  document.getElementById("imgModal").style.display="flex";
+}
+
+function formatDate(d){
+  if(!d) return "";
+  try{
+    const date = new Date(d);
+    if(isNaN(date.getTime())) return "";
+    return date.toLocaleString("ar-OM",{hour12:false});
+  }catch(e){
+    return "";
+  }
 }
 
 loadReplies();
