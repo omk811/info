@@ -549,14 +549,25 @@ function fillSelectedBox() {
     }
 
     box.innerHTML = `
-        <strong>👤 ${selectedNote.name || "مجهول"}</strong><br>
-        <div style="margin-top:4px;white-space:pre-wrap;">${selectedNote.note || ""}</div>
-        ${selectedNote.image ? "<div style='margin-top:4px;font-size:12px;color:var(--muted)'>📷 الملاحظة تحتوي على صورة.</div>" : ""}
-        ${selectedNote.reply || selectedNote.replyImage
-            ? "<div style='margin-top:6px;font-size:12px;color:var(--success)'>✔ توجد إجابة محفوظة مسبقًا.</div>"
-            : "<div style='margin-top:6px;font-size:12px;color:var(--warning)'>⏳ لا يوجد رد بعد.</div>"
-        }
-    `;
+    <strong>👤 ${selectedNote.name || "مجهول"}</strong><br>
+
+    <div style="margin-top:4px;white-space:pre-wrap;">
+        ${selectedNote.note || ""}
+    </div>
+
+    ${selectedNote.image ? `
+        <div style="margin-top:8px">
+            <img src="${selectedNote.image}" 
+                 style="max-width:100%;border-radius:12px;">
+        </div>
+    ` : ""}
+
+    ${selectedNote.reply || selectedNote.replyImage
+        ? "<div style='margin-top:6px;font-size:12px;color:var(--success)'>✔ توجد إجابة محفوظة مسبقًا.</div>"
+        : "<div style='margin-top:6px;font-size:12px;color:var(--warning)'>⏳ لا يوجد رد بعد.</div>"
+    }
+`;
+
 
     replyText.value = selectedNote.reply || "";
     imgInput.value = "";
