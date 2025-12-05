@@ -2,74 +2,109 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة الإدارة</title>
+
+<title>لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+
 <style>
-    body { font-family:Cairo; background:#eef1f5; padding:20px; }
-    .panel, .loginBox { 
-        max-width:900px; margin:auto; background:white; padding:25px;
-        border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); 
+    body {
+        font-family:"Cairo", sans-serif;
+        background: linear-gradient(135deg,#eef2ff,#faf5ff);
+        padding:30px;
     }
-    .note { background:#fff; padding:15px; border-radius:10px;
-            border-right:5px solid #f59e0b; margin:10px 0; cursor:pointer; }
-    .replyBox { margin-top:30px; background:#fff; padding:20px; border-radius:10px; }
-    input { width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; margin:10px 0; }
-    button { padding:12px; border:none; border-radius:10px; cursor:pointer; font-size:16px; }
+
+    .login-box, .dashboard {
+        max-width:900px;
+        margin:auto;
+        background:white;
+        padding:30px;
+        border-radius:20px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 { text-align:center; color:#4f46e5; }
+
+    input {
+        width:100%;
+        padding:14px;
+        border:#ddd solid 1px;
+        border-radius:12px;
+        margin-top:10px;
+        font-size:16px;
+    }
+
+    button {
+        width:100%;
+        padding:14px;
+        background:linear-gradient(135deg,#4f46e5,#7c3aed);
+        color:white;
+        border:none;
+        border-radius:12px;
+        font-size:18px;
+        cursor:pointer;
+        margin-top:15px;
+    }
+
+    .note {
+        background:white;
+        padding:18px;
+        border-radius:14px;
+        margin:10px 0;
+        border-right:5px solid #4f46e5;
+        cursor:pointer;
+        box-shadow:0 5px 12px rgba(0,0,0,0.05);
+        transition:0.3s;
+    }
+
+    .note:hover { transform:translateX(-5px); }
+
+    .reply-box {
+        background:#f8fafc;
+        padding:20px;
+        border-radius:14px;
+        margin-top:25px;
+    }
 </style>
 </head>
 
 <body>
 
-<!-- صندوق تسجيل الدخول -->
-<div id="loginBox" class="loginBox">
-    <h2 style="text-align:center;color:#2563eb;">🔐 تسجيل الدخول</h2>
-
+<div id="loginBox" class="login-box">
+    <h2>🔐 تسجيل الدخول</h2>
     <input id="pass" type="password" placeholder="أدخل كلمة السر">
-
-    <button onclick="login()" 
-        style="background:#2563eb;color:white;width:100%;margin-top:10px;">
-        دخول
-    </button>
-
-    <p id="loginStatus" style="color:red;text-align:center;margin-top:10px;"></p>
+    <button onclick="login()">دخول</button>
+    <p id="loginStatus" style="color:red;text-align:center;"></p>
 </div>
 
-<!-- لوحة الإدارة -->
-<div id="panel" class="panel" style="display:none;">
-    <h2 style="color:#2563eb;text-align:center;">⚙️ لوحة التحكم</h2>
+<div id="dashboard" class="dashboard" style="display:none;">
+    <h2>⚙️ لوحة التحكم</h2>
 
     <div id="notesList"></div>
 
-    <div class="replyBox">
+    <div class="reply-box">
         <h3>🔄 الرد على الملاحظة</h3>
-        <textarea id="reply" rows="3" placeholder="اكتب الرد هنا..."></textarea>
-        <br><br>
-        <button onclick="sendReply()" 
-                style="padding:12px;background:#10b981;color:white;border:none;border-radius:10px;">
-            إرسال الرد
-        </button>
+        <textarea id="reply" rows="3" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;"></textarea>
+        <button onclick="sendReply()">إرسال الرد</button>
     </div>
 </div>
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
-const correctPassword = "aysha123";  // كلمة السر هنا فقط
+const PASSWORD = "aysha123";
 
 let selectedRow = null;
 
-/************** تسجيل الدخول **************/
 function login() {
-    const pass = document.getElementById("pass").value;
-
-    if (pass === correctPassword) {
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("panel").style.display = "block";
+    const inp = document.getElementById("pass").value;
+    if (inp === PASSWORD) {
+        loginBox.style.display = "none";
+        dashboard.style.display = "block";
         loadNotes();
     } else {
-        document.getElementById("loginStatus").innerHTML = "❌ كلمة السر غير صحيحة";
+        loginStatus.innerHTML = "❌ كلمة السر غير صحيحة";
     }
 }
 
-/************** تحميل الملاحظات **************/
 async function loadNotes() {
     const res = await fetch(scriptURL, {
         method:"POST",
@@ -77,13 +112,12 @@ async function loadNotes() {
     });
 
     const data = await res.json();
-    const list = document.getElementById("notesList");
-    list.innerHTML = "";
+    notesList.innerHTML = "";
 
     data.data.forEach(n=>{
-        list.innerHTML += `
+        notesList.innerHTML += `
             <div class="note" onclick="select(${n.row})">
-                <b>${n.name}</b> - <i>${n.status}</i><br>
+                <b>${n.name}</b> — <span>${n.status}</span><br>
                 ${n.note}
             </div>
         `;
@@ -92,13 +126,11 @@ async function loadNotes() {
 
 function select(row) {
     selectedRow = row;
-    alert("تم اختيار الملاحظة رقم: " + row);
+    alert("تم اختيار الملاحظة رقم " + row);
 }
 
-/************** إرسال الرد **************/
 async function sendReply() {
     if (!selectedRow) return alert("اختر ملاحظة أولاً");
-
     const reply = document.getElementById("reply").value;
 
     await fetch(scriptURL, {
