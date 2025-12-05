@@ -2,146 +2,653 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-
-<title>لوحة التحكم</title>
+<title>لوحة التحكم – صندوق الملاحظات</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
+    :root {
+        --primary: #4f46e5;
+        --secondary: #7c3aed;
+        --bg: #eef2ff;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-        font-family:"Cairo", sans-serif;
-        background: linear-gradient(135deg,#eef2ff,#faf5ff);
-        padding:30px;
+        margin: 0;
+        padding: 30px 15px;
+        font-family: "Cairo", sans-serif;
+        background: radial-gradient(circle at top, #c7d2fe, #faf5ff);
     }
 
-    .login-box, .dashboard {
-        max-width:900px;
-        margin:auto;
-        background:white;
-        padding:30px;
-        border-radius:20px;
-        box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    .centered {
+        max-width: 1000px;
+        margin: auto;
     }
 
-    h2 { text-align:center; color:#4f46e5; }
+    .card {
+        background: rgba(255,255,255,0.95);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 18px 40px rgba(15,23,42,0.15);
+        margin-bottom: 25px;
+    }
 
-    input {
-        width:100%;
-        padding:14px;
-        border:#ddd solid 1px;
-        border-radius:12px;
-        margin-top:10px;
-        font-size:16px;
+    h2 {
+        margin: 0 0 15px;
+        color: #111827;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        font-family: inherit;
+        font-size: 15px;
+        margin-top: 8px;
+        margin-bottom: 10px;
+        outline: none;
+        transition: 0.2s;
+        background: #f9fafb;
+    }
+
+    input:focus, textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+        background: white;
     }
 
     button {
-        width:100%;
-        padding:14px;
-        background:linear-gradient(135deg,#4f46e5,#7c3aed);
-        color:white;
-        border:none;
-        border-radius:12px;
-        font-size:18px;
-        cursor:pointer;
-        margin-top:15px;
+        border: none;
+        border-radius: 14px;
+        padding: 11px 16px;
+        font-size: 15px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 600;
+        transition: 0.2s;
     }
 
-    .note {
-        background:white;
-        padding:18px;
-        border-radius:14px;
-        margin:10px 0;
-        border-right:5px solid #4f46e5;
-        cursor:pointer;
-        box-shadow:0 5px 12px rgba(0,0,0,0.05);
-        transition:0.3s;
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        width: 100%;
+        margin-top: 5px;
     }
 
-    .note:hover { transform:translateX(-5px); }
-
-    .reply-box {
-        background:#f8fafc;
-        padding:20px;
-        border-radius:14px;
-        margin-top:25px;
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(79,70,229,0.35);
     }
+
+    .login-status {
+        text-align: center;
+        font-size: 13px;
+        color: var(--error);
+        min-height: 18px;
+    }
+
+    /* Dashboard layout */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1.5fr;
+        gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Stats */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 700px) {
+        .stats-row {
+            grid-template-columns: repeat(2, minmax(0,1fr));
+        }
+    }
+
+    .stat-card {
+        padding: 10px 12px;
+        border-radius: 16px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        font-size: 13px;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .stat-value {
+        font-size: 18px;
+        font-weight: 800;
+        margin-top: 3px;
+    }
+
+    /* Filters */
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .filter-btn {
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: #f3f4f6;
+        color: #374151;
+        font-size: 13px;
+        cursor: pointer;
+        border: 1px solid transparent;
+    }
+
+    .filter-btn.active {
+        background: #eef2ff;
+        border-color: var(--primary);
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    /* Notes list */
+    .notes-list {
+        max-height: 520px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .note-item {
+        background: white;
+        border-radius: 16px;
+        padding: 12px 13px;
+        margin-bottom: 10px;
+        border-right: 4px solid #e5e7eb;
+        box-shadow: 0 4px 12px rgba(15,23,42,0.06);
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .note-item:hover {
+        transform: translateX(-3px);
+    }
+
+    .note-item.selected {
+        border-right-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(79,70,229,0.25);
+        background: #eef2ff;
+    }
+
+    .note-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+
+    .note-name {
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .note-status-pill {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 999px;
+    }
+
+    .note-status-new {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .note-status-replied {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .note-body {
+        white-space: pre-wrap;
+        color: #374151;
+    }
+
+    .note-meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+    }
+
+    /* Reply pane */
+    .reply-pane-title {
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #111827;
+    }
+
+    .selected-note-box {
+        background: #f9fafb;
+        border-radius: 14px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+
+    .selected-note-box strong {
+        display: inline-block;
+        margin-bottom: 3px;
+    }
+
+    .reply-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+        flex: 1;
+    }
+
+    .btn-success {
+        background: #10b981;
+        color: white;
+        flex: 2;
+    }
+
+    .small {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+    }
+
+    /* Toast */
+    #toast {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #111827;
+        color: #f9fafb;
+        padding: 9px 18px;
+        border-radius: 999px;
+        font-size: 13px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+        z-index: 9999;
+    }
+
+    #toast.show {
+        opacity: 1;
+        bottom: 24px;
+    }
+
+    #toast.success { background: #16a34a; }
+    #toast.error { background: #dc2626; }
+    #toast.info { background: #2563eb; }
+
 </style>
 </head>
 
 <body>
+<div id="toast"></div>
 
-<div id="loginBox" class="login-box">
-    <h2>🔐 تسجيل الدخول</h2>
-    <input id="pass" type="password" placeholder="أدخل كلمة السر">
-    <button onclick="login()">دخول</button>
-    <p id="loginStatus" style="color:red;text-align:center;"></p>
-</div>
+<div class="centered">
 
-<div id="dashboard" class="dashboard" style="display:none;">
-    <h2>⚙️ لوحة التحكم</h2>
+    <!-- شاشة الدخول -->
+    <div id="loginCard" class="card">
+        <h2>🔐 تسجيل الدخول للوحة التحكم</h2>
+        <label for="pass">كلمة السر</label>
+        <input id="pass" type="password" placeholder="أدخل كلمة السر (للمعلم فقط)">
+        <button class="btn-primary" onclick="login()">دخول</button>
+        <div id="loginStatus" class="login-status"></div>
+    </div>
 
-    <div id="notesList"></div>
+    <!-- لوحة التحكم -->
+    <div id="dashboardCard" class="card" style="display:none;">
+        <h2>⚙️ لوحة إدارة الملاحظات</h2>
 
-    <div class="reply-box">
-        <h3>🔄 الرد على الملاحظة</h3>
-        <textarea id="reply" rows="3" style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;"></textarea>
-        <button onclick="sendReply()">إرسال الرد</button>
+        <!-- صف الإحصائيات -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">إجمالي الملاحظات</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">جديدة</div>
+                <div class="stat-value" id="statNew">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">تم الرد</div>
+                <div class="stat-value" id="statReplied">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">بها صور</div>
+                <div class="stat-value" id="statImages">0</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- قائمة الملاحظات -->
+            <div>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all" onclick="applyFilter('all', this)">الكل</button>
+                    <button class="filter-btn" data-filter="new" onclick="applyFilter('new', this)">الجديدة</button>
+                    <button class="filter-btn" data-filter="replied" onclick="applyFilter('replied', this)">تم الرد</button>
+                    <button class="filter-btn" data-filter="image" onclick="applyFilter('image', this)">بها صورة</button>
+                </div>
+
+                <div id="notesList" class="notes-list">
+                    <p style="font-size:13px;color:var(--muted);">جاري تحميل الملاحظات...</p>
+                </div>
+            </div>
+
+            <!-- مساحة الرد -->
+            <div>
+                <div class="reply-pane-title">📝 الملاحظة المحددة</div>
+                <div id="selectedBox" class="selected-note-box">
+                    <span class="small">اختر ملاحظة من القائمة لعرضها هنا والرد عليها.</span>
+                </div>
+
+                <label for="replyText">نص الرد</label>
+                <textarea id="replyText" rows="4" placeholder="اكتب ردك على الطالب هنا..."></textarea>
+                <div class="small">يمكنك وضع روابط، وسيتم عرضها كما هي للطالب.</div>
+
+                <label for="replyImage">صورة للرد (اختياري)</label>
+                <input id="replyImage" type="file" accept="image/*">
+
+                <div class="reply-actions">
+                    <button class="btn-danger" onclick="confirmDelete()">حذف الملاحظة</button>
+                    <button class="btn-success" onclick="sendReply()">حفظ الرد</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec"; // ضع رابط الـ Web App هنا
 const PASSWORD = "aysha123";
 
-let selectedRow = null;
+let allNotes = [];
+let currentFilter = "all";
+let selectedNote = null;
 
+/******** Toast ********/
+function showToast(message, type = "info") {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.className = "";
+    toast.classList.add("show", type);
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500);
+}
+
+/******** تحويل إلى Base64 ********/
+function toBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+    });
+}
+
+/******** تسجيل الدخول ********/
 function login() {
-    const inp = document.getElementById("pass").value;
-    if (inp === PASSWORD) {
-        loginBox.style.display = "none";
-        dashboard.style.display = "block";
+    const pass = document.getElementById("pass").value.trim();
+    const status = document.getElementById("loginStatus");
+
+    if (pass === PASSWORD) {
+        document.getElementById("loginCard").style.display = "none";
+        document.getElementById("dashboardCard").style.display = "block";
         loadNotes();
     } else {
-        loginStatus.innerHTML = "❌ كلمة السر غير صحيحة";
+        status.textContent = "❌ كلمة السر غير صحيحة";
     }
 }
 
+/******** تحميل الملاحظات ********/
 async function loadNotes() {
-    const res = await fetch(scriptURL, {
-        method:"POST",
-        body:JSON.stringify({ type:"get" })
-    });
+    const list = document.getElementById("notesList");
+    list.innerHTML = `<p style="font-size:13px;color:var(--muted);">جاري تحميل الملاحظات...</p>`;
 
-    const data = await res.json();
-    notesList.innerHTML = "";
+    try {
+        const res = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({ type: "get" })
+        });
+        const result = await res.json();
 
-    data.data.forEach(n=>{
-        notesList.innerHTML += `
-            <div class="note" onclick="select(${n.row})">
-                <b>${n.name}</b> — <span>${n.status}</span><br>
-                ${n.note}
+        if (!result.success) {
+            list.innerHTML = `<p style="font-size:13px;color:var(--error);">فشل تحميل الملاحظات.</p>`;
+            return;
+        }
+
+        allNotes = result.data || [];
+        updateStats();
+        renderNotes();
+
+    } catch (err) {
+        list.innerHTML = `<p style="font-size:13px;color:var(--error);">تعذر الاتصال بالخادم.</p>`;
+    }
+}
+
+/******** تحديث الإحصائيات ********/
+function updateStats() {
+    const total = allNotes.length;
+    const replied = allNotes.filter(n => n.reply || n.replyImage).length;
+    const withImages = allNotes.filter(n => n.image).length;
+    const fresh = allNotes.filter(n => !n.reply && !n.replyImage).length;
+
+    document.getElementById("statTotal").textContent = total;
+    document.getElementById("statReplied").textContent = replied;
+    document.getElementById("statImages").textContent = withImages;
+    document.getElementById("statNew").textContent = fresh;
+}
+
+/******** تطبيق الفلتر ********/
+function applyFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderNotes();
+}
+
+/******** عرض الملاحظات حسب الفلتر ********/
+function renderNotes() {
+    const list = document.getElementById("notesList");
+    list.innerHTML = "";
+
+    let notes = [...allNotes];
+
+    if (currentFilter === "new") {
+        notes = notes.filter(n => !n.reply && !n.replyImage);
+    } else if (currentFilter === "replied") {
+        notes = notes.filter(n => n.reply || n.replyImage);
+    } else if (currentFilter === "image") {
+        notes = notes.filter(n => n.image);
+    }
+
+    if (!notes.length) {
+        list.innerHTML = `<p style="font-size:13px;color:var(--muted);">لا توجد ملاحظات مطابقة للتصفية الحالية.</p>`;
+        return;
+    }
+
+    notes.forEach(n => {
+        const hasReply = !!(n.reply || n.replyImage);
+        const isSelected = selectedNote && selectedNote.row === n.row;
+        const statusClass = hasReply ? "note-status-replied" : "note-status-new";
+        const statusText = hasReply ? "تم الرد" : "جديدة";
+
+        const item = document.createElement("div");
+        item.className = "note-item" + (isSelected ? " selected" : "");
+        item.onclick = () => selectNote(n.row);
+
+        item.innerHTML = `
+            <div class="note-header">
+                <span class="note-name">👤 ${n.name || "مجهول"}</span>
+                <span class="note-status-pill ${statusClass}">${statusText}</span>
+            </div>
+            <div class="note-body">${(n.note || "").substring(0, 120)}${(n.note || "").length > 120 ? "..." : ""}</div>
+            <div class="note-meta">
+                صف: ${n.row} 
+                ${n.image ? "• 📷" : ""} 
+                ${hasReply ? "• ✔" : ""}
             </div>
         `;
+        list.appendChild(item);
     });
 }
 
-function select(row) {
-    selectedRow = row;
-    alert("تم اختيار الملاحظة رقم " + row);
+/******** اختيار ملاحظة ********/
+function selectNote(row) {
+    selectedNote = allNotes.find(n => n.row === row);
+    document.querySelectorAll(".note-item").forEach(el => el.classList.remove("selected"));
+
+    const items = document.querySelectorAll(".note-item");
+    items.forEach(el => {
+        if (el.textContent.includes("صف: " + row)) {
+            el.classList.add("selected");
+        }
+    });
+
+    fillSelectedBox();
 }
 
+/******** تعبئة صندوق الملاحظة المحددة ********/
+function fillSelectedBox() {
+    const box = document.getElementById("selectedBox");
+    const replyText = document.getElementById("replyText");
+    const imgInput = document.getElementById("replyImage");
+
+    if (!selectedNote) {
+        box.innerHTML = `<span class="small">اختر ملاحظة من القائمة لعرضها هنا.</span>`;
+        return;
+    }
+
+    box.innerHTML = `
+        <strong>👤 ${selectedNote.name || "مجهول"}</strong><br>
+        <div style="margin-top:4px;white-space:pre-wrap;">${selectedNote.note || ""}</div>
+        ${selectedNote.image ? "<div style='margin-top:4px;font-size:12px;color:var(--muted)'>📷 الملاحظة تحتوي على صورة.</div>" : ""}
+        ${selectedNote.reply || selectedNote.replyImage
+            ? "<div style='margin-top:6px;font-size:12px;color:var(--success)'>✔ توجد إجابة محفوظة مسبقًا.</div>"
+            : "<div style='margin-top:6px;font-size:12px;color:var(--warning)'>⏳ لا يوجد رد بعد.</div>"
+        }
+    `;
+
+    replyText.value = selectedNote.reply || "";
+    imgInput.value = "";
+}
+
+/******** إرسال الرد ********/
 async function sendReply() {
-    if (!selectedRow) return alert("اختر ملاحظة أولاً");
-    const reply = document.getElementById("reply").value;
+    if (!selectedNote) {
+        showToast("اختر ملاحظة أولاً", "error");
+        return;
+    }
 
-    await fetch(scriptURL, {
-        method:"POST",
-        body:JSON.stringify({ type:"reply", row:selectedRow, reply })
-    });
+    const replyText = document.getElementById("replyText").value.trim();
+    const imgInput = document.getElementById("replyImage");
 
-    alert("تم إرسال الرد");
-    loadNotes();
+    if (!replyText && !imgInput.files[0]) {
+        showToast("اكتب الرد أو أرفق صورة على الأقل", "error");
+        return;
+    }
+
+    let replyImage64 = "";
+    if (imgInput.files[0]) {
+        const file = imgInput.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("❌ حجم صورة الرد أكبر من 5MB", "error");
+            return;
+        }
+        replyImage64 = await toBase64(file);
+    }
+
+    try {
+        const res = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({
+                type: "reply",
+                row: selectedNote.row,
+                reply: replyText,
+                replyImage: replyImage64
+            })
+        });
+
+        const result = await res.json();
+        if (result.success) {
+            showToast("✅ تم حفظ الرد", "success");
+            await loadNotes();
+            selectedNote = allNotes.find(n => n.row === selectedNote.row) || null;
+            fillSelectedBox();
+        } else {
+            showToast("❌ فشل حفظ الرد", "error");
+        }
+    } catch (err) {
+        showToast("❌ فشل الاتصال بالخادم", "error");
+    }
+}
+
+/******** تأكيد الحذف ********/
+function confirmDelete() {
+    if (!selectedNote) {
+        showToast("اختر ملاحظة أولاً", "error");
+        return;
+    }
+    if (confirm("هل تريد بالتأكيد حذف هذه الملاحظة؟ هذا الإجراء لا يمكن التراجع عنه.")) {
+        deleteNote();
+    }
+}
+
+/******** حذف الملاحظة ********/
+async function deleteNote() {
+    try {
+        const res = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({
+                type: "delete",
+                row: selectedNote.row
+            })
+        });
+        const result = await res.json();
+        if (result.success) {
+            showToast("🗑️ تم حذف الملاحظة", "success");
+            selectedNote = null;
+            document.getElementById("replyText").value = "";
+            document.getElementById("replyImage").value = "";
+            document.getElementById("selectedBox").innerHTML =
+                `<span class="small">اختر ملاحظة من القائمة لعرضها هنا.</span>`;
+            loadNotes();
+        } else {
+            showToast("❌ فشل الحذف", "error");
+        }
+    } catch (err) {
+        showToast("❌ فشل الاتصال بالخادم", "error");
+    }
 }
 </script>
-
 </body>
 </html>
