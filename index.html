@@ -2,191 +2,397 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>صندوق الملاحظات</title>
-
+<title>صندوق الملاحظات – الأستاذ خليل البلوشي</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
+    :root {
+        --primary: #2563eb;
+        --secondary: #7c3aed;
+        --bg: #eef2ff;
+        --card-bg: rgba(255,255,255,0.9);
+        --text: #0f172a;
+        --muted: #6b7280;
+        --success: #10b981;
+        --error: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-        font-family: "Cairo", sans-serif;
-        background: linear-gradient(135deg, #e0e7ff, #fdf2f8);
         margin: 0;
         padding: 40px 15px;
+        font-family: "Cairo", sans-serif;
+        background: radial-gradient(circle at top, #bfdbfe, #fdf2f8);
+        color: var(--text);
     }
 
     .container {
-        max-width: 650px;
+        max-width: 800px;
         margin: auto;
     }
 
     .card {
-        background: rgba(255,255,255,0.75);
+        background: var(--card-bg);
         backdrop-filter: blur(10px);
-        padding: 25px;
-        border-radius: 20px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-        margin-bottom: 35px;
+        border-radius: 24px;
+        padding: 24px 20px;
+        box-shadow: 0 18px 45px rgba(15,23,42,0.18);
+        margin-bottom: 30px;
     }
 
-    h1 {
+    .header-title {
         text-align: center;
-        color: #2563eb;
-        font-size: 30px;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
+    }
+
+    .header-title h1 {
+        font-size: 28px;
+        margin: 0;
+        color: var(--primary);
+    }
+
+    .header-title p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    label {
+        font-weight: 600;
+        font-size: 15px;
+        margin-top: 10px;
+        display: block;
     }
 
     input, textarea {
         width: 100%;
-        padding: 14px;
-        border: none;
+        margin-top: 6px;
+        margin-bottom: 14px;
+        padding: 12px 14px;
         border-radius: 14px;
-        margin: 10px 0;
-        background: #f1f5f9;
-        font-size: 16px;
+        border: 2px solid #e5e7eb;
+        background: #f9fafb;
+        font-size: 15px;
         outline: none;
-        border: 2px solid transparent;
-        transition: 0.3s;
+        transition: 0.25s;
+        font-family: inherit;
     }
 
     input:focus, textarea:focus {
-        border-color: #2563eb;
+        border-color: var(--primary);
         background: white;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
     }
 
-    .btn {
+    .file-input {
+        padding: 8px 0;
+    }
+
+    .btn-primary {
         width: 100%;
-        padding: 14px;
-        font-size: 18px;
+        padding: 13px;
+        border-radius: 16px;
         border: none;
-        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 700;
         cursor: pointer;
-        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
         color: white;
-        transition: 0.3s;
+        transition: 0.25s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
 
-    .btn:hover {
-        opacity: 0.9;
+    .btn-primary:hover {
         transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(37,99,235,0.35);
     }
 
     .admin-btn {
-        width: 220px;
-        padding: 12px;
-        background: #475569;
-        color: white;
-        border-radius: 14px;
-        font-size: 16px;
-        cursor: pointer;
-        margin: 20px auto 0;
-        display: block;
-        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin: 10px auto 0;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: #111827;
+        color: #e5e7eb;
+        font-size: 14px;
         text-decoration: none;
-        transition: 0.3s;
+        transition: 0.25s;
     }
 
     .admin-btn:hover {
-        background: #1e293b;
-        transform: translateY(-2px);
+        background: #020617;
+        transform: translateY(-1px);
+    }
+
+    h2 {
+        font-size: 20px;
+        margin: 0 0 10px;
+        color: #111827;
+    }
+
+    .notes-list {
+        margin-top: 10px;
     }
 
     .note {
         background: white;
-        border-radius: 16px;
-        padding: 15px;
-        margin: 10px 0;
-        border-right: 5px solid #2563eb;
-        box-shadow: 0 5px 12px rgba(0,0,0,0.05);
-        animation: fadeIn 0.4s ease;
+        border-radius: 18px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        border-right: 5px solid var(--primary);
+        box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+        animation: fadeIn 0.3s ease;
+        font-size: 14px;
     }
+
+    .note-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .note-name {
+        font-weight: 700;
+        color: #111827;
+        font-size: 14px;
+    }
+
+    .note-status {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .note-body {
+        margin-top: 4px;
+        margin-bottom: 6px;
+        white-space: pre-wrap;
+    }
+
+    .note-reply {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px dashed #e5e7eb;
+        font-size: 13px;
+        color: #065f46;
+    }
+
+    /* Toast */
+    #toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #111827;
+        color: #f9fafb;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+        z-index: 9999;
+    }
+
+    #toast.show {
+        opacity: 1;
+        bottom: 28px;
+        pointer-events: auto;
+    }
+
+    #toast.success { background: #16a34a; }
+    #toast.error { background: #dc2626; }
+    #toast.info { background: #2563eb; }
 
     @keyframes fadeIn {
-        from {opacity:0; transform:translateY(5px);}
-        to {opacity:1; transform:translateY(0);}
+        from { opacity:0; transform:translateY(4px); }
+        to { opacity:1; transform:translateY(0); }
     }
 
+    @media (max-width: 600px) {
+        body { padding: 20px 10px; }
+        .card { padding: 18px 14px; }
+        .header-title h1 { font-size: 22px; }
+    }
 </style>
 </head>
 
 <body>
+<div id="toast"></div>
 
 <div class="container">
 
-    <h1>📮 صندوق الملاحظات</h1>
-
     <div class="card">
-        <input id="name" placeholder="اسمك الكريم">
-        <textarea id="note" rows="4" placeholder="اكتب ملاحظتك هنا..."></textarea>
+        <div class="header-title">
+            <h1>📮 صندوق الملاحظات</h1>
+            <p>أرسل ملاحظتك أو سؤالك، وسيتم الرد عليك من قبل الأستاذ.</p>
+        </div>
 
-        <label style="font-size:14px;font-weight:bold;">إضافة صورة (اختياري)</label>
-        <input type="file" id="image">
+        <label for="name">الاسم (أو اسم مستعار)</label>
+        <input id="name" type="text" placeholder="مثال: طالب مجتهد">
 
-        <button class="btn" onclick="sendNote()">إرسال الملاحظة</button>
-        <p id="status" style="text-align:center;color:#16a34a;margin-top:10px;"></p>
+        <label for="note">نص الملاحظة / السؤال</label>
+        <textarea id="note" rows="4" placeholder="اكتب هنا..." maxlength="1000"></textarea>
+
+        <label>إضافة صورة (اختياري)</label>
+        <input id="image" type="file" class="file-input" accept="image/*">
+
+        <button class="btn-primary" id="sendBtn" onclick="sendNote()">
+            <span>إرسال الملاحظة</span> <span>📤</span>
+        </button>
+
+        <a href="admin.html" class="admin-btn">
+            ⚙️ لوحة التحكم (المعلم)
+        </a>
     </div>
 
-    <a href="admin.html" class="admin-btn">⚙️ لوحة التحكم</a>
-
-    <h2 style="margin-top:30px;color:#334155;">💬 الملاحظات المردود عليها</h2>
-    <div id="replies"></div>
-
+    <div class="card">
+        <h2>💬 ملاحظات تم الرد عليها</h2>
+        <div id="notesContainer" class="notes-list">
+            <p style="font-size:13px;color:var(--muted);">جاري التحميل...</p>
+        </div>
+    </div>
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec"; // ضع رابط الـ Web App هنا
 
-/***** إرسال الملاحظة *****/
-async function sendNote() {
-    const name = name.value.trim();
-    const note = document.getElementById("note").value.trim();
-    const file = document.getElementById("image").files[0];
-
-    let base64 = "";
-    if (file) base64 = await toBase64(file);
-
-    await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({ type:"add", name, note, image:base64 })
-    });
-
-    status.innerHTML = "تم الإرسال ✔";
-
-    loadReplies();
+/******** Toast ********/
+function showToast(message, type = "info") {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.className = "";
+    toast.classList.add("show", type);
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500);
 }
 
-/**** صورة Base64 ****/
+/******** تحويل الصورة إلى Base64 ********/
 function toBase64(file) {
-    return new Promise((resolve)=>{
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = ()=> resolve(reader.result);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
         reader.readAsDataURL(file);
     });
 }
 
-/***** تحميل الردود *****/
+/******** إرسال الملاحظة ********/
+async function sendNote() {
+    const nameInput = document.getElementById("name");
+    const noteInput = document.getElementById("note");
+    const imgInput = document.getElementById("image");
+    const btn = document.getElementById("sendBtn");
+
+    const name = nameInput.value.trim() || "مجهول";
+    const note = noteInput.value.trim();
+
+    if (!note) {
+        showToast("❌ الرجاء كتابة الملاحظة أولًا", "error");
+        return;
+    }
+
+    let img64 = "";
+    if (imgInput.files[0]) {
+        const file = imgInput.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("❌ حجم الصورة أكبر من 5MB", "error");
+            return;
+        }
+        img64 = await toBase64(file);
+    }
+
+    btn.disabled = true;
+    btn.style.opacity = 0.7;
+
+    try {
+        const res = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({
+                type: "add",
+                name,
+                note,
+                image: img64
+            })
+        });
+
+        const result = await res.json();
+        if (result.success) {
+            showToast("✅ تم إرسال الملاحظة بنجاح", "success");
+            nameInput.value = "";
+            noteInput.value = "";
+            imgInput.value = "";
+            loadReplies();
+        } else {
+            showToast("❌ حدث خطأ في الإرسال", "error");
+        }
+    } catch (err) {
+        showToast("❌ فشل الاتصال بالخادم", "error");
+    } finally {
+        btn.disabled = false;
+        btn.style.opacity = 1;
+    }
+}
+
+/******** تحميل الملاحظات المردود عليها ********/
 async function loadReplies() {
-    const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({ type:"get" })
-    });
+    const container = document.getElementById("notesContainer");
+    container.innerHTML = `<p style="font-size:13px;color:var(--muted);">جاري التحميل...</p>`;
 
-    const data = await res.json();
-    const box = document.getElementById("replies");
-    box.innerHTML = "";
+    try {
+        const res = await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({ type: "get" })
+        });
+        const result = await res.json();
 
-    data.data.filter(r=>r.reply).forEach(n=>{
-        box.innerHTML += `
-            <div class="note">
-                <b>👤 ${n.name}</b><br>
-                ${n.note}<br><br>
-                <span style="color:#16a34a;">✔ رد الأستاذ:</span> ${n.reply}
-            </div>
-        `;
-    });
+        if (!result.success) {
+            container.innerHTML = `<p style="font-size:13px;color:var(--error);">فشل تحميل الملاحظات.</p>`;
+            return;
+        }
+
+        const notes = (result.data || []).filter(n => n.reply || n.replyImage);
+
+        if (!notes.length) {
+            container.innerHTML = `<p style="font-size:14px;color:var(--muted);">لا توجد ملاحظات مردود عليها حتى الآن.</p>`;
+            return;
+        }
+
+        container.innerHTML = "";
+        notes.forEach(n => {
+            container.innerHTML += `
+                <div class="note">
+                    <div class="note-header">
+                        <span class="note-name">👤 ${n.name || "مجهول"}</span>
+                        <span class="note-status">تم الرد</span>
+                    </div>
+                    <div class="note-body">${(n.note || "").replace(/\n/g,"<br>")}</div>
+                    <div class="note-reply">
+                        <strong>رد الأستاذ:</strong><br>
+                        ${(n.reply || "").replace(/\n/g,"<br>")}
+                    </div>
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        container.innerHTML = `<p style="font-size:13px;color:var(--error);">تعذر الاتصال بالخادم.</p>`;
+    }
 }
 
 loadReplies();
 </script>
-
 </body>
 </html>
