@@ -2,351 +2,78 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة الإدارة – ملاحظات الطلاب</title>
-
+<title>لوحة الإدارة</title>
 <style>
-    body {
-        font-family: "Cairo", sans-serif;
-        background: #f0f4f8;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    h1 {
-        text-align: center;
-        color: #1e40af;
-    }
-
-    .login-box, .panel {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        margin-top: 20px;
-    }
-
-    input, textarea {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        margin-bottom: 15px;
-        font-size: 16px;
-    }
-
-    button {
-        background: #2563eb;
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-left: 5px;
-    }
-
-    button:hover {
-        background: #1e3a8a;
-    }
-
-    .note-card {
-        background: #ffffff;
-        border-right: 5px solid #2563eb;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 5px 12px rgba(0,0,0,0.08);
-        cursor: pointer;
-    }
-
-    .note-card.replied {
-        border-right-color: #10b981;
-        background: #f0fdf4;
-    }
-
-    .note-card.pending {
-        border-right-color: #f59e0b;
-        background: #fff7ed;
-    }
-
-    .reply-box {
-        padding: 15px;
-        background: #e0f7eb;
-        border-radius: 10px;
-        margin-top: 10px;
-    }
-
-    .note-image, .reply-image {
-        max-width: 100%;
-        border-radius: 10px;
-        margin-top: 10px;
-    }
-
-    .flex {
-        display: flex;
-        gap: 20px;
-    }
-
-    .notes-list {
-        flex: 2;
-    }
-
-    .reply-section {
-        flex: 1;
-        background: white;
-        padding: 15px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        height: fit-content;
-        position: sticky;
-        top: 20px;
-    }
+    body { font-family:Cairo; background:#eef1f5; padding:20px; }
+    .panel { max-width:900px; margin:auto; background:white; padding:25px;
+             border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); }
+    .note { background:#fff; padding:15px; border-radius:10px;
+            border-right:5px solid #f59e0b; margin:10px 0; cursor:pointer; }
+    .replyBox { margin-top:30px; background:#fff; padding:20px; border-radius:10px; }
 </style>
 </head>
 
 <body>
+<div class="panel">
+    <h2 style="color:#2563eb;text-align:center;">⚙️ لوحة التحكم</h2>
 
-<div class="container">
+    <div id="notesList"></div>
 
-<h1>لوحة إدارة الملاحظات</h1>
-
-<!-- Login box -->
-<div class="login-box" id="loginBox">
-    <h2>تسجيل الدخول</h2>
-    <input type="password" id="password" placeholder="أدخل كلمة المرور">
-    <button onclick="login()">دخول</button>
-    <p id="loginStatus" style="color:red; font-weight:600;"></p>
-</div>
-
-<!-- Admin Panel -->
-<div class="panel" id="adminPanel" style="display:none;">
-    
-    <button onclick="logout()" style="background:#ef4444;">تسجيل خروج</button>
-    <button onclick="loadNotes()">تحديث</button>
-
-    <h2>الملاحظات الواردة</h2>
-
-    <div class="flex">
-        <!-- NOTES LIST -->
-        <div class="notes-list" id="notesList">
-            جاري التحميل...
-        </div>
-
-        <!-- REPLY SECTION -->
-        <div class="reply-section">
-            <h3>الرد على الملاحظة</h3>
-
-            <p><strong>اسم المرسل:</strong> <span id="selectedName">—</span></p>
-            <p><strong>التاريخ:</strong> <span id="selectedDate">—</span></p>
-
-            <p><strong>النص:</strong></p>
-            <div id="selectedMessage" style="background:#f3f4f6; padding:10px; border-radius:8px;"></div>
-
-            <div id="selectedImageBox"></div>
-
-            <textarea id="replyText" rows="4" placeholder="اكتب الرد..."></textarea>
-
-            <p>صورة مع الرد (اختياري):</p>
-            <input type="file" id="replyImageInput" accept="image/*">
-
-            <button onclick="sendReply()">إرسال الرد</button>
-            <button onclick="deleteNote()" style="background:#dc2626;">حذف الملاحظة</button>
-
-            <p id="replyStatus" style="margin-top:10px;"></p>
-        </div>
+    <div class="replyBox">
+        <h3>🔄 الرد على الملاحظة</h3>
+        <textarea id="reply" rows="3" placeholder="اكتب الرد هنا..."></textarea>
+        <br><br>
+        <button onclick="sendReply()" style="padding:12px;background:#10b981;color:white;border:none;border-radius:10px;">إرسال الرد</button>
     </div>
-
-</div>
-
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbwslO8ZjlGHiuvaeKlZrB5czcEbz_so6mqJGnLC9LFF6M_fI-irHDFULd5lcYC_rj8a/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
 
-let sessionToken = null;
 let selectedRow = null;
 
-/* ---------------------- LOGIN ---------------------- */
-async function login() {
-    const password = document.getElementById("password").value.trim();
-    const loginStatus = document.getElementById("loginStatus");
-
-    loginStatus.textContent = "جاري التحقق...";
-
-    const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({
-            action: "login",
-            password
-        })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-        loginStatus.textContent = "";
-        sessionToken = data.token;
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        loadNotes();
-    } else {
-        loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
-    }
-}
-
-/* ---------------------- LOGOUT ---------------------- */
-function logout() {
-    sessionToken = null;
-    document.getElementById("adminPanel").style.display = "none";
-    document.getElementById("loginBox").style.display = "block";
-}
-
-
-/* ---------------------- LOAD NOTES ---------------------- */
+/******** تحميل الملاحظات ********/
 async function loadNotes() {
+    const res = await fetch(scriptURL, {
+        method:"POST",
+        body:JSON.stringify({ type:"get" })
+    });
+
+    const data = await res.json();
     const list = document.getElementById("notesList");
-    list.innerHTML = "جاري التحميل...";
+    list.innerHTML = "";
 
-    const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({
-            action: "getAllNotes",
-            token: sessionToken
-        })
+    data.data.forEach(n=>{
+        list.innerHTML += `
+            <div class="note" onclick="select(${n.row})">
+                <b>${n.name}</b> - <i>${n.status}</i><br>
+                ${n.note}
+            </div>
+        `;
     });
-
-    const data = await res.json();
-
-    if (!data.success) {
-        list.innerHTML = "❌ فشل تحميل البيانات";
-        return;
-    }
-
-    let html = "";
-
-    data.data.forEach(n => {
-        html += `
-        <div class="note-card ${n.reply || n.replyImageURL ? "replied" : "pending"}"
-            onclick="selectNote(${n.row})">
-            
-            <strong>${n.Name}</strong>
-            <br>
-            <small>${n.date}</small>
-
-            <p>${n.Message}</p>
-
-            ${n.imageURL ? `<img src="${n.imageURL}" class="note-image">` : ""}
-        </div>`;
-    });
-
-    list.innerHTML = html;
 }
 
-
-/* ---------------------- SELECT NOTE ---------------------- */
-function selectNote(row) {
+function select(row) {
     selectedRow = row;
-
-    fetchNoteDetails(row);
+    alert("تم اختيار الملاحظة رقم: " + row);
 }
 
-async function fetchNoteDetails(row) {
-    const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({
-            action: "getAllNotes",
-            token: sessionToken
-        })
-    });
-
-    const data = await res.json();
-    const note = data.data.find(n => n.row === row);
-
-    document.getElementById("selectedName").textContent = note.Name;
-    document.getElementById("selectedDate").textContent = note.date;
-    document.getElementById("selectedMessage").textContent = note.Message;
-
-    if (note.imageURL) {
-        document.getElementById("selectedImageBox").innerHTML =
-            `<img src="${note.imageURL}" class="note-image">`;
-    } else {
-        document.getElementById("selectedImageBox").innerHTML = "";
-    }
-}
-
-/* ---------------------- SEND REPLY ---------------------- */
+/******** إرسال الرد ********/
 async function sendReply() {
-    if (!selectedRow) return;
+    if (!selectedRow) return alert("اختر ملاحظة أولاً");
 
-    const replyText = document.getElementById("replyText").value.trim();
-    const replyFile = document.getElementById("replyImageInput").files[0];
-    const replyStatus = document.getElementById("replyStatus");
+    const reply = document.getElementById("reply").value;
 
-    replyStatus.textContent = "جاري الإرسال...";
-
-    let replyImage64 = "";
-    if (replyFile) {
-        const reader = new FileReader();
-        replyImage64 = await new Promise(resolve => {
-            reader.onload = e => resolve(e.target.result);
-            reader.readAsDataURL(replyFile);
-        });
-    }
-
-    const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({
-            action: "updateNote",
-            row: selectedRow,
-            reply: replyText,
-            replyImage: replyImage64,
-            token: sessionToken
-        })
+    await fetch(scriptURL, {
+        method:"POST",
+        body:JSON.stringify({ type:"reply", row:selectedRow, reply })
     });
 
-    const data = await res.json();
-
-    if (data.success) {
-        replyStatus.style.color = "green";
-        replyStatus.textContent = "✅ تم إرسال الرد";
-        loadNotes();
-    } else {
-        replyStatus.style.color = "red";
-        replyStatus.textContent = "❌ خطأ في الإرسال";
-    }
+    alert("تم إرسال الرد");
+    loadNotes();
 }
 
-/* ---------------------- DELETE NOTE ---------------------- */
-async function deleteNote() {
-    if (!selectedRow) return;
-
-    if (!confirm("هل تريد حذف هذه الملاحظة نهائيًا؟")) return;
-
-    const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({
-            action: "deleteNote",
-            row: selectedRow,
-            token: sessionToken
-        })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-        alert("🗑️ تم حذف الملاحظة");
-        loadNotes();
-    } else {
-        alert("❌ فشل الحذف");
-    }
-}
+loadNotes();
 </script>
 
 </body>
