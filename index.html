@@ -1,320 +1,747 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <title>صندوق الملاحظات – الأستاذ خليل البلوشي</title>
 
-<title>صندوق الملاحظات – الطلاب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-soft: #6366f1;
+      --accent: #ec4899;
+      --bg: #f3f4f6;
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #0f172a;
+      --muted: #6b7280;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 14px 35px rgba(15, 23, 42, 0.16);
+    }
 
-<style>
-:root{
-  --primary:#4f46e5;
-  --secondary:#7c3aed;
-  --bg1:#e0e7ff;
-  --bg2:#fdf2f8;
-  --card:rgba(255,255,255,0.85);
-  --text:#0f172a;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-*{box-sizing:border-box;}
+    body {
+      font-family: "Cairo", sans-serif;
+      background: radial-gradient(circle at top, #e0e7ff 0%, #f9fafb 50%, #f3f4f6 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 80px; /* مساحة للناف بار السفلي */
+    }
 
-body{
-  font-family:"Cairo",sans-serif;
-  margin:0;
-  padding-bottom:80px;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
-  color:var(--text);
-}
+    .app-shell {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 12px 14px 24px;
+    }
 
-.container{
-  width:100%;
-  max-width:640px;
-  margin:auto;
-  padding:15px;
-}
+    /* الهيدر */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 10px 4px 16px;
+      background: linear-gradient(to bottom, rgba(243, 244, 246, 0.9), rgba(243, 244, 246, 0));
+      backdrop-filter: blur(10px);
+    }
 
-/* بطاقة رئيسية */
-.card{
-  background:var(--card);
-  backdrop-filter:blur(14px);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 10px 30px rgba(15,23,42,0.18);
-}
+    .hero-card {
+      background: linear-gradient(135deg, #4f46e5, #ec4899);
+      border-radius: var(--radius-lg);
+      padding: 16px 16px 14px;
+      color: #fff;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-/* الحقول */
-input,textarea{
-  width:100%;
-  padding:13px;
-  border-radius:14px;
-  border:none;
-  background:#eef2ff;
-  margin-top:8px;
-  font-size:15px;
-}
+    .hero-title {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-/* زر إرسال */
-.btn{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
-  border-radius:14px;
-  border:none;
-  font-size:17px;
-  color:white;
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  cursor:pointer;
-}
+    .hero-title span.icon {
+      font-size: 22px;
+    }
 
-/* الملاحظات */
-.note{
-  background:white;
-  border-radius:16px;
-  padding:14px;
-  margin:14px 0;
-  border-right:6px solid var(--primary);
-  box-shadow:0 6px 16px rgba(15,23,42,0.12);
-}
+    .hero-sub {
+      font-size: 13px;
+      opacity: 0.96;
+    }
 
-.note-header{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  font-size:14px;
-  margin-bottom:6px;
-}
+    .hero-badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
 
-.note img{
-  width:100%;
-  border-radius:10px;
-  margin-top:8px;
-  cursor:pointer;
-}
+    .hero-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.18);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
 
-/* رد الأستاذ */
-.reply-box{
-  margin-top:10px;
-  border-radius:10px;
-  padding:10px;
-  background:#ecfdf5;
-  color:#064e3b;
-  font-size:14px;
-}
+    /* المحتوى الرئيسي */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
 
-/* Bottom Navigation */
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:white;
-  box-shadow:0 -6px 16px rgba(15,23,42,0.18);
-  display:flex;
-  justify-content:space-around;
-  padding:8px 0;
-  z-index:2000;
-}
+    @media (min-width: 900px) {
+      .main-grid {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        align-items: flex-start;
+      }
+    }
 
-.bottom-nav a{
-  text-decoration:none;
-  color:#475569;
-  font-size:13px;
-  text-align:center;
-}
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 16px 14px 18px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
 
-/* مودال الصورة */
-#imgModal{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:3000;
-}
-#imgModal img{
-  max-width:95%;
-  max-height:95%;
-  border-radius:14px;
-}
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
 
-/* هواتف */
-@media(max-width:600px){
-  .card{padding:14px;border-radius:14px;}
-  .note{padding:12px;border-radius:12px;}
-  input,textarea{font-size:14px;padding:11px;}
-  .btn{font-size:15px;padding:12px;}
-}
-</style>
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title span.icon {
+      font-size: 18px;
+    }
+
+    .card-caption {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* فورم الملاحظة */
+    .form-group {
+      margin-top: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .required::after {
+      content: " *";
+      color: #dc2626;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: var(--radius-md);
+      background: #eef2ff;
+      padding: 11px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      transition: box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+      max-height: 220px;
+    }
+
+    input:focus,
+    textarea:focus {
+      background: #e0e7ff;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.35);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .file-row {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .file-label {
+      flex: 1;
+      border-radius: var(--radius-md);
+      padding: 9px 10px;
+      border: 1px dashed rgba(148, 163, 184, 0.9);
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(249, 250, 251, 0.9);
+    }
+
+    .file-label span.icon {
+      font-size: 16px;
+      color: var(--primary);
+    }
+
+    #image {
+      font-size: 12px;
+      flex: 1;
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 12px;
+      border-radius: var(--radius-md);
+      border: none;
+      padding: 11px 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary-soft), var(--accent));
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(79, 70, 229, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s;
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 7px 16px rgba(79, 70, 229, 0.35);
+      filter: brightness(0.96);
+    }
+
+    .status-text {
+      font-size: 12px;
+      margin-top: 6px;
+      text-align: center;
+      min-height: 16px;
+    }
+
+    /* قائمة الردود */
+    .list-scroll {
+      max-height: 460px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-top: 4px;
+    }
+
+    .note-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px 10px 11px;
+      margin-bottom: 10px;
+      border-right: 4px solid var(--primary);
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .note-card {
+        background: #0f172a;
+      }
+    }
+
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .note-name {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .note-badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4338ca;
+    }
+
+    .note-date {
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .note-body {
+      font-size: 13px;
+      margin-top: 4px;
+      white-space: pre-wrap;
+      color: var(--text);
+    }
+
+    .note-image {
+      margin-top: 6px;
+      border-radius: 10px;
+      width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+    }
+
+    .reply-box {
+      background: #ecfdf5;
+      border-radius: 10px;
+      padding: 7px 8px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #064e3b;
+    }
+
+    .reply-title {
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .reply-image {
+      margin-top: 5px;
+      border-radius: 10px;
+      width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.2);
+    }
+
+    .empty-state {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      padding: 14px 8px;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      inset-inline: 0;
+      bottom: 0;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.24);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+
+    .bottom-nav span.icon {
+      font-size: 18px;
+    }
+
+    .bottom-nav a.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Modal الصورة */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.93);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal img {
+      max-width: 95vw;
+      max-height: 90vh;
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      inset-inline-start: 16px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* Scrollbar بسيط */
+    .list-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .list-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.8);
+      border-radius: 999px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
+<div class="app-shell" id="top">
 
-  <h2 style="text-align:center;margin-bottom:10px;color:var(--primary);">
-    📮 صندوق الملاحظات – الأستاذ خليل البلوشي
-  </h2>
+  <header class="app-header">
+    <div class="hero-card">
+      <div class="hero-title">
+        <span class="icon">📮</span>
+        <span>صندوق الملاحظات – الصف الخامس</span>
+      </div>
+      <p class="hero-sub">
+        أرسل ملاحظتك أو سؤالك، وسيتم الرد عليك هنا بعد مراجعتها من قبل الأستاذ خليل البلوشي.
+      </p>
+      <div class="hero-badge-row">
+        <span class="hero-badge">🎧 مناسب للهواتف</span>
+        <span class="hero-badge">📝 ملاحظات الطلاب وأولياء الأمور</span>
+      </div>
+    </div>
+  </header>
 
-  <!-- نموذج إرسال ملاحظة -->
-  <div class="card" id="form">
-    <label>👤 الاسم (يمكن مستعار)</label>
-    <input id="name" placeholder="مثال: طالب مجتهد">
+  <main class="main-grid">
 
-    <label style="margin-top:10px;">✏️ الملاحظة / السؤال</label>
-    <textarea id="note" rows="4" placeholder="اكتب ملاحظتك أو سؤالك هنا..."></textarea>
+    <!-- نموذج الإرسال -->
+    <section class="card" id="sendSection">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <span class="icon">📝</span>
+            <span>إرسال ملاحظة جديدة</span>
+          </div>
+          <p class="card-caption">استخدم اسمًا مستعارًا إن أحببت، والمحتوى يهمنا أكثر من الاسم.</p>
+        </div>
+      </div>
 
-    <label style="margin-top:10px;">📷 صورة (اختياري)</label>
-    <input type="file" id="image" accept="image/*">
+      <div class="form-group">
+        <label for="name" class="required">الاسم</label>
+        <input id="name" type="text" placeholder="مثال: طالب مجتهد">
+        <p class="hint">يمكن كتابة اسمك الحقيقي أو اسم مستعار.</p>
+      </div>
 
-    <button class="btn" onclick="sendNote()">إرسال الملاحظة</button>
-    <p id="formStatus" style="text-align:center;font-size:14px;margin-top:8px;"></p>
-  </div>
+      <div class="form-group">
+        <label for="note" class="required">نص الملاحظة / السؤال</label>
+        <textarea id="note" placeholder="اكتب ملاحظتك، سؤالك، رأيك في الدرس..."></textarea>
+        <p class="hint">من الأفضل أن تكون الملاحظة واضحة ومحددة في نقطة واحدة أو نقطتين فقط.</p>
+      </div>
 
-  <!-- الملاحظات المردود عليها -->
-  <h3 style="margin-top:22px;margin-bottom:8px;">💬 ملاحظات تم الرد عليها</h3>
-  <div id="replies"></div>
+      <div class="form-group">
+        <label>صورة (اختياري)</label>
+        <div class="file-row">
+          <div class="file-label">
+            <span class="icon">📷</span>
+            <span id="fileLabel">لم يتم اختيار صورة</span>
+          </div>
+          <input type="file" id="image" accept="image/*">
+        </div>
+        <p class="hint">يمكن رفع لقطة شاشة للسؤال أو الواجب بحد أقصى 5MB.</p>
+      </div>
 
+      <button class="btn" id="sendBtn" onclick="sendNote()">
+        <span>إرسال الملاحظة</span> <span>📤</span>
+      </button>
+      <p id="formStatus" class="status-text"></p>
+    </section>
+
+    <!-- الردود السابقة -->
+    <section class="card" id="replySection">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <span class="icon">💬</span>
+            <span>ملاحظات تم الرد عليها</span>
+          </div>
+          <p class="card-caption">ستظهر هنا الملاحظات التي قام الأستاذ بالرد عليها.</p>
+        </div>
+      </div>
+
+      <div id="replies" class="list-scroll">
+        <div class="empty-state">جاري تحميل الملاحظات...</div>
+      </div>
+    </section>
+
+  </main>
 </div>
 
-<!-- Bottom Nav -->
-<div class="bottom-nav">
-  <a href="#top">🏠 الرئيسية</a>
-  <a href="#form">📝 إرسال</a>
-  <a href="#replies">💬 الردود</a>
-  <a href="admin.html">⚙️ الإدارة</a>
-</div>
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="#top" class="active">
+    <span class="icon">🏠</span>
+    <span>الرئيسية</span>
+  </a>
+  <a href="#sendSection">
+    <span class="icon">📝</span>
+    <span>إرسال</span>
+  </a>
+  <a href="#replySection">
+    <span class="icon">💬</span>
+    <span>الردود</span>
+  </a>
+  <a href="admin.html">
+    <span class="icon">⚙️</span>
+    <span>الإدارة</span>
+  </a>
+</nav>
 
-<!-- Image Modal -->
-<div id="imgModal" onclick="this.style.display='none'">
-  <img id="modalImg">
+<!-- Modal عرض الصورة -->
+<div id="imgModal" class="modal" onclick="hideModal()">
+  <button class="modal-close" type="button" onclick="hideModal();event.stopPropagation();">إغلاق ✕</button>
+  <img id="modalImg" alt="">
 </div>
 
 <script>
-// ضع هنا رابط الويب آب بعد النشر
-const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
+  // ضع هنا رابط الويب آب بعد النشر
+  const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
 
-function setStatus(msg,color="#0f172a"){
-  const el=document.getElementById("formStatus");
-  el.textContent=msg;
-  el.style.color=color;
-}
+  const nameInput = document.getElementById("name");
+  const noteInput = document.getElementById("note");
+  const fileInput = document.getElementById("image");
+  const fileLabel = document.getElementById("fileLabel");
+  const formStatus = document.getElementById("formStatus");
+  const sendBtn = document.getElementById("sendBtn");
+  const repliesBox = document.getElementById("replies");
 
-function toBase64(file){
-  return new Promise(res=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result);
-    r.readAsDataURL(file);
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files[0]) {
+      fileLabel.textContent = fileInput.files[0].name;
+    } else {
+      fileLabel.textContent = "لم يتم اختيار صورة";
+    }
   });
-}
 
-async function sendNote(){
-  const name=document.getElementById("name").value.trim();
-  const note=document.getElementById("note").value.trim();
-  const file=document.getElementById("image").files[0];
-
-  if(!note){
-    setStatus("❌ يرجى كتابة الملاحظة أولاً","red");
-    return;
+  function setStatus(message, color = "#4b5563") {
+    formStatus.textContent = message;
+    formStatus.style.color = color;
   }
 
-  setStatus("⏳ جاري الإرسال...","#2563eb");
-
-  let img="";
-  if(file){
-    img = await toBase64(file);
-  }
-
-  try{
-    const res = await fetch(scriptURL,{
-      method:"POST",
-      body:JSON.stringify({ type:"add", name, note, image:img })
+  function toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = err => reject(err);
+      reader.readAsDataURL(file);
     });
-
-    const result = await res.json();
-    if(result.success){
-      setStatus("✅ تم إرسال الملاحظة بنجاح","#16a34a");
-      document.getElementById("name").value="";
-      document.getElementById("note").value="";
-      document.getElementById("image").value="";
-      loadReplies();
-    }else{
-      setStatus("❌ خطأ: "+(result.error||"غير معروف"),"red");
-    }
-  }catch(e){
-    setStatus("❌ تعذر الاتصال بالخادم","red");
   }
-}
 
-async function loadReplies(){
-  try{
-    const res = await fetch(scriptURL,{
-      method:"POST",
-      body:JSON.stringify({ type:"get" })
-    });
-    const result = await res.json();
-    const box=document.getElementById("replies");
-    box.innerHTML="";
+  async function sendNote() {
+    const name = nameInput.value.trim() || "مجهول";
+    const note = noteInput.value.trim();
 
-    if(!result.success || !Array.isArray(result.data)){
-      box.innerHTML="<p>لا توجد بيانات متاحة حالياً</p>";
+    if (!note) {
+      setStatus("❌ يرجى كتابة الملاحظة أولاً.", "#dc2626");
       return;
     }
 
-    // نعرض فقط ما يوجد له رد
-    const replied = result.data.filter(n=>n.reply && n.reply.trim()!=="");
-
-    if(replied.length===0){
-      box.innerHTML="<p>لا توجد ملاحظات مردود عليها حتى الآن.</p>";
-      return;
+    let img64 = "";
+    const file = fileInput.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setStatus("❌ حجم الصورة أكبر من 5MB.", "#dc2626");
+        return;
+      }
+      img64 = await toBase64(file);
     }
 
-    replied.sort((a,b)=>(b.row||0)-(a.row||0));
+    sendBtn.disabled = true;
+    sendBtn.style.filter = "grayscale(0.2)";
+    setStatus("⏳ جاري إرسال الملاحظة...", "#4f46e5");
 
-    replied.forEach(n=>{
-      box.innerHTML += `
-        <div class="note">
-          <div class="note-header">
-            <span>👤 ${n.name || "مجهول"}</span>
-            <span style="font-size:12px;color:#64748b;">
-              ${formatDate(n.date)}
-            </span>
+    try {
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "add",
+          name: name,
+          note: note,
+          image: img64
+        })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        setStatus("✅ تم إرسال الملاحظة بنجاح.", "#16a34a");
+        nameInput.value = "";
+        noteInput.value = "";
+        fileInput.value = "";
+        fileLabel.textContent = "لم يتم اختيار صورة";
+        loadReplies();
+      } else {
+        setStatus("❌ خطأ: " + (result.error || "غير معروف"), "#dc2626");
+      }
+    } catch (e) {
+      console.error(e);
+      setStatus("❌ تعذر الاتصال بالخادم. حاول لاحقاً.", "#dc2626");
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.style.filter = "none";
+    }
+  }
+
+  async function loadReplies() {
+    repliesBox.innerHTML = '<div class="empty-state">جاري تحميل الملاحظات...</div>';
+
+    try {
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({ type: "get" })
+      });
+      const result = await res.json();
+
+      if (!result.success || !Array.isArray(result.data)) {
+        repliesBox.innerHTML = '<div class="empty-state">لا توجد بيانات متاحة حالياً.</div>';
+        return;
+      }
+
+      // فقط الملاحظات التي لها رد
+      const replied = result.data.filter(n => n.reply && n.reply.trim() !== "");
+      if (replied.length === 0) {
+        repliesBox.innerHTML = '<div class="empty-state">لا توجد ملاحظات تم الرد عليها بعد.</div>';
+        return;
+      }
+
+      replied.sort((a, b) => (b.row || 0) - (a.row || 0));
+
+      let html = "";
+      replied.forEach(n => {
+        html += renderNote(n);
+      });
+
+      repliesBox.innerHTML = html;
+    } catch (e) {
+      console.error(e);
+      repliesBox.innerHTML = '<div class="empty-state">حدث خطأ أثناء تحميل الملاحظات.</div>';
+    }
+  }
+
+  function renderNote(n) {
+    const name = n.name || "مجهول";
+    const date = formatDate(n.date);
+    const note = (n.note || "").replace(/\n/g, "<br>");
+    const reply = (n.reply || "").replace(/\n/g, "<br>");
+    const image = n.image || "";
+    const replyImage = n.replyImage || "";
+
+    return `
+      <article class="note-card">
+        <div class="note-header">
+          <div>
+            <div class="note-name">
+              <span>👤</span><span>${name}</span>
+            </div>
+            <span class="note-badge">تم الرد</span>
           </div>
-          <div>${(n.note||"").replace(/\n/g,"<br>")}</div>
-          ${n.image ? `<img src="${n.image}" onclick="showImg('${n.image}')">` : ""}
-          <div class="reply-box">
-            <strong>✔ رد الأستاذ:</strong><br>
-            ${(n.reply||"").replace(/\n/g,"<br>")}
-            ${n.replyImage ? `<img src="${n.replyImage}" onclick="showImg('${n.replyImage}')">` : ""}
-          </div>
+          <div class="note-date">${date}</div>
         </div>
-      `;
-    });
-
-  }catch(e){
-    document.getElementById("replies").innerHTML="<p>حدث خطأ أثناء تحميل الردود.</p>";
+        <div class="note-body">${note}</div>
+        ${image ? `<img class="note-image" src="${image}" alt="صورة الملاحظة" onclick="showModal('${image}')">` : ""}
+        <div class="reply-box">
+          <div class="reply-title">
+            <span>✔</span><span>رد الأستاذ:</span>
+          </div>
+          <div>${reply}</div>
+          ${replyImage ? `<img class="reply-image" src="${replyImage}" alt="صورة الرد" onclick="showModal('${replyImage}')">` : ""}
+        </div>
+      </article>
+    `;
   }
-}
 
-function showImg(src){
-  document.getElementById("modalImg").src=src;
-  document.getElementById("imgModal").style.display="flex";
-}
-
-function formatDate(d){
-  if(!d) return "";
-  try{
-    const date = new Date(d);
-    if(isNaN(date.getTime())) return "";
-    return date.toLocaleString("ar-OM",{hour12:false});
-  }catch(e){
-    return "";
+  function formatDate(d) {
+    if (!d) return "";
+    try {
+      const dt = new Date(d);
+      if (isNaN(dt.getTime())) return "";
+      return dt.toLocaleString("ar-OM", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+    } catch {
+      return "";
+    }
   }
-}
 
-loadReplies();
+  function showModal(src) {
+    const modal = document.getElementById("imgModal");
+    const img = document.getElementById("modalImg");
+    img.src = src;
+    modal.style.display = "flex";
+  }
+
+  function hideModal() {
+    const modal = document.getElementById("imgModal");
+    modal.style.display = "none";
+    document.getElementById("modalImg").src = "";
+  }
+
+  // تحميل الردود عند فتح الصفحة
+  loadReplies();
 </script>
 
 </body>
