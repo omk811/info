@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة إدارة الملاحظات – قناة الأستاذ خليل البلوشي</title>
+    <title>لوحة إدارة الملاحظات (المشرف) – الأستاذ خليل البلوشي</title>
     
-    <!-- الخطوط -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- أيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -41,6 +38,7 @@
             line-height: 1.6;
         }
 
+        /* تخطيط الصفحة */
         .navbar {
             background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             color: var(--white);
@@ -54,10 +52,6 @@
             z-index: 100;
         }
 
-        .navbar i {
-            margin-left: 10px;
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -66,13 +60,14 @@
             grid-template-columns: 1fr 400px;
             gap: 20px;
         }
-
+        
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
             }
         }
 
+        /* البطاقات والأزرار */
         .card {
             background: var(--white);
             border-radius: 16px;
@@ -80,11 +75,6 @@
             padding: 24px;
             margin-bottom: 24px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px var(--shadow-hover);
         }
 
         .card-title {
@@ -97,19 +87,8 @@
             gap: 10px;
         }
 
-        .card-title i {
-            font-size: 22px;
-        }
-
         .form-group {
             margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
         }
 
         input, textarea {
@@ -147,41 +126,32 @@
             color: var(--white);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
         }
-
-        .btn-secondary {
-            background: var(--light);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: var(--white);
-        }
-
+        
         .btn-success {
             background: var(--success);
             color: var(--white);
         }
 
-        .btn-success:hover {
+        .btn-success:hover:not(:disabled) {
             background: #0d9668;
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
         }
-
+        
         .btn:disabled {
             background: var(--gray);
             cursor: not-allowed;
+            opacity: 0.7;
             transform: none;
             box-shadow: none;
         }
 
+        /* العدادات والتصفية */
         .counter-box {
             display: flex;
             gap: 16px;
@@ -190,63 +160,31 @@
         }
 
         .counter {
-            background: var(--white);
+            background: var(--light);
             flex: 1;
             min-width: 160px;
             text-align: center;
             padding: 20px 16px;
             border-radius: 12px;
             font-weight: 700;
-            box-shadow: 0 4px 12px var(--shadow);
-            border-right: 5px solid var(--primary);
+            box-shadow: 0 2px 6px var(--shadow);
+            border-right: 5px solid;
             transition: transform 0.3s ease;
         }
+        
+        .counter-value { font-size: 28px; }
 
-        .counter:hover {
-            transform: translateY(-5px);
-        }
+        .counter.total { border-right-color: var(--primary); }
+        .counter.total .counter-value { color: var(--primary); }
 
-        .counter-title {
-            font-size: 14px;
-            color: var(--gray);
-            margin-bottom: 8px;
-        }
+        .counter.new { border-right-color: var(--warning); }
+        .counter.new .counter-value { color: var(--warning); }
 
-        .counter-value {
-            font-size: 28px;
-            color: var(--primary);
-        }
+        .counter.replied { border-right-color: var(--success); }
+        .counter.replied .counter-value { color: var(--success); }
 
-        .counter.new {
-            border-right-color: var(--warning);
-        }
-
-        .counter.new .counter-value {
-            color: var(--warning);
-        }
-
-        .counter.replied {
-            border-right-color: var(--success);
-        }
-
-        .counter.replied .counter-value {
-            color: var(--success);
-        }
-
-        .counter.images {
-            border-right-color: #8b5cf6;
-        }
-
-        .counter.images .counter-value {
-            color: #8b5cf6;
-        }
-
-        .filter-box {
-            margin: 20px 0;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
+        .counter.images { border-right-color: #8b5cf6; }
+        .counter.images .counter-value { color: #8b5cf6; }
 
         .filter-btn {
             flex: 1;
@@ -263,7 +201,6 @@
 
         .filter-btn:hover {
             background: var(--light-gray);
-            border-color: var(--primary);
         }
 
         .filter-btn.active {
@@ -272,10 +209,12 @@
             border-color: var(--primary);
         }
 
+        /* قائمة الملاحظات وعرضها */
         .notes-list {
             margin-top: 20px;
             max-height: 600px;
             overflow-y: auto;
+            border-radius: 16px; /* لإخفاء الزوايا المستديرة للملاحظات */
         }
 
         .note-box {
@@ -283,64 +222,38 @@
             padding: 20px;
             border-radius: 16px;
             background: var(--white);
-            margin: 18px 0;
-            box-shadow: 0 4px 12px var(--shadow);
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
             transition: all 0.3s ease;
-            position: relative;
             cursor: pointer;
         }
+        
+        .note-box:last-child { margin-bottom: 0; }
 
         .note-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px var(--shadow-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow-hover);
         }
 
-        .note-box.unreplied {
-            border-right: 5px solid var(--warning);
-        }
-
-        .note-box.replied {
-            border-right: 5px solid var(--success);
-        }
+        .note-box.unreplied { border-right: 5px solid var(--warning); }
+        .note-box.replied { border-right: 5px solid var(--success); }
 
         .note-box.selected {
-            background: #f0f9ff;
+            background: #e0f2fe; /* لون أفتح للاختيار */
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .note-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
         }
 
         .note-author {
             font-weight: 700;
             font-size: 18px;
-            color: var(--primary);
-        }
-
-        .note-date {
-            font-size: 14px;
-            color: var(--gray);
+            color: var(--primary-dark);
         }
 
         .note-content {
-            margin-bottom: 16px;
-            line-height: 1.7;
+            white-space: pre-wrap; /* للحفاظ على تنسيق الأسطر الجديدة */
         }
-
-        .note-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-top: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
+        
         .reply-box {
             background: #f0fdf4;
             border-radius: 12px;
@@ -348,109 +261,8 @@
             margin-top: 16px;
             border-right: 5px solid var(--success);
         }
-
-        .reply-title {
-            font-weight: 700;
-            color: var(--success);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .reply-content {
-            line-height: 1.7;
-        }
-
-        .reply-content a {
-            color: var(--primary);
-            text-decoration: underline;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .reply-content a:hover {
-            color: var(--primary-dark);
-            text-decoration: none;
-        }
-
-        .reply-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-top: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .pending {
-            background: #fef3c7;
-            border-right: 5px solid var(--warning);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            text-align: center;
-            color: #92400e;
-            font-weight: 600;
-        }
-
-        .pending i {
-            margin-left: 8px;
-        }
-
-        .file-input-container {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-input-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px;
-            background: var(--light);
-            border: 2px dashed var(--light-gray);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .file-input-label:hover {
-            background: var(--light-gray);
-            border-color: var(--primary);
-        }
-
-        .file-input-label i {
-            color: var(--primary);
-            font-size: 20px;
-        }
-
-        .file-name {
-            margin-top: 8px;
-            font-size: 14px;
-            color: var(--gray);
-            text-align: center;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
+        
+        /* إشعارات النظام */
         #popup {
             position: fixed;
             top: 20px;
@@ -462,52 +274,8 @@
             z-index: 1000;
             display: none;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            animation: fadeInOut 2.5s ease;
         }
-
-        .popup-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .popup-error {
-            background: var(--error);
-            color: white;
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; top: 0; }
-            20% { opacity: 1; top: 20px; }
-            80% { opacity: 1; top: 20px; }
-            100% { opacity: 0; top: 0; }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: var(--light-gray);
-        }
-
-        .empty-state p {
-            font-size: 18px;
-        }
-
-        .login-form {
-            max-width: 500px;
-            margin: 40px auto;
-        }
-
-        .login-title {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
+        
         .status-message {
             padding: 12px 16px;
             border-radius: 12px;
@@ -515,102 +283,12 @@
             text-align: center;
             font-weight: 600;
         }
-
-        .status-success {
-            background: #d1fae5;
-            color: var(--success);
-            border: 1px solid #a7f3d0;
-        }
-
-        .status-error {
-            background: #fee2e2;
-            color: var(--error);
-            border: 1px solid #fecaca;
-        }
-
-        .status-loading {
-            background: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fcd34d;
-        }
-
-        .selected-note-info {
-            background: #f0f9ff;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            border-right: 4px solid var(--primary);
-        }
-
-        .selected-note-title {
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .selected-note-content {
-            color: var(--dark);
-            line-height: 1.6;
-        }
-
+        
         /* شريط التمرير المخصص */
-        .notes-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .notes-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .notes-list::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .notes-list::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
-
-        /* تحسينات للهواتف */
-        @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-                grid-template-columns: 1fr;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .navbar {
-                font-size: 20px;
-                padding: 16px;
-            }
-            
-            .counter-box {
-                gap: 12px;
-            }
-            
-            .counter {
-                min-width: calc(50% - 12px);
-            }
-            
-            .filter-box {
-                gap: 8px;
-            }
-            
-            .filter-btn {
-                min-width: calc(50% - 8px);
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
+        .notes-list::-webkit-scrollbar { width: 8px; }
+        .notes-list::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .notes-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        .notes-list::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
     </style>
 </head>
 
@@ -622,7 +300,6 @@
     </div>
 
     <div class="container">
-        <!-- نموذج تسجيل الدخول -->
         <div class="card login-form" id="loginBox">
             <h2 class="card-title login-title"><i class="fas fa-lock"></i> تسجيل الدخول</h2>
             
@@ -631,24 +308,25 @@
                 <input id="adminPass" type="password" placeholder="أدخل كلمة المرور">
             </div>
             
-            <button class="btn btn-primary" onclick="login()" style="width: 100%;">
+            <button class="btn btn-primary" id="loginBtn" style="width: 100%;">
                 <i class="fas fa-sign-in-alt"></i> دخول
             </button>
             
-            <div id="loginStatus" class="status-message status-error" style="display: none;"></div>
+            <div id="loginStatus" class="status-message" style="display: none;"></div>
         </div>
 
-        <!-- لوحة التحكم -->
         <div id="adminPanel" style="display:none;">
-            <!-- العمود الأيسر: قائمة الملاحظات -->
             <div class="main-content">
                 <div class="card">
-                    <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="location.href='index.html'">
+                    <div class="action-buttons" style="display: flex; gap: 12px;">
+                        <button class="btn btn-secondary" onclick="window.location.href='index.html'">
                             <i class="fas fa-arrow-right"></i> الرجوع للصفحة الرئيسية
                         </button>
-                        <button class="btn btn-primary" onclick="loadNotes()">
+                        <button class="btn btn-primary" id="refreshBtn">
                             <i class="fas fa-sync-alt"></i> تحديث البيانات
+                        </button>
+                        <button class="btn btn-danger" id="logoutBtn" style="background: var(--error);">
+                            <i class="fas fa-sign-out-alt"></i> خروج
                         </button>
                     </div>
                 </div>
@@ -657,7 +335,7 @@
                     <h3 class="card-title"><i class="fas fa-chart-bar"></i> إحصائيات الملاحظات</h3>
                     
                     <div class="counter-box">
-                        <div class="counter">
+                        <div class="counter total">
                             <div class="counter-title">إجمالي الملاحظات</div>
                             <div class="counter-value" id="countTotal">0</div>
                         </div>
@@ -675,19 +353,19 @@
                         </div>
                     </div>
 
-                    <div class="filter-box">
-                        <div class="filter-btn active" onclick="applyFilter('all', this)">
+                    <div class="filter-box" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="filter-btn active" data-filter="all">
                             <i class="fas fa-list"></i> الكل
-                        </div>
-                        <div class="filter-btn" onclick="applyFilter('new', this)">
+                        </button>
+                        <button class="filter-btn" data-filter="new">
                             <i class="fas fa-clock"></i> الجديدة
-                        </div>
-                        <div class="filter-btn" onclick="applyFilter('replied', this)">
+                        </button>
+                        <button class="filter-btn" data-filter="replied">
                             <i class="fas fa-check-circle"></i> تم الرد
-                        </div>
-                        <div class="filter-btn" onclick="applyFilter('img', this)">
+                        </button>
+                        <button class="filter-btn" data-filter="img">
                             <i class="fas fa-image"></i> مع صورة
-                        </div>
+                        </button>
                     </div>
                 </div>
 
@@ -695,32 +373,25 @@
                     <h3 class="card-title"><i class="fas fa-comments"></i> قائمة الملاحظات</h3>
                     
                     <div id="notesList" class="notes-list">
-                        <div class="empty-state">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <p>جاري تحميل الملاحظات...</p>
                         </div>
-                    </div>
                 </div>
             </div>
 
-            <!-- العمود الأيمن: نموذج الرد -->
             <div class="sidebar">
                 <div class="card">
                     <h3 class="card-title"><i class="fas fa-reply"></i> الرد على الملاحظة</h3>
                     
                     <div id="selectedNoteInfo" class="selected-note-info" style="display: none;">
-                        <div class="selected-note-title">
-                            <i class="fas fa-sticky-note"></i>
-                            الملاحظة المحددة:
+                         <div class="selected-note-title">
+                            <i class="fas fa-sticky-note"></i> الملاحظة المحددة (<span id="selectedNoteAuthor">...</span>)
                         </div>
                         <div class="selected-note-content" id="selectedNoteContent">
-                            <!-- سيتم عرض محتوى الملاحظة المحددة هنا -->
-                        </div>
+                            </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="replyText">نص الرد</label>
-                        <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا... يمكنك إضافة روابط وسيتم تحويلها تلقائياً إلى روابط قابلة للنقر"></textarea>
+                        <textarea id="replyText" rows="4" placeholder="اكتب الرد هنا..."></textarea>
                         <small style="color: var(--gray); margin-top: 5px; display: block;">
                             <i class="fas fa-info-circle"></i> سيتم تحويل الروابط تلقائياً إلى روابط قابلة للنقر
                         </small>
@@ -738,7 +409,7 @@
                         <div class="file-name" id="replyFileName"></div>
                     </div>
                     
-                    <button class="btn btn-success" onclick="sendReply()" id="sendReplyBtn" style="width: 100%;">
+                    <button class="btn btn-success" id="sendReplyBtn" style="width: 100%;">
                         <i class="fas fa-paper-plane"></i> إرسال الرد
                     </button>
                     
@@ -749,117 +420,265 @@
     </div>
 
     <script>
+        // *** نقطة هامة: يجب نقل كلمة المرور إلى مكان آمن في جانب الخادم (Google Apps Script) أو استخدام متغير بيئة عند النشر.
+        // تم إخفاء كلمة المرور من الكود هنا لأسباب أمنية ولنفترض أنك ستمررها عبر حقل الإدخال فقط.
+        // لن يتم تخزين كلمة المرور هنا.
         const scriptURL = "https://script.google.com/macros/s/AKfycbwFSBO_y4QL-HswJ9Rbnb5QFchewWDAxyEtxqyrYmjIijP0oQJ6VJB3wY5bv1gdgUwv/exec";
-        const adminPassword = "Aysha123";
-
+        const ADMIN_SESSION_KEY = "aysha123";
+        
         let allNotes = [];
-        let filteredNotes = [];
+        let currentFilter = 'all';
         let selectedNote = null;
-
-        // دالة لتحويل الروابط النصية إلى روابط قابلة للنقر
+        
+        // =========================================================================
+        // 1. وظائف المساعدة العامة
+        // =========================================================================
+        
+        /**
+         * يحول الروابط النصية إلى روابط HTML قابلة للنقر
+         * @param {string} text - النص المراد معالجته
+         * @returns {string} النص بعد تحويل الروابط
+         */
         function convertLinksToClickable(text) {
             if (!text) return '';
-            
-            // نمط للتعرف على الروابط (يشمل http و https)
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             
             return text.replace(urlRegex, function(url) {
-                // تنظيف الرابط من أي علامات ترقيم في النهاية
                 const cleanUrl = url.replace(/[.,!?;:]$/, '');
-                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" 
-                        style="color: #2563eb; text-decoration: underline; font-weight: 600;">
-                        ${cleanUrl}
-                        </a>`;
+                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: underline; font-weight: 600;">${cleanUrl}</a>`;
             });
         }
-
-        // إظهار رسالة منبثقة
+        
+        /**
+         * يعرض رسالة منبثقة أعلى الشاشة
+         * @param {string} msg - الرسالة المراد عرضها
+         * @param {string} type - نوع الرسالة ("success" أو "error")
+         */
         function popup(msg, type = "success") {
             const p = document.getElementById("popup");
             p.innerText = msg;
             p.className = type === "success" ? "popup-success" : "popup-error";
             p.style.display = 'block';
+            p.style.animation = 'none'; // إعادة تشغيل الحركة
+            p.offsetHeight; // لفرض إعادة التشغيل
+            p.style.animation = 'fadeInOut 2.5s ease';
             
             setTimeout(() => {
                 p.style.display = 'none';
             }, 2500);
         }
 
-        // تسجيل الدخول
-        function login() {
-            const pass = document.getElementById("adminPass").value.trim();
+        /**
+         * يحول ملف الصورة إلى base64
+         * @param {File} file - ملف الصورة
+         * @returns {Promise<string>} سلسلة Base64
+         */
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+        
+        // =========================================================================
+        // 2. وظائف الإدارة والتحقق من الجلسة
+        // =========================================================================
+        
+        /**
+         * معالجة محاولة تسجيل الدخول
+         */
+        async function handleLogin() {
+            const passInput = document.getElementById("adminPass");
+            const pass = passInput.value.trim();
             const loginStatus = document.getElementById("loginStatus");
-            
-            if (pass !== adminPassword) {
-                loginStatus.textContent = "❌ كلمة مرور غير صحيحة";
+            const loginBtn = document.getElementById("loginBtn");
+
+            if (!pass) {
+                loginStatus.textContent = "❌ الرجاء إدخال كلمة المرور";
                 loginStatus.className = "status-message status-error";
                 loginStatus.style.display = "block";
                 return;
             }
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+            loginStatus.style.display = "none";
             
-            document.getElementById("adminPanel").style.display = "grid";
+            try {
+                // بدلاً من التحقق محلياً، نرسل كلمة المرور إلى Apps Script ليتم التحقق منها
+                const res = await fetch(scriptURL, {
+                    method: "POST",
+                    body: JSON.stringify({ type: "checkPassword", password: pass })
+                });
+
+                const result = await res.json();
+
+                if (result.success) {
+                    sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+                    setupAdminPanel();
+                    popup("✔ تم تسجيل الدخول بنجاح");
+                } else {
+                    loginStatus.textContent = "❌ كلمة مرور غير صحيحة. حاول مرة أخرى.";
+                    loginStatus.className = "status-message status-error";
+                    loginStatus.style.display = "block";
+                }
+            } catch (error) {
+                loginStatus.textContent = "❌ فشل الاتصال بالخادم.";
+                loginStatus.className = "status-message status-error";
+                loginStatus.style.display = "block";
+                console.error("Login error:", error);
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول';
+            }
+        }
+        
+        /**
+         * إعداد اللوحة بعد تسجيل الدخول
+         */
+        function setupAdminPanel() {
             document.getElementById("loginBox").style.display = "none";
+            document.getElementById("adminPanel").style.display = "grid";
             loadNotes();
         }
+        
+        /**
+         * تسجيل الخروج
+         */
+        function handleLogout() {
+            sessionStorage.removeItem(ADMIN_SESSION_KEY);
+            document.getElementById("adminPanel").style.display = "none";
+            document.getElementById("loginBox").style.display = "flex";
+            document.getElementById("adminPass").value = "";
+            window.scrollTo(0, 0); // العودة لأعلى الصفحة
+            popup("🚪 تم تسجيل الخروج بنجاح", "error");
+        }
+        
+        /**
+         * التحقق من حالة الجلسة عند تحميل الصفحة
+         */
+        function checkSession() {
+            if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
+                setupAdminPanel();
+            } else {
+                document.getElementById("loginBox").style.display = "block";
+                document.getElementById("adminPanel").style.display = "none";
+            }
+        }
 
-        // تحميل الملاحظات
+        // =========================================================================
+        // 3. وظائف عرض البيانات
+        // =========================================================================
+
+        /**
+         * تحميل الملاحظات من Apps Script
+         */
         async function loadNotes() {
             const notesList = document.getElementById("notesList");
-            notesList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل الملاحظات...</p></div>';
-
+            notesList.innerHTML = '<div class="empty-state" style="text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-spinner fa-spin" style="font-size: 48px; color: var(--primary);"></i><p style="font-size: 18px;">جاري تحميل الملاحظات...</p></div>';
+            
             try {
                 const res = await fetch(scriptURL + "?getData");
                 const result = await res.json();
                 
                 if (result.success && Array.isArray(result.data)) {
-                    allNotes = result.data;
-                    filteredNotes = allNotes;
+                    // فرز الملاحظات: (غير مُردود عليها) أولاً، ثم (الأحدث)
+                    allNotes = result.data.sort((a, b) => {
+                        // 1. الجديدة أولاً
+                        if (!a.reply && b.reply) return -1;
+                        if (a.reply && !b.reply) return 1;
+                        
+                        // 2. الأحدث أولاً (افتراضياً استخدام رقم الصف `row`)
+                        return b.row - a.row; 
+                    });
+                    
                     updateCounters();
-                    renderNotes();
+                    applyFilter(currentFilter); // إعادة تطبيق الفلتر الحالي
                 } else {
-                    throw new Error(result.error || "تنسيق البيانات غير صحيح");
+                    throw new Error(result.error || "تنسيق بيانات غير صحيح");
                 }
             } catch (error) {
-                notesList.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>حدث خطأ في تحميل الملاحظات</p></div>';
+                notesList.innerHTML = '<div class="empty-state" style="text-align: center; padding: 40px; color: var(--error);"><i class="fas fa-exclamation-triangle" style="font-size: 48px; color: var(--error);"></i><p style="font-size: 18px;">حدث خطأ في تحميل الملاحظات: ' + error.message + '</p></div>';
                 console.error("Error loading notes:", error);
             }
         }
+        
+        /**
+         * تحديث العدادات الإحصائية
+         */
+        function updateCounters() {
+            const countNew = allNotes.filter(n => !n.reply).length;
+            const countReplied = allNotes.filter(n => n.reply).length;
 
-        // عرض الملاحظات
-        function renderNotes() {
+            document.getElementById("countTotal").textContent = allNotes.length;
+            document.getElementById("countNew").textContent = countNew;
+            document.getElementById("countReplied").textContent = countReplied;
+            document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
+        }
+
+        /**
+         * تطبيق التصفية وعرض الملاحظات
+         * @param {string} type - نوع الفلتر ("all", "new", "replied", "img")
+         */
+        function applyFilter(type) {
+            currentFilter = type;
+            
+            // تحديث حالة الأزرار
+            document.querySelectorAll(".filter-btn").forEach(b => {
+                b.classList.toggle("active", b.dataset.filter === type);
+            });
+
+            let filteredNotes = [];
+            if (type === "all") filteredNotes = allNotes;
+            else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
+            else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
+            else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
+
+            renderNotes(filteredNotes);
+            selectedNote = null;
+            updateSelectedNoteInfo();
+        }
+
+        /**
+         * رسم قائمة الملاحظات على الشاشة
+         * @param {Array<Object>} notes - قائمة الملاحظات المصنفة
+         */
+        function renderNotes(notes) {
             const notesList = document.getElementById("notesList");
             
-            if (filteredNotes.length === 0) {
-                notesList.innerHTML = '<div class="empty-state"><i class="far fa-comment-dots"></i><p>لا توجد ملاحظات لعرضها</p></div>';
+            if (notes.length === 0) {
+                notesList.innerHTML = '<div class="empty-state" style="text-align: center; padding: 40px; color: var(--gray);"><i class="far fa-comment-dots" style="font-size: 48px; color: var(--light-gray);"></i><p style="font-size: 18px;">لا توجد ملاحظات مطابقة لمعيار التصفية</p></div>';
                 return;
             }
 
             let out = "";
-            filteredNotes.forEach((note, index) => {
+            notes.forEach((note) => {
                 const hasReply = note.reply || note.replyImageURL;
-                const isSelected = selectedNote === index;
+                const isSelected = selectedNote && selectedNote.row === note.row;
                 
+                // استخدام رقم الصف كمعرف فريد للربط
                 out += `
-                <div class="note-box ${hasReply ? 'replied' : 'unreplied'} ${isSelected ? 'selected' : ''}" 
-                     onclick="selectNote(${index})">
-                    <div class="note-header">
+                <div class="note-box ${hasReply ? 'replied' : 'unreplied'} ${isSelected ? 'selected' : ''}" data-row="${note.row}">
+                    <div class="note-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
                         <div class="note-author">${note.Name}</div>
-                        <div class="note-date">${note.date || ""}</div>
+                        <div class="note-date" style="font-size: 14px; color: var(--gray);">${note.date || ""}</div>
                     </div>
                     <div class="note-content">${note.Message}</div>
 
                     ${note.imageURL
-                        ? `<img src="${note.imageURL}" class="note-image" alt="صورة الملاحظة" onerror="this.style.display='none'">`
+                        ? `<img src="${note.imageURL}" class="note-image" alt="صورة الملاحظة" style="width: 100%; max-height: 300px; object-fit: contain; border-radius: 12px; margin-top: 12px; box-shadow: 0 2px 8px var(--shadow);">`
                         : ""}
 
                     ${
                         hasReply
                         ? `<div class="reply-box">
-                            <div class="reply-title"><i class="fas fa-reply"></i> رد المشرف</div>
-                            ${note.reply ? `<div class="reply-content">${convertLinksToClickable(note.reply)}</div>` : ""}
-                            ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" alt="صورة الرد" onerror="this.style.display='none'">` : ""}
-                        </div>`
-                        : `<div class="pending"><i class="fas fa-clock"></i> بانتظار الرد</div>`
+                                <div class="reply-title" style="font-weight: 700; color: var(--success); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-reply"></i> رد المشرف</div>
+                                ${note.reply ? `<div class="reply-content">${convertLinksToClickable(note.reply)}</div>` : ""}
+                                ${note.replyImageURL ? `<img src="${note.replyImageURL}" class="reply-image" alt="صورة الرد" style="width: 100%; max-height: 300px; object-fit: contain; border-radius: 12px; margin-top: 12px; box-shadow: 0 2px 8px var(--shadow);">` : ""}
+                            </div>`
+                        : `<div class="pending" style="background: #fef3c7; border-right: 5px solid var(--warning); border-radius: 12px; padding: 16px; margin-top: 16px; text-align: center; color: #92400e; font-weight: 600;"><i class="fas fa-clock" style="margin-left: 8px;"></i> بانتظار الرد</div>`
                     }
                 </div>`;
             });
@@ -867,81 +686,99 @@
             notesList.innerHTML = out;
         }
 
-        // تحديث العدادات
-        function updateCounters() {
-            document.getElementById("countTotal").textContent = allNotes.length;
-            document.getElementById("countNew").textContent = allNotes.filter(n => !n.reply).length;
-            document.getElementById("countReplied").textContent = allNotes.filter(n => n.reply).length;
-            document.getElementById("countWithImg").textContent = allNotes.filter(n => n.imageURL).length;
-        }
-
-        // تطبيق الفلتر
-        function applyFilter(type, el) {
-            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-            el.classList.add("active");
-
-            if (type === "all") filteredNotes = allNotes;
-            else if (type === "new") filteredNotes = allNotes.filter(n => !n.reply);
-            else if (type === "replied") filteredNotes = allNotes.filter(n => n.reply);
-            else if (type === "img") filteredNotes = allNotes.filter(n => n.imageURL);
-
-            selectedNote = null;
-            updateSelectedNoteInfo();
-            renderNotes();
-        }
-
-        // تحديد ملاحظة للرد
-        function selectNote(index) {
-            selectedNote = index;
-            updateSelectedNoteInfo();
-            renderNotes();
+        /**
+         * تحديد ملاحظة للرد
+         * @param {number} row - رقم الصف (المعرف الفريد للملاحظة)
+         */
+        function handleNoteSelection(row) {
+            // إزالة التحديد من جميع الملاحظات
+            document.querySelectorAll(".note-box").forEach(el => el.classList.remove("selected"));
             
-            // تمرير الملاحظة المحددة إلى الأعلى (في الشاشات الصغيرة)
-            if (window.innerWidth < 1024) {
-                document.querySelector('.sidebar').scrollIntoView({ behavior: 'smooth' });
+            // تحديد الملاحظة الجديدة
+            const noteElement = document.querySelector(`.note-box[data-row="${row}"]`);
+            if (noteElement) {
+                noteElement.classList.add("selected");
+                
+                // البحث عن الملاحظة في القائمة الكلية
+                selectedNote = allNotes.find(n => n.row == row);
+                updateSelectedNoteInfo();
+                
+                // تمرير الملاحظة المحددة إلى الأعلى (في الشاشات الصغيرة)
+                if (window.innerWidth < 1024) {
+                    document.querySelector('.sidebar').scrollIntoView({ behavior: 'smooth' });
+                }
             }
         }
-
-        // تحديث معلومات الملاحظة المحددة
+        
+        /**
+         * تحديث معلومات الملاحظة المحددة في عمود الرد
+         */
         function updateSelectedNoteInfo() {
             const infoDiv = document.getElementById("selectedNoteInfo");
             const contentDiv = document.getElementById("selectedNoteContent");
+            const authorSpan = document.getElementById("selectedNoteAuthor");
             
-            if (selectedNote !== null && filteredNotes[selectedNote]) {
-                const note = filteredNotes[selectedNote];
-                contentDiv.innerHTML = `
-                    <strong>${note.Name}</strong><br>
-                    ${note.Message.substring(0, 100)}${note.Message.length > 100 ? '...' : ''}
-                `;
+            if (selectedNote) {
                 infoDiv.style.display = 'block';
+                authorSpan.textContent = selectedNote.Name;
+                contentDiv.innerHTML = `
+                    <div style="font-weight: 600;">الملاحظة:</div>
+                    <div style="color: var(--dark); margin-top: 5px;">
+                        ${selectedNote.Message.substring(0, 150)}${selectedNote.Message.length > 150 ? '...' : ''}
+                    </div>
+                `;
             } else {
                 infoDiv.style.display = 'none';
             }
         }
 
-        // إرسال الرد
+        // =========================================================================
+        // 4. وظائف الرد
+        // =========================================================================
+        
+        /**
+         * إرسال الرد إلى Apps Script
+         */
         async function sendReply() {
             const reply = document.getElementById("replyText").value.trim();
             const imgFile = document.getElementById("replyImage").files[0];
             const replyStatus = document.getElementById("replyStatus");
             const sendBtn = document.getElementById("sendReplyBtn");
+            const adminPass = document.getElementById("adminPass").value.trim(); // استخدام كلمة المرور المُدخلة لغرض التحقق من الصلاحية في جانب الخادم
 
-            if (selectedNote === null || filteredNotes.length === 0) {
+            if (!selectedNote) {
                 popup("⚠️ يرجى تحديد ملاحظة للرد عليها", "error");
                 return;
             }
 
             if (!reply && !imgFile) {
-                popup("⚠️ اكتب الرد أو أرفق صورة", "error");
+                popup("⚠️ اكتب نص الرد أو أرفق صورة للرد", "error");
                 return;
+            }
+            
+            if (!adminPass) {
+                 popup("⚠️ يجب إدخال كلمة المرور في خانة الدخول لحفظها واستخدامها في الإرسال لمرة واحدة.", "error");
+                 return;
             }
 
             sendBtn.disabled = true;
             sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            replyStatus.style.display = "block";
+            replyStatus.textContent = "جاري رفع الصورة وإرسال البيانات...";
+            replyStatus.className = "status-message status-loading";
 
             let img64 = "";
             if (imgFile) {
-                img64 = await toBase64(imgFile);
+                try {
+                    img64 = await toBase64(imgFile);
+                } catch (e) {
+                    popup("❌ خطأ في معالجة الصورة.", "error");
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
+                    replyStatus.textContent = "❌ فشل رفع الصورة.";
+                    replyStatus.className = "status-message status-error";
+                    return;
+                }
             }
 
             try {
@@ -949,10 +786,10 @@
                     method: "POST",
                     body: JSON.stringify({
                         type: "reply",
-                        row: filteredNotes[selectedNote].row,
+                        row: selectedNote.row,
                         reply: reply,
                         replyImage: img64,
-                        password: adminPassword
+                        password: adminPass // تمرير كلمة المرور للتحقق من الصلاحية في Apps Script
                     })
                 });
 
@@ -962,57 +799,72 @@
                     popup("✔ تم إرسال الرد بنجاح");
                     replyStatus.textContent = "✔ تم إرسال الرد بنجاح";
                     replyStatus.className = "status-message status-success";
-                    replyStatus.style.display = "block";
                     
                     // إعادة تعيين الحقول
                     document.getElementById("replyText").value = "";
                     document.getElementById("replyImage").value = "";
                     document.getElementById("replyFileName").textContent = "";
-                    
-                    // إعادة تحميل الملاحظات
-                    setTimeout(() => {
-                        loadNotes();
-                        selectedNote = null;
-                        updateSelectedNoteInfo();
-                    }, 1000);
+                    selectedNote = null; // إزالة التحديد
+
+                    // تحديث قائمة الملاحظات بعد فترة قصيرة
+                    setTimeout(loadNotes, 1000); 
                 } else {
                     throw new Error(result.error || "حدث خطأ غير معروف");
                 }
             } catch (error) {
                 console.error("خطأ في الإرسال:", error);
-                replyStatus.textContent = "❌ خطأ: " + error.message;
+                replyStatus.textContent = "❌ خطأ: " + (error.message || "فشل الإرسال");
                 replyStatus.className = "status-message status-error";
-                replyStatus.style.display = "block";
-                popup("❌ " + error.message, "error");
+                popup("❌ فشل إرسال الرد", "error");
             } finally {
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرد';
             }
         }
+        
+        // =========================================================================
+        // 5. تهيئة الأحداث (Listeners)
+        // =========================================================================
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            // التحقق من الجلسة أولاً
+            checkSession(); 
 
-        // تحويل الصورة إلى base64
-        function toBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // إعداد مستمعي الأحداث عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            // تحديث اسم الملف المختار للرد
-            document.getElementById('replyImage').addEventListener('change', function(e) {
-                const fileName = e.target.files[0] ? e.target.files[0].name : '';
-                document.getElementById('replyFileName').textContent = fileName;
-            });
+            // ربط حدث تسجيل الدخول
+            document.getElementById("loginBtn").addEventListener('click', handleLogin);
             
-            // السماح بالدخول باستخدام زر Enter في حقل كلمة المرور
-            document.getElementById('adminPass').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    login();
+            // تمكين تسجيل الدخول بزر Enter
+            document.getElementById("adminPass").addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+
+            // ربط زر تحديث البيانات
+            document.getElementById("refreshBtn").addEventListener('click', loadNotes);
+
+            // ربط زر تسجيل الخروج
+             document.getElementById("logoutBtn").addEventListener('click', handleLogout);
+
+            // ربط أحداث التصفية
+            document.querySelectorAll(".filter-box .filter-btn").forEach(button => {
+                button.addEventListener('click', (e) => applyFilter(e.currentTarget.dataset.filter));
+            });
+
+            // ربط حدث اختيار الملاحظة (باستخدام التفويض event delegation)
+            document.getElementById("notesList").addEventListener('click', (e) => {
+                const noteBox = e.target.closest('.note-box');
+                if (noteBox && noteBox.dataset.row) {
+                    handleNoteSelection(noteBox.dataset.row);
                 }
+            });
+
+            // ربط حدث إرسال الرد
+            document.getElementById("sendReplyBtn").addEventListener('click', sendReply);
+            
+            // تحديث اسم ملف الصورة المرفق للرد
+            document.getElementById("replyImage").addEventListener('change', (e) => {
+                const fileName = e.target.files[0] ? e.target.files[0].name : "اختر صورة";
+                document.getElementById("replyFileName").textContent = fileName;
+                document.querySelector('.file-input-label span').textContent = e.target.files[0] ? "تم اختيار صورة" : "اختر صورة";
             });
         });
     </script>
