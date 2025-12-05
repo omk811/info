@@ -28,111 +28,99 @@ html, body {
 
     * { box-sizing: border-box; }
 
-   body {
+  body {
     font-family: "Cairo", sans-serif;
     background: linear-gradient(135deg,#eef2ff,#faf5ff);
     margin: 0;
-    padding: 25px;
+    padding: 15px;
 }
 
-/* صندوق الدخول ولوحة التحكم */
+/* صندوق الدخول */
 .login-box, .dashboard {
+    width: 100%;
     max-width: 900px;
     margin: auto;
     background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-/* الإدخال */
-input, textarea {
-    width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    border: 1px solid #cbd5e1;
-    margin-top: 10px;
-    font-size: 16px;
+/* الصف الرئيسي للملاحظات + الرد */
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    box-sizing: border-box;
 }
 
-/* ملاحظة */
+/* العمودين */
+#notesList {
+    width: 50%;
+}
+
+.reply-box {
+    width: 50%;
+}
+
+/* الملاحظات */
 .note {
     background: white;
-    padding: 20px;
+    padding: 16px;
     border-radius: 14px;
     margin: 10px 0;
     border-right: 5px solid #4f46e5;
     cursor: pointer;
-    transition: 0.3s;
     box-shadow: 0 5px 12px rgba(0,0,0,0.05);
 }
 
-.note:hover { transform: translateX(-5px); }
+/* الصور */
+.note img, #selectedBox img {
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 10px;
+}
 
 /* زر العودة */
 .back-btn {
     display: inline-block;
-    padding: 10px 18px;
-    margin-bottom: 20px;
+    padding: 10px;
     background: linear-gradient(135deg,#4f46e5,#7c3aed);
     color: white;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: 0.3s;
 }
 
-.back-btn:hover {
-    transform: translateX(-4px);
-}
-
-/* صندوق الرد */
-.reply-box {
-    background: #f8fafc;
-    padding: 20px;
-    border-radius: 14px;
-    margin-top: 20px;
-}
-
-/* ===== تجاوُب الهواتف ===== */
-@media (max-width: 768px) {
-    body { padding: 10px; }
-
-    .login-box, .dashboard {
-        padding: 18px;
+/* ===== الهواتف ===== */
+@media (max-width: 900px) {
+    .dashboard {
+        flex-direction: column;
     }
 
+    #notesList, .reply-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    body { padding: 10px; }
+
     .note {
-        padding: 15px;
+        padding: 12px;
         border-radius: 12px;
     }
 
-    textarea {
+    input, textarea {
+        padding: 12px;
         font-size: 15px;
     }
 
-    .back-btn {
-        width: 100%;
-        text-align: center;
+    button {
+        padding: 12px;
+        font-size: 16px;
     }
 }
 
-/* للهواتف الأصغر */
-@media (max-width: 430px) {
-    input, textarea {
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    .note {
-        padding: 12px;
-    }
-
-    .dashboard {
-        padding: 14px;
-    }
-}
 
     @media (max-width: 900px) {
         .dashboard-grid {
