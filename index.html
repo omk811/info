@@ -371,21 +371,36 @@ async function loadReplies() {
         }
 
         container.innerHTML = "";
-        notes.forEach(n => {
-            container.innerHTML += `
-                <div class="note">
-                    <div class="note-header">
-                        <span class="note-name">👤 ${n.name || "مجهول"}</span>
-                        <span class="note-status">تم الرد</span>
-                    </div>
-                    <div class="note-body">${(n.note || "").replace(/\n/g,"<br>")}</div>
-                    <div class="note-reply">
-                        <strong>رد الأستاذ:</strong><br>
-                        ${(n.reply || "").replace(/\n/g,"<br>")}
-                    </div>
+       notes.forEach(n => {
+    container.innerHTML += `
+        <div class="note">
+
+            <div class="note-header">
+                <span class="note-name">👤 ${n.name || "مجهول"}</span>
+                <span class="note-status">تم الرد</span>
+            </div>
+
+            <div class="note-body">${(n.note || "").replace(/\n/g,"<br>")}</div>
+
+            ${n.image ? `
+                <div style="margin:10px 0;">
+                    <img src="${n.image}" style="max-width:100%;border-radius:12px;">
                 </div>
-            `;
-        });
+            ` : ''}
+
+            <div class="note-reply">
+                <strong>رد الأستاذ:</strong><br>
+                ${(n.reply || "").replace(/\n/g,"<br>")}
+            </div>
+
+            ${n.replyImage ? `
+                <div style="margin:10px 0;">
+                    <img src="${n.replyImage}" style="max-width:100%;border-radius:12px;">
+                </div>
+            ` : ''}
+        </div>
+    `;
+});
 
     } catch (err) {
         container.innerHTML = `<p style="font-size:13px;color:var(--error);">تعذر الاتصال بالخادم.</p>`;
