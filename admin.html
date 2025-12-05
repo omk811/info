@@ -5,16 +5,36 @@
 <title>لوحة الإدارة</title>
 <style>
     body { font-family:Cairo; background:#eef1f5; padding:20px; }
-    .panel { max-width:900px; margin:auto; background:white; padding:25px;
-             border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); }
+    .panel, .loginBox { 
+        max-width:900px; margin:auto; background:white; padding:25px;
+        border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); 
+    }
     .note { background:#fff; padding:15px; border-radius:10px;
             border-right:5px solid #f59e0b; margin:10px 0; cursor:pointer; }
     .replyBox { margin-top:30px; background:#fff; padding:20px; border-radius:10px; }
+    input { width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; margin:10px 0; }
+    button { padding:12px; border:none; border-radius:10px; cursor:pointer; font-size:16px; }
 </style>
 </head>
 
 <body>
-<div class="panel">
+
+<!-- صندوق تسجيل الدخول -->
+<div id="loginBox" class="loginBox">
+    <h2 style="text-align:center;color:#2563eb;">🔐 تسجيل الدخول</h2>
+
+    <input id="pass" type="password" placeholder="أدخل كلمة السر">
+
+    <button onclick="login()" 
+        style="background:#2563eb;color:white;width:100%;margin-top:10px;">
+        دخول
+    </button>
+
+    <p id="loginStatus" style="color:red;text-align:center;margin-top:10px;"></p>
+</div>
+
+<!-- لوحة الإدارة -->
+<div id="panel" class="panel" style="display:none;">
     <h2 style="color:#2563eb;text-align:center;">⚙️ لوحة التحكم</h2>
 
     <div id="notesList"></div>
@@ -23,16 +43,33 @@
         <h3>🔄 الرد على الملاحظة</h3>
         <textarea id="reply" rows="3" placeholder="اكتب الرد هنا..."></textarea>
         <br><br>
-        <button onclick="sendReply()" style="padding:12px;background:#10b981;color:white;border:none;border-radius:10px;">إرسال الرد</button>
+        <button onclick="sendReply()" 
+                style="padding:12px;background:#10b981;color:white;border:none;border-radius:10px;">
+            إرسال الرد
+        </button>
     </div>
 </div>
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
+const correctPassword = "aysha123";  // كلمة السر هنا فقط
 
 let selectedRow = null;
 
-/******** تحميل الملاحظات ********/
+/************** تسجيل الدخول **************/
+function login() {
+    const pass = document.getElementById("pass").value;
+
+    if (pass === correctPassword) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("panel").style.display = "block";
+        loadNotes();
+    } else {
+        document.getElementById("loginStatus").innerHTML = "❌ كلمة السر غير صحيحة";
+    }
+}
+
+/************** تحميل الملاحظات **************/
 async function loadNotes() {
     const res = await fetch(scriptURL, {
         method:"POST",
@@ -58,7 +95,7 @@ function select(row) {
     alert("تم اختيار الملاحظة رقم: " + row);
 }
 
-/******** إرسال الرد ********/
+/************** إرسال الرد **************/
 async function sendReply() {
     if (!selectedRow) return alert("اختر ملاحظة أولاً");
 
@@ -72,8 +109,6 @@ async function sendReply() {
     alert("تم إرسال الرد");
     loadNotes();
 }
-
-loadNotes();
 </script>
 
 </body>
