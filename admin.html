@@ -4,329 +4,551 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>لوحة الإدارة – النسخة 4.0</title>
+<title>لوحة إدارة الملاحظات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-/* ========== ROOT ========== */
-:root {
-    --primary:#4f46e5;
-    --secondary:#7c3aed;
-    --bg:#f1f5f9;
-    --card:white;
-    --text:#1e293b;
+:root{
+  --primary:#4f46e5;
+  --secondary:#7c3aed;
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
 }
 
-/* DARK MODE */
-.dark {
-    --bg:#0f172a;
-    --card:#1e293b;
-    --text:#f1f5f9;
-    --primary:#818cf8;
-    --secondary:#a78bfa;
+body.dark{
+  --bg:#020617;
+  --card:#0f172a;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --primary:#818cf8;
+  --secondary:#a855f7;
 }
 
-body {
-    font-family:"Cairo",sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    margin:0;
-    padding:15px;
+*{box-sizing:border-box;}
+
+body{
+  font-family:"Cairo",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  margin:0;
+  padding:15px;
 }
 
-/* CONTAINERS */
-.dashboard {
-    max-width:1000px;
-    margin:auto;
-    background:var(--card);
-    padding:20px;
-    border-radius:20px;
-    box-shadow:0 10px 35px rgba(0,0,0,0.15);
+/* زر الوضع الداكن */
+.dark-toggle{
+  position:fixed;
+  top:12px;
+  left:12px;
+  background:#111827;
+  color:#e5e7eb;
+  padding:6px 10px;
+  border-radius:12px;
+  font-size:13px;
+  cursor:pointer;
+  z-index:2000;
 }
 
-h2 { text-align:center; }
+/* صندوق الدخول */
+.login-box{
+  max-width:400px;
+  margin:60px auto;
+  padding:22px;
+  border-radius:18px;
+  background:var(--card);
+  box-shadow:0 10px 30px rgba(15,23,42,0.35);
+}
 
-/* BUTTONS */
-.btn {
-    padding:12px;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    color:white;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:12px;
+  border:none;
+  background:#e2e8f0;
+  font-size:15px;
+}
+
+.btn{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-size:15px;
+  color:white;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+}
+
+/* لوحة التحكم */
+.dashboard{
+  max-width:1024px;
+  margin:auto;
+  padding:18px;
+  border-radius:20px;
+  background:var(--card);
+  box-shadow:0 10px 35px rgba(15,23,42,0.4);
+}
+
+.back-btn{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+}
+
+/* رأس اللوحة */
+.header-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+/* منطقة المحتوى الرئيسي */
+.main-area{
+  display:flex;
+  gap:18px;
+  margin-top:18px;
+}
+
+/* قائمة الملاحظات */
+.notes-panel{
+  width:50%;
+  max-height:70vh;
+  overflow-y:auto;
+}
+
+/* شريط بحث + فلاتر */
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.filters input{
+  flex:1;
+  min-width:140px;
+}
+
+.filter-btn{
+  padding:6px 10px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  background:#f9fafb;
+  font-size:13px;
+  cursor:pointer;
+  color:var(--muted);
+}
+.filter-btn.active{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+/* بطاقة ملاحظة */
+.note-card{
+  background:var(--card);
+  border-radius:14px;
+  padding:10px;
+  margin-bottom:10px;
+  border-right:5px solid var(--primary);
+  box-shadow:0 5px 12px rgba(15,23,42,0.25);
+  cursor:pointer;
+  transition:0.25s;
+}
+
+.note-card:hover{
+  transform:translateX(-4px);
+}
+
+.note-header{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.note-body{
+  font-size:14px;
+  color:var(--text);
+  max-height:70px;
+  overflow:hidden;
+  white-space:pre-wrap;
+}
+
+.status-tag{
+  display:inline-block;
+  margin-top:6px;
+  font-size:11px;
+  padding:3px 8px;
+  border-radius:999px;
+}
+
+.status-new{
+  background:#fef3c7;
+  color:#92400e;
+}
+.status-replied{
+  background:#dcfce7;
+  color:#166534;
+}
+
+/* صندوق الرد */
+.reply-panel{
+  width:50%;
+  max-height:70vh;
+  overflow-y:auto;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(15,23,42,0.03);
+}
+
+/* محتوى الملاحظة المحددة */
+.selected-box{
+  background:var(--card);
+  border-radius:14px;
+  padding:10px;
+  box-shadow:0 5px 14px rgba(15,23,42,0.25);
+  margin-bottom:10px;
+  font-size:14px;
+  white-space:pre-wrap;
+}
+
+.selected-box img{
+  width:100%;
+  border-radius:10px;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+/* مودال الصورة */
+#imgModal{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+}
+#imgModal img{
+  max-width:95%;
+  max-height:95%;
+  border-radius:14px;
+}
+
+/* استجابة للشاشات الصغيرة */
+@media(max-width:900px){
+  .main-area{
+    flex-direction:column;
+  }
+  .notes-panel,.reply-panel{
     width:100%;
-    margin-top:10px;
-    font-size:16px;
+    max-height:none;
+  }
 }
 
-.back-btn {
-    display:inline-block;
-    padding:10px 18px;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    color:white;
-    border-radius:12px;
-    text-decoration:none;
-    font-weight:600;
-    margin-bottom:20px;
+@media(max-width:600px){
+  body{padding:10px;}
+  .dashboard{padding:14px;}
+  .note-card{padding:8px;}
 }
-
-/* LOGIN */
-.login-box {
-    max-width:400px;
-    margin:auto;
-    background:var(--card);
-    padding:20px;
-    border-radius:16px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.15);
-}
-
-/* INPUT */
-input,textarea {
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border-radius:12px;
-    border:none;
-    background:#e2e8f0;
-    font-size:15px;
-}
-
-/* NOTES LIST */
-.notes-area {
-    display:flex;
-    gap:20px;
-    margin-top:20px;
-}
-
-.notes-list {
-    width:50%;
-    max-height:70vh;
-    overflow-y:auto;
-}
-
-/* NOTE CARD */
-.note {
-    background:var(--card);
-    padding:15px;
-    border-radius:14px;
-    margin:10px 0;
-    border-right:6px solid var(--primary);
-    box-shadow:0 6px 14px rgba(0,0,0,0.08);
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.note:hover { transform:translateX(-5px); }
-
-.note img {
-    width:100%;
-    border-radius:12px;
-    margin-top:10px;
-}
-
-/* SELECTED NOTE */
-.reply-box {
-    width:50%;
-    padding:15px;
-    background:var(--card);
-    border-radius:14px;
-    max-height:70vh;
-    overflow-y:auto;
-    box-shadow:0 6px 14px rgba(0,0,0,0.08);
-}
-
-.status-tag {
-    background:#facc15;
-    color:#854d0e;
-    padding:4px 10px;
-    border-radius:8px;
-    font-size:12px;
-    display:inline-block;
-    margin-bottom:5px;
-}
-
-/* DARK MODE BUTTON */
-.dark-toggle {
-    position:fixed;
-    top:15px;
-    left:15px;
-    padding:8px 12px;
-    background:#475569;
-    color:white;
-    border-radius:12px;
-    cursor:pointer;
-    z-index:5000;
-}
-
-/* MOBILE RESPONSIVE */
-@media (max-width:800px){
-    .notes-area { flex-direction:column; }
-    .notes-list, .reply-box { width:100%; }
-}
-
 </style>
 </head>
-
 <body>
 
-<!-- DARK MODE SWITCH -->
-<div class="dark-toggle" onclick="toggleDark()">🌙</div>
+<div class="dark-toggle" onclick="toggleDark()">🌓 وضع ليلي</div>
 
-<!-- LOGIN -->
+<!-- شاشة تسجيل الدخول -->
 <div id="loginBox" class="login-box">
-    <h2>🔐 تسجيل الدخول</h2>
-    <input id="pass" type="password" placeholder="كلمة المرور">
-    <button class="btn" onclick="login()">دخول</button>
-    <p id="loginStatus" style="color:red;text-align:center;"></p>
+  <h2 style="text-align:center;margin-bottom:10px;">🔐 تسجيل الدخول</h2>
+  <input id="pass" type="password" placeholder="أدخل كلمة المرور">
+  <button class="btn" onclick="login()">دخول</button>
+  <p id="loginStatus" style="text-align:center;color:#f97316;font-size:14px;margin-top:8px;"></p>
 </div>
 
-<!-- DASHBOARD -->
+<!-- لوحة التحكم -->
 <div id="dashboard" class="dashboard" style="display:none;">
 
-    <a href="index.html" class="back-btn">⬅ العودة للصفحة الرئيسية</a>
+  <a href="index.html" class="back-btn">⬅ العودة للصفحة الرئيسية</a>
 
-    <h2>⚙️ لوحة التحكم</h2>
+  <div class="header-line">
+    <h2 style="margin:8px 0;">⚙️ لوحة إدارة الملاحظات</h2>
+    <span id="stats" style="font-size:13px;color:var(--muted);"></span>
+  </div>
 
-    <div class="notes-area">
-        
-        <!-- NOTE LIST -->
-        <div class="notes-list" id="notesList"></div>
+  <div class="main-area">
 
-        <!-- REPLY BOX -->
-        <div class="reply-box">
-            <h3>📝 الرد على الملاحظة</h3>
-            <div id="selectedBox" style="white-space:pre-wrap;"></div>
+    <!-- قائمة الملاحظات -->
+    <div class="notes-panel">
 
-            <textarea id="replyText" rows="3" placeholder="اكتب الرد هنا..."></textarea>
-            <input type="file" id="replyImage">
+      <div class="filters">
+        <input id="searchInput" placeholder="بحث بالاسم أو جزء من الملاحظة..." oninput="applyFilters()">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">الكل</button>
+        <button class="filter-btn" data-filter="new" onclick="setFilter('new',this)">الجديدة</button>
+        <button class="filter-btn" data-filter="replied" onclick="setFilter('replied',this)">تم الرد</button>
+        <button class="filter-btn" data-filter="image" onclick="setFilter('image',this)">بها صورة</button>
+      </div>
 
-            <button class="btn" onclick="sendReply()">إرسال الرد</button>
-        </div>
+      <div id="notesList"></div>
 
     </div>
 
+    <!-- صندوق الرد -->
+    <div class="reply-panel">
+      <h3>📝 الملاحظة المحددة / الرد</h3>
+      <div id="selectedBox" class="selected-box">
+        لم يتم اختيار أي ملاحظة بعد.
+      </div>
+
+      <label style="font-size:14px;">✏️ نص الرد</label>
+      <textarea id="replyText" rows="3" placeholder="اكتب الرد هنا..."></textarea>
+
+      <label style="font-size:14px;margin-top:6px;display:block;">📷 صورة للرد (اختياري)</label>
+      <input type="file" id="replyImage" accept="image/*">
+
+      <button class="btn" onclick="sendReply()">إرسال الرد</button>
+      <p id="replyStatus" style="font-size:13px;color:var(--muted);margin-top:6px;"></p>
+    </div>
+
+  </div>
+
 </div>
 
-<!-- IMAGE MODAL -->
-<div id="imgModal" onclick="this.style.display='none'" 
-     style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);
-     display:none;align-items:center;justify-content:center;z-index:6000;">
-    <img id="modalImg" style="max-width:95%;max-height:95%;border-radius:14px;">
+<!-- مودال الصورة -->
+<div id="imgModal" onclick="this.style.display='none'">
+  <img id="modalImg">
 </div>
 
 <script>
-const PASSWORD="aysha123";
-const scriptURL="https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
+const PASSWORD = "aysha123";
+const scriptURL = "Phttps://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
 
-let selectedNote=null;
+let allNotes = [];
+let currentFilter = "all";
+let selectedNote = null;
 
-/* DARK MODE */
 function toggleDark(){
-    document.body.classList.toggle("dark");
+  document.body.classList.toggle("dark");
 }
 
-/* LOGIN */
+/* تسجيل الدخول */
 function login(){
-    let p=document.getElementById("pass").value;
-    if(p===PASSWORD){
-        loginBox.style.display="none";
-        dashboard.style.display="block";
-        loadNotes();
-    } else {
-        loginStatus.innerText="❌ كلمة المرور غير صحيحة";
-    }
-}
-
-/* LOAD NOTES */
-async function loadNotes(){
-    let r=await fetch(scriptURL,{method:"POST",body:JSON.stringify({type:"get"})});
-    let data=await r.json();
-
-    let box=document.getElementById("notesList");
-    box.innerHTML="";
-
-    data.data.forEach(n=>{
-        box.innerHTML+=`
-            <div class="note" onclick='selectNote(${n.row})'>
-                <strong>${n.name}</strong><br>
-                ${n.note.slice(0,80)}...
-                ${n.image?`<img src="${n.image}" onclick="showImg('${n.image}');event.stopPropagation()">`:''}
-                <div class="status-tag">${n.reply?"تم الرد":"جديد"}</div>
-            </div>
-        `;
-    });
-}
-
-/* SELECT NOTE */
-async function selectNote(row){
-    let r=await fetch(scriptURL,{method:"POST",body:JSON.stringify({type:"get"})});
-    let data=await r.json();
-
-    selectedNote=data.data.find(n=>n.row===row);
-
-    selectedBox.innerHTML=`
-        <strong>👤 ${selectedNote.name}</strong><br>
-        ${selectedNote.note}
-
-        ${selectedNote.image?`
-            <img src="${selectedNote.image}" 
-                 onclick="showImg('${selectedNote.image}')">
-        `:''}
-
-        <hr>
-
-        ${selectedNote.reply?`<b>✔ الرد السابق:</b><br>${selectedNote.reply}`:''}
-
-        ${selectedNote.replyImage?`
-            <img src="${selectedNote.replyImage}" 
-                 onclick="showImg('${selectedNote.replyImage}')">
-        `:''}
-    `;
-}
-
-/* SHOW IMAGE MODAL */
-function showImg(src){
-    modalImg.src=src;
-    imgModal.style.display="flex";
-}
-
-/* REPLY */
-async function sendReply(){
-    if(!selectedNote){ alert("اختر ملاحظة أولاً"); return; }
-
-    let reply=replyText.value.trim();
-    let file=document.getElementById("replyImage").files[0];
-    let img64="";
-
-    if(file){
-        img64=await toBase64(file);
-    }
-
-    await fetch(scriptURL,{
-        method:"POST",
-        body:JSON.stringify({
-            type:"reply",
-            row:selectedNote.row,
-            reply,
-            replyImage:img64
-        })
-    });
-
-    alert("تم إرسال الرد");
+  const p = document.getElementById("pass").value.trim();
+  if(p === PASSWORD){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
     loadNotes();
+  }else{
+    document.getElementById("loginStatus").textContent = "❌ كلمة المرور غير صحيحة";
+  }
 }
 
-/* BASE64 */
-function toBase64(file){
-    return new Promise(res=>{
-        let r=new FileReader();
-        r.onload=()=>res(r.result);
-        r.readAsDataURL(file);
+/* تحميل الملاحظات */
+async function loadNotes(){
+  try{
+    const res = await fetch(scriptURL,{
+      method:"POST",
+      body:JSON.stringify({ type:"get" })
     });
+    const result = await res.json();
+    if(result.success && Array.isArray(result.data)){
+      allNotes = result.data.sort((a,b)=>(b.row||0)-(a.row||0));
+      updateStats();
+      renderNotes();
+    }else{
+      document.getElementById("notesList").innerHTML = "<p>لا توجد ملاحظات.</p>";
+    }
+  }catch(e){
+    document.getElementById("notesList").innerHTML = "<p>فشل تحميل الملاحظات.</p>";
+  }
+}
+
+/* إحصائيات بسيطة */
+function updateStats(){
+  const total = allNotes.length;
+  const replied = allNotes.filter(n=>n.reply && n.reply.trim()!=="").length;
+  const newOnes = total - replied;
+  document.getElementById("stats").textContent =
+    `إجمالي: ${total} | جديدة: ${newOnes} | تم الرد: ${replied}`;
+}
+
+/* تعيين فلتر */
+function setFilter(type,btn){
+  currentFilter = type;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderNotes();
+}
+
+/* تطبيق البحث والفلترة */
+function applyFilters(){
+  renderNotes();
+}
+
+/* عرض قائمة الملاحظات */
+function renderNotes(){
+  const container = document.getElementById("notesList");
+  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+
+  let notes = allNotes.slice();
+
+  if(currentFilter === "new"){
+    notes = notes.filter(n=>!n.reply || n.reply.trim()==="");
+  }else if(currentFilter === "replied"){
+    notes = notes.filter(n=>n.reply && n.reply.trim()!=="");
+  }else if(currentFilter === "image"){
+    notes = notes.filter(n=>n.image && n.image.trim()!=="");
+  }
+
+  if(search){
+    notes = notes.filter(n=>
+      (n.name||"").toLowerCase().includes(search) ||
+      (n.note||"").toLowerCase().includes(search)
+    );
+  }
+
+  if(notes.length===0){
+    container.innerHTML = "<p style='font-size:14px;color:var(--muted);'>لا توجد ملاحظات مطابقة.</p>";
+    return;
+  }
+
+  let html = "";
+  notes.forEach(n=>{
+    html += `
+      <div class="note-card" onclick="selectNote(${n.row})">
+        <div class="note-header">
+          <span>👤 ${n.name || "مجهول"}</span>
+          <span style="font-size:12px;color:var(--muted);">${formatDate(n.date)}</span>
+        </div>
+        <div class="note-body">
+          ${(n.note||"").slice(0,120)}${(n.note||"").length>120?"...":""}
+        </div>
+        <div class="status-tag ${n.reply && n.reply.trim()!=='' ? "status-replied":"status-new"}">
+          ${n.reply && n.reply.trim()!=='' ? "تم الرد" : "جديد"}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+/* اختيار ملاحظة */
+function selectNote(row){
+  const note = allNotes.find(n=>Number(n.row)===Number(row));
+  if(!note) return;
+  selectedNote = note;
+
+  const box = document.getElementById("selectedBox");
+  let html = `
+    <strong>👤 ${note.name || "مجهول"}</strong><br>
+    <span style="font-size:12px;color:var(--muted);">${formatDate(note.date)}</span>
+    <hr>
+    ${(note.note||"").replace(/\n/g,"<br>")}
+  `;
+
+  if(note.image){
+    html += `
+      <img src="${note.image}" onclick="showImg('${note.image}')">
+    `;
+  }
+
+  if(note.reply || note.replyImage){
+    html += `<hr><strong>✔ الرد السابق:</strong><br>${(note.reply||"").replace(/\n/g,"<br>")}`;
+    if(note.replyImage){
+      html += `<img src="${note.replyImage}" onclick="showImg('${note.replyImage}')">`;
+    }
+  }
+
+  box.innerHTML = html;
+
+  document.getElementById("replyText").value = note.reply || "";
+  document.getElementById("replyImage").value = "";
+  document.getElementById("replyStatus").textContent = "";
+}
+
+/* إرسال الرد */
+async function sendReply(){
+  if(!selectedNote){
+    document.getElementById("replyStatus").textContent = "❌ اختر ملاحظة أولاً.";
+    return;
+  }
+
+  const reply = document.getElementById("replyText").value.trim();
+  const file = document.getElementById("replyImage").files[0];
+
+  if(!reply && !file){
+    document.getElementById("replyStatus").textContent = "❌ اكتب الرد أو أضف صورة.";
+    return;
+  }
+
+  let img64 = "";
+  if(file){
+    img64 = await toBase64(file);
+  }
+
+  document.getElementById("replyStatus").textContent = "⏳ جاري الحفظ...";
+
+  try{
+    const res = await fetch(scriptURL,{
+      method:"POST",
+      body:JSON.stringify({
+        type:"reply",
+        row:selectedNote.row,
+        reply:reply,
+        replyImage:img64
+      })
+    });
+    const result = await res.json();
+    if(result.success){
+      document.getElementById("replyStatus").textContent = "✅ تم حفظ الرد.";
+      loadNotes();
+    }else{
+      document.getElementById("replyStatus").textContent = "❌ خطأ: "+(result.error||"غير معروف");
+    }
+  }catch(e){
+    document.getElementById("replyStatus").textContent = "❌ فشل الاتصال بالخادم.";
+  }
+}
+
+/* عرض الصورة في مودال */
+function showImg(src){
+  document.getElementById("modalImg").src = src;
+  document.getElementById("imgModal").style.display = "flex";
+}
+
+/* تحويل الصورة لـ Base64 */
+function toBase64(file){
+  return new Promise(res=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result);
+    r.readAsDataURL(file);
+  });
+}
+
+/* تنسيق التاريخ */
+function formatDate(d){
+  if(!d) return "";
+  try{
+    const dt = new Date(d);
+    if(isNaN(dt.getTime())) return "";
+    return dt.toLocaleString("ar-OM",{hour12:false});
+  }catch(e){
+    return "";
+  }
 }
 </script>
-
 </body>
 </html>
