@@ -2,224 +2,90 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>صندوق الملاحظات – الأستاذ خليل البلوشي</title>
-
+<title>صندوق الملاحظات</title>
 <style>
-    body {
-        font-family: "Cairo", sans-serif;
-        background: #f5f7fa;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        max-width: 900px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    h1 {
-        text-align: center;
-        color: #2563eb;
-    }
-
-    .note-form {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        margin-bottom: 30px;
-    }
-
-    input, textarea {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        margin-bottom: 15px;
-        font-size: 16px;
-    }
-
-    button {
-        background: #2563eb;
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #1e40af;
-    }
-
-    .notes-list {
-        margin-top: 30px;
-    }
-
-    .note-card {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
-    }
-
-    .note-image {
-        max-width: 100%;
-        border-radius: 10px;
-        margin-top: 12px;
-    }
-
-    .reply-box {
-        margin-top: 15px;
-        padding: 15px;
-        background: #e0f7eb;
-        border-right: 5px solid #10b981;
-        border-radius: 10px;
-    }
+    body { font-family:Cairo; background:#f5f7fa; padding:30px; }
+    .box { background:white; padding:25px; border-radius:15px;
+           max-width:600px; margin:auto; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+    input, textarea { width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; margin:10px 0; }
+    button { background:#2563eb; color:white; padding:12px; width:100%;
+             border:none; border-radius:10px; cursor:pointer; font-size:18px; }
+    .note { background:#fff; border-radius:10px; padding:15px; margin:10px 0;
+            border-right:5px solid #2563eb; }
 </style>
 </head>
 
 <body>
+<div class="box">
+    <h2 style="text-align:center;color:#2563eb;">📮 صندوق الملاحظات</h2>
 
-<div class="container">
+    <input id="name" placeholder="الاسم">
+    <textarea id="note" rows="4" placeholder="اكتب ملاحظتك هنا..."></textarea>
 
-    <h1>📮 صندوق الملاحظات</h1>
+    <label>إضافة صورة (اختياري)</label>
+    <input type="file" id="image">
 
-    <!-- نموذج إرسال ملاحظة -->
-    <div class="note-form">
-        <h2>أرسل ملاحظتك</h2>
+    <button onclick="sendNote()">إرسال</button>
 
-        <input type="text" id="name" placeholder="الاسم">
-        <textarea id="message" rows="4" placeholder="اكتب الملاحظة هنا..."></textarea>
-
-        <label>صورة (اختياري)</label>
-        <input type="file" id="imageInput" accept="image/*">
-
-        <button onclick="sendNote()">إرسال</button>
-
-        <p id="status" style="margin-top:10px; font-weight:600;"></p>
-    </div>
-
-    <!-- قائمة الملاحظات -->
-    <h2>📬 الملاحظات المردود عليها</h2>
-    <div class="notes-list" id="notesList">
-        جاري التحميل...
-    </div>
-
+    <p id="status"></p>
 </div>
 
-<script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbwslO8ZjlGHiuvaeKlZrB5czcEbz_so6mqJGnLC9LFF6M_fI-irHDFULd5lcYC_rj8a/exec";
+<h3 style="text-align:center;margin-top:40px;">💬 الملاحظات المردود عليها</h3>
+<div id="replies"></div>
 
-/* تحويل الصورة إلى Base64 */
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbzI1WkE0fUr6HaYiNMBiDn9JfTIByXjCvjQ6jnTyasz5Asyn0mLX4dNrcLVFADVHKMr/exec";
+
+/******** إرسال الملاحظة ********/
+async function sendNote() {
+    const name = document.getElementById("name").value.trim();
+    const note = document.getElementById("note").value.trim();
+    const file = document.getElementById("image").files[0];
+
+    let base64 = "";
+    if (file) base64 = await toBase64(file);
+
+    const res = await fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({ type:"add", name, note, image:base64 })
+    });
+
+    document.getElementById("status").innerHTML = "✅ تم الإرسال";
+    loadReplies();
+}
+
+/******** تحويل صورة إلى Base64 ********/
 function toBase64(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve)=>{
         const reader = new FileReader();
+        reader.onload = ()=> resolve(reader.result);
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
     });
 }
 
-/* إرسال الملاحظة */
-async function sendNote() {
-    const name = document.getElementById("name").value.trim();
-    const message = document.getElementById("message").value.trim();
-    const status = document.getElementById("status");
-    const file = document.getElementById("imageInput").files[0];
+/******** تحميل الردود ********/
+async function loadReplies() {
+    const res = await fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({ type:"get" })
+    });
+    const data = await res.json();
 
-    if (!message) {
-        status.textContent = "⚠️ الرجاء كتابة الملاحظة.";
-        status.style.color = "red";
-        return;
-    }
+    const container = document.getElementById("replies");
+    container.innerHTML = "";
 
-    status.textContent = "جاري الإرسال...";
-    status.style.color = "#2563eb";
-
-    let img64 = "";
-    if (file) img64 = await toBase64(file);
-
-    const payload = {
-        action: "addNote",
-        Name: name,
-        Message: message,
-        image: img64
-    };
-
-    try {
-        const res = await fetch(scriptURL, {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-
-        const result = await res.json();
-
-        if (result.success) {
-            status.textContent = "✅ تم إرسال الملاحظة بنجاح";
-            status.style.color = "#10b981";
-
-            document.getElementById("name").value = "";
-            document.getElementById("message").value = "";
-            document.getElementById("imageInput").value = "";
-
-            loadNotes();
-
-        } else {
-            status.textContent = "❌ حدث خطأ أثناء الإرسال";
-            status.style.color = "red";
-        }
-    } catch (err) {
-        status.textContent = "❌ فشل الاتصال بالخادم";
-        status.style.color = "red";
-    }
-}
-
-/* تحميل الملاحظات المردود عليها فقط */
-async function loadNotes() {
-    const list = document.getElementById("notesList");
-    list.innerHTML = "جاري التحميل...";
-
-    try {
-        const res = await fetch(scriptURL + "?action=getPublicNotes");
-        const data = await res.json();
-
-        if (!data.success || !data.data) {
-            list.innerHTML = "❌ فشل تحميل البيانات";
-            return;
-        }
-
-        let html = "";
-
-        data.data.forEach(n => {
-            html += `
-            <div class="note-card">
-                <strong>${n.Name || "مجهول"}</strong>
-                <p>${n.Message}</p>
-
-                ${n.imageURL ? `<img src="${n.imageURL}" class="note-image">` : ""}
-
-                <div class="reply-box">
-                    <strong>🔔 رد المعلم:</strong>
-                    <p>${n.reply || ""}</p>
-                    ${n.replyImageURL ? `<img src="${n.replyImageURL}" class="note-image">` : ""}
-                </div>
+    data.data.filter(n=>n.reply).forEach(n=>{
+        container.innerHTML += `
+            <div class="note">
+                <b>👤 ${n.name}</b><br>
+                📝 ${n.note}<br><br>
+                <b style="color:green">✔ الرد:</b> ${n.reply}
             </div>
-            `;
-        });
-
-        list.innerHTML = html || "لا توجد ملاحظات مردود عليها بعد.";
-
-    } catch (err) {
-        list.innerHTML = "❌ خطأ أثناء تحميل البيانات";
-    }
+        `;
+    });
 }
 
-loadNotes();
+loadReplies();
 </script>
 
 </body>
