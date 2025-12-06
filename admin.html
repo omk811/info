@@ -527,74 +527,44 @@
       background: rgba(148,163,184,0.9);
       border-radius: 999px;
     }
-    /* === تحسين حجم الخط في لوحة الإدارة === */
+    /* === تحسين حجم الخط في لوحة الإدارة === *//* === تكبير الخط في لوحة الإدارة === */
 body {
-  font-size: 15px;
-}
-
-.title-chip,
-.dark-toggle,
-.back-link {
-  font-size: 12px;
-}
-
-.login-title {
-  font-size: 20px;
-}
-
-.login-sub {
-  font-size: 13px;
-}
-
-.login-card input,
-.login-btn {
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .header-title {
-  font-size: 18px;
-}
-
-.header-sub,
-.stat-chip {
-  font-size: 13px;
-}
-
-.filter-btn,
-#searchInput {
-  font-size: 13px;
+  font-size: 22px;
 }
 
 .note-item,
-.note-snippet,
 .selected-note-box,
 textarea,
 .reply-btn {
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .note-date,
-.note-status,
-.reply-status {
-  font-size: 12px;
+.note-status {
+  font-size: 14px;
 }
 
-/* على الجوال نرفع أكثر */
+.reply-status { 
+  font-size: 15px; 
+}
+
+/* الجوال */
 @media (max-width: 600px) {
-  body {
-    font-size: 16px;
-  }
-
-  .header-title {
-    font-size: 19px;
-  }
-
-  .note-snippet,
-  .selected-note-box,
-  textarea,
-  .reply-btn {
-    font-size: 15px;
-  }
+  body { font-size: 18px; }
+  .header-title { font-size: 23px; }
+  textarea { font-size: 18px; }
+  .reply-btn { font-size: 18px; }
+}
+.admin-refresh {
+  background: linear-gradient(135deg, #10b981, #059669);
+  margin: 10px 0;
+  width: 100%;
+  font-size: 17px;
+}
 }
   </style>
 </head>
@@ -613,7 +583,7 @@ textarea,
       ⬅ العودة للصفحة الرئيسية
     </a>
   </div>
-
+<button class="btn admin-refresh" onclick="loadNotes()">🔄 تحديث الملاحظات</button>
   <!-- شاشة تسجيل الدخول -->
   <section id="loginScreen" class="login-card">
     <div class="login-title">تسجيل الدخول للوحة الإدارة</div>
