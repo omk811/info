@@ -441,72 +441,44 @@
       background: rgba(148, 163, 184, 0.8);
       border-radius: 999px;
     }
-    /* === تحسين حجم الخط للهواتف والأجهزة اللوحية === */
+    /* === تحسين حجم الخط للهواتف والأجهزة اللوحية ===/* === تكبير الخط للصفحة الرئيسية === */
 body {
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .card-title {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .hero-title {
-  font-size: 22px;
+  font-size: 23px;
 }
 
 .hero-sub,
 .card-caption {
-  font-size: 14px;
+  font-size: 16px;
 }
 
-label,
-input[type="text"],
-textarea,
-.hint,
-.file-label,
-#image,
-.btn,
+input, textarea, .btn, label {
+  font-size: 17px;
+}
+
 .note-body,
-.note-snippet,
-.reply-box,
-.status-text,
-.empty-state,
+.note-snippet {
+  font-size: 17px;
+}
+
 .bottom-nav a {
   font-size: 14px;
 }
 
-.note-name,
-.reply-title {
-  font-size: 14px;
-}
-
-.note-date {
-  font-size: 12px;
-}
-
-/* على الشاشات الصغيرة جداً (الجوال) كبّر أكثر */
+/* على الجوال */
 @media (max-width: 600px) {
-  body {
-    font-size: 17px;
-  }
-
-  .card-title {
-    font-size: 19px;
-  }
-
-  label,
-  input[type="text"],
-  textarea,
-  .btn,
-  .note-body,
-  .reply-box {
-    font-size: 15px;
-  }
-
-  .bottom-nav a {
-    font-size: 12px;
-  }
-  
+  body { font-size: 18px; }
+  .card-title { font-size: 21px; }
+  input, textarea, .btn { font-size: 18px; }
+  .note-body { font-size: 18px; }
+}
 }
     
   </style>
