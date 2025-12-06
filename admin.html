@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-
 <title>لوحة الإدارة – نظام الملاحظات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -14,16 +13,12 @@
   --sunset-1: #ff8a3d;
   --sunset-2: #ff4f9a;
   --sunset-3: #7d5cff;
-  --bg: #faf7ff;
-
   --card-bg: rgba(255,255,255,0.65);
   --glass-blur: blur(18px);
   --radius: 22px;
   --shadow: 0 18px 38px rgba(0,0,0,0.18);
-
   --text-dark: #1f1f1f;
   --text-muted: #6b6b6b;
-
   --transition: 0.25s ease;
 }
 
@@ -36,7 +31,7 @@ body {
   color: var(--text-dark);
 }
 
-/* =============== LOGIN CARD =============== */
+/* LOGIN CARD */
 .card {
   background: var(--card-bg);
   backdrop-filter: var(--glass-blur);
@@ -50,7 +45,7 @@ body {
 
 .card-title {
   text-align: center;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   background: linear-gradient(90deg, var(--sunset-1), var(--sunset-2));
   -webkit-background-clip: text;
@@ -58,25 +53,24 @@ body {
 }
 
 label {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
 }
 
 input[type="password"] {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 15px;
   border-radius: 14px;
   border: none;
   margin-top: 6px;
-  background: rgba(255,255,255,0.7);
-  font-size: 17px;
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.75);
+  font-size: 18px;
 }
 
 .btn-main {
   width: 100%;
   margin-top: 18px;
-  padding: 13px;
+  padding: 14px;
   font-size: 18px;
   border-radius: 16px;
   border: none;
@@ -89,17 +83,16 @@ input[type="password"] {
 }
 .btn-main:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(125,92,255,0.55);
 }
 
 .status-message {
   margin-top: 12px;
   text-align: center;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
 }
 
-/* =============== DASHBOARD AREA =============== */
+/* DASHBOARD LAYOUT */
 .dashboard {
   display: none;
   margin-top: 25px;
@@ -117,7 +110,7 @@ input[type="password"] {
 }
 
 .topbar-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   background: linear-gradient(90deg, var(--sunset-1), var(--sunset-2));
   -webkit-background-clip: text;
@@ -131,24 +124,24 @@ input[type="password"] {
   font-size: 16px;
   cursor: pointer;
   border: none;
-  transition: var(--transition);
   font-weight: 600;
+  transition: var(--transition);
 }
 .top-btn:hover {
-  background: rgba(255,255,255,0.95);
+  background: white;
 }
 
-/* =============== NOTES GRID =============== */
+/* NOTES GRID */
 .notes-grid {
   margin-top: 20px;
   display: grid;
-  gap: 14px;
+  gap: 20px;
 }
 
 .note-card {
-  background: rgba(255,255,255,0.65);
+  background: rgba(255,255,255,0.70);
   backdrop-filter: var(--glass-blur);
-  padding: 16px;
+  padding: 18px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   animation: fadeIn 0.4s ease;
@@ -157,33 +150,33 @@ input[type="password"] {
 .note-header {
   display: flex;
   justify-content: space-between;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--sunset-3);
 }
 
 .note-body {
-  margin-top: 8px;
-  font-size: 17px;
-  color: var(--text-dark);
+  margin-top: 10px;
+  font-size: 18px;
   white-space: pre-wrap;
+  color: black;
 }
 
 .note-image {
-  margin-top: 8px;
+  margin-top: 10px;
   width: 100%;
-  max-height: 240px;
-  border-radius: 14px;
+  max-height: 260px;
+  border-radius: 16px;
   object-fit: contain;
   box-shadow: var(--shadow);
   cursor: pointer;
 }
 
-/* =============== REPLY BOX =============== */
+/* REPLY BOX */
 .reply-box {
-  margin-top: 12px;
+  margin-top: 14px;
   border-top: 2px solid rgba(125,92,255,0.25);
-  padding-top: 12px;
+  padding-top: 14px;
 }
 
 textarea {
@@ -192,21 +185,21 @@ textarea {
   border-radius: 14px;
   border: none;
   background: rgba(255,255,255,0.7);
-  margin-top: 6px;
-  font-size: 16px;
-  min-height: 100px;
+  margin-top: 8px;
+  font-size: 17px;
+  min-height: 110px;
 }
 
 .submit-reply {
   background: linear-gradient(135deg, var(--sunset-1), var(--sunset-2));
   color: white;
   width: 100%;
-  margin-top: 12px;
-  padding: 12px;
+  margin-top: 14px;
+  padding: 13px;
   border-radius: 14px;
   border: none;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   transition: var(--transition);
 }
@@ -217,6 +210,22 @@ textarea {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* IMAGE MODAL */
+#imgModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+#modalImg {
+  max-width: 95%;
+  max-height: 95%;
+  border-radius: 18px;
 }
 </style>
 </head>
@@ -252,9 +261,14 @@ textarea {
 
 </div>
 
+<!-- IMAGE MODAL -->
+<div id="imgModal" onclick="hideModal()">
+  <img id="modalImg">
+</div>
+
 <script>
-// ضع رابط الويب آب هنا:
-const scriptURL = "https://script.google.com/macros/s/AKfycbzVW0bz-FiwR5cDvqx00sXWB9CJjK4zFcMNdLIWPD5Iw4rji1WmAi2yYIF8QdOziDEQ/exec";
+// === ضع رابط الويب آب الصحيح هنا ===
+const scriptURL = "https://script.google.com/macros/s/AKfycbzVW0bz-FiwR5cDvqx00sXWB9CJjK4zFcMNdLIWPD5Iw4rji1WmAi2yYIF8QdOziDEQ/exec"; 
 
 let adminToken = null;
 
@@ -293,7 +307,7 @@ function logout() {
 
 function loadNotes() {
   const grid = document.getElementById("notesGrid");
-  grid.innerHTML = "<div style='text-align:center;color:white;font-size:20px;'>جاري التحميل...</div>";
+  grid.innerHTML = "<div style='text-align:center;color:white;font-size:20px;'>⏳ جاري التحميل...</div>";
 
   fetch(scriptURL, {
     method: "POST",
@@ -303,11 +317,11 @@ function loadNotes() {
   .then(res => {
     if (!res.success) return;
 
-    const data = res.data.filter(n => n.name);
+    const data = res.data.reverse(); // أحدث أولاً
 
     let html = "";
 
-    data.reverse().forEach(n => {
+    data.forEach(n => {
       html += `
       <div class="note-card">
         <div class="note-header">
@@ -317,13 +331,15 @@ function loadNotes() {
 
         <div class="note-body">${linkify(n.note)}</div>
 
-        ${n.image ? `<img src="${n.image}" class="note-image">` : ""}
+        ${n.image ? `<img src="${n.image}" class="note-image" onclick="openImage('${n.image}')">` : ""}
+
+        ${n.replyImage ? `<img src="${n.replyImage}" class="note-image" onclick="openImage('${n.replyImage}')">` : ""}
 
         <div class="reply-box">
           <textarea id="reply_${n.row}" placeholder="اكتب الرد هنا...">${n.reply || ""}</textarea>
 
           <button class="submit-reply" onclick="sendReply(${n.row})">
-            💬 إرسال الرد
+            💬 حفظ الرد
           </button>
         </div>
       </div>
@@ -352,6 +368,15 @@ function sendReply(row) {
     alert(res.success ? "✔ تم حفظ الرد" : "❌ فشل حفظ الرد");
     loadNotes();
   });
+}
+
+function openImage(src) {
+  document.getElementById("modalImg").src = src;
+  document.getElementById("imgModal").style.display = "flex";
+}
+
+function hideModal() {
+  document.getElementById("imgModal").style.display = "none";
 }
 
 function linkify(text) {
