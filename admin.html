@@ -91,7 +91,6 @@ button {
   border-right: 4px solid rgba(236,72,153,0.9);
 }
 
-/* الصور */
 .note-image, .reply-image {
   width: 100%;
   max-height: 260px;
@@ -152,6 +151,7 @@ button {
 </div>
 
 <script>
+/* ضع رابط السكربت هنا */
 const scriptURL = "https://script.google.com/macros/s/AKfycbzVW0bz-FiwR5cDvqx00sXWB9CJjK4zFcMNdLIWPD5Iw4rji1WmAi2yYIF8QdOziDEQ/exec";
 
 /* ————— تحويل الروابط إلى قابلة للنقر ————— */
@@ -203,6 +203,7 @@ function loadNotes() {
     result.data.forEach(n => {
       html += `
         <div class="note-card">
+
           <p><strong>👤 ${n.name}</strong></p>
           <p>${linkify(n.note)}</p>
           ${n.image ? `<img class="note-image" src="${n.image}" onclick="showModal('${n.image}')">` : ""}
@@ -216,6 +217,9 @@ function loadNotes() {
           <input type="file" id="replyImg_${n.row}" accept="image/*">
 
           <button onclick="saveReply(${n.row})">💾 حفظ الرد</button>
+
+          <p id="status_${n.row}" style="font-size:14px; margin-top:8px;"></p>
+
         </div>
       `;
     });
@@ -227,8 +231,12 @@ function loadNotes() {
 /* ————— حفظ الرد ————— */
 async function saveReply(row) {
   const replyText = document.getElementById(`reply_${row}`).value.trim();
+  const statusBox = document.getElementById(`status_${row}`);
   const fileInput = document.getElementById(`replyImg_${row}`);
   let replyImg = "";
+
+  statusBox.textContent = "⏳ جاري إرسال الرد...";
+  statusBox.style.color = "#38bdf8";
 
   if (fileInput.files[0]) {
     replyImg = await toBase64(fileInput.files[0]);
@@ -245,8 +253,22 @@ async function saveReply(row) {
   })
   .then(res => res.json())
   .then(data => {
-    alert(data.success ? "✔ تم حفظ الرد" : "❌ فشل الحفظ");
-    loadNotes();
+    if (data.success) {
+      statusBox.textContent = "✔ تم إرسال الرد بنجاح";
+      statusBox.style.color = "#4ade80";
+      fileInput.value = "";
+    } else {
+      statusBox.textContent = "❌ فشل في إرسال الرد: " + (data.error || "");
+      statusBox.style.color = "#f87171";
+    }
+
+    setTimeout(() => statusBox.textContent = "", 5000);
+  })
+  .catch(() => {
+    statusBox.textContent = "❌ حدث خطأ أثناء الاتصال";
+    statusBox.style.color = "#f87171";
+
+    setTimeout(() => statusBox.textContent = "", 5000);
   });
 }
 
