@@ -1,295 +1,229 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>لوحة الإدارة – ملاحظات الصف الخامس</title>
+  <meta charset="UTF-8" />
+  <meta name=" viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة الإدارة – ملاحظات الصف الخامس</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c084fc;
+      --bg: #0f0f1b;
+      --card-bg: rgba(25, 25, 45, 0.85);
+      --text: #f8fafc;
+      --text-muted: #cbd5e1;
+      --border: rgba(148, 163, 184, 0.3);
+      --radius: 20px;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Cairo", sans-serif;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(192, 132, 252, 0.12), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(244, 114, 182, 0.1), transparent 40%),
+        var(--bg);
+      color: var(--text);
+      padding: 24px;
+      min-height: 100vh;
+      line-height: 1.7;
+    }
 
-<style>
-/* ————— الهوية البصرية الموحدة ————— */
+    .container { max-width: 900px; margin: 0 auto; }
 
-:root {
-  --primary: #ff4f9a;
-  --primary-soft: #ff8a3d;
-  --accent: #7c3aed;
-  --bg: #050816;
-  --card: rgba(15, 23, 42, 0.95);
-  --text: #f9fafb;
-  --muted: #9ca3af;
-  --radius-lg: 22px;
-  --radius-md: 14px;
-  --shadow-soft: 0 18px 40px rgba(0,0,0,0.65);
-  --glass-border: rgba(148,163,184,0.45);
-}
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
 
-body {
-  font-family: "Cairo", sans-serif;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(236,72,153,0.25), transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(96,165,250,0.24), transparent 55%),
-    radial-gradient(circle at 10% 100%, rgba(249,115,22,0.24), transparent 55%),
-    #020617;
-  padding: 20px;
-  min-height: 100vh;
-  color: var(--text);
-  line-height: 1.9;
-}
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
 
-.card {
-  background: var(--card);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin: 0 auto 20px;
-  max-width: 900px;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(16px);
-}
+    input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(15, 15, 30, 0.7);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
+      margin-bottom: 14px;
+    }
 
-.title {
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 12px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), #f472b6);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(148,163,184,0.7);
-  background: rgba(15,23,42,0.95);
-  color: var(--text);
-  font-size: 16px;
-  margin-top: 6px;
-}
+    .note {
+      background: rgba(35, 35, 60, 0.7);
+      padding: 18px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      border-right: 3px solid var(--primary);
+    }
 
-button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 999px;
-  margin-top: 12px;
-  border: none;
-  font-size: 17px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #fff;
-  background-image: linear-gradient(135deg, #f97316, #ec4899, #6366f1);
-  box-shadow: 0 12px 30px rgba(236, 72, 153, 0.55);
-}
+    .note-author {
+      font-weight: 700;
+      color: #ddd6fe;
+      margin-bottom: 8px;
+    }
 
-/* كرت الملاحظة */
-.note-card {
-  background: rgba(15,23,42,0.88);
-  padding: 14px;
-  border-radius: 18px;
-  margin-bottom: 15px;
-  border-right: 4px solid rgba(236,72,153,0.9);
-}
+    .note img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: contain;
+      border-radius: 12px;
+      margin: 10px 0;
+      cursor: zoom-in;
+    }
 
-.note-image, .reply-image {
-  width: 100%;
-  max-height: 260px;
-  object-fit: contain;
-  border-radius: 14px;
-  margin-top: 8px;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.7);
-}
+    .status { margin-top: 8px; font-size: 15px; }
 
-/* Modal */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.92);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-}
-.modal img {
-  max-width: 95vw;
-  max-height: 90vh;
-  border-radius: 20px;
-}
-</style>
+    .hidden { display: none; }
+
+    .login-card input {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- شاشة تسجيل الدخول -->
-<div id="loginCard" class="card">
-  <div class="title">🔐 تسجيل الدخول</div>
-
-  <label>كلمة المرور</label>
-  <input type="password" id="adminPass" placeholder="أدخل كلمة المرور">
-
-  <button onclick="login()">دخول</button>
-  <p id="loginStatus" style="text-align:center;color:#fca5a5;margin-top:10px;"></p>
-</div>
-
-<!-- لوحة التحكم -->
-<div id="adminPanel" style="display:none;">
-  <div class="card">
-    <div class="title">⚙️ لوحة الإدارة</div>
-    <button onclick="loadNotes()">🔄 تحديث الملاحظات</button>
+<div class="container">
+  <!-- Login -->
+  <div id="login" class="card">
+    <h2 class="card-title">🔐 تسجيل الدخول إلى لوحة الإدارة</h2>
+    <input type="password" id="pass" placeholder="أدخل كلمة المرور" />
+    <button class="btn" onclick="login()">→ دخول</button>
+    <p id="loginMsg" style="text-align:center;margin-top:12px;color:#fca5a5"></p>
   </div>
 
-  <div id="notesContainer" class="card">
-    <div class="title">💬 جميع الملاحظات</div>
-    <div id="notesList">جاري التحميل...</div>
+  <!-- Admin Panel -->
+  <div id="panel" class="hidden">
+    <div class="card">
+      <h2 class="card-title">⚙️ لوحة التحكم</h2>
+      <button class="btn" onclick="loadNotes()" style="background:#8b5cf6">🔄 تحميل الملاحظات</button>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">📥 جميع الملاحظات</h2>
+      <div id="notes">جاري التحميل...</div>
+    </div>
   </div>
 </div>
 
-<!-- نافذة تكبير الصور -->
-<div id="imgModal" class="modal" onclick="hideModal()">
-  <img id="modalImg">
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;justify-content:center;align-items:center;" onclick="this.style.display='none'">
+  <img id="modalImg" style="max-width:95vw;max-height:90vh;border-radius:16px;">
 </div>
 
 <script>
-/* ضع رابط السكربت هنا */
-const scriptURL = "https://script.google.com/macros/s/AKfycbxXQMLTAcN924jaXNFYEGhkm6gj0LRZvwWq66ciz3UQM3gLTUWATInFNrfJ7X0gDG1m/exec";
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxXQMLTAcN924jaXNFYEGhkm6gj0LRZvwWq66ciz3UQM3gLTUWATInFNrfJ7X0gDG1m/exec";
 
-/* ————— تحويل الروابط إلى قابلة للنقر ————— */
-function linkify(text) {
-  if (!text) return "";
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, link =>
-    `<a href="${link}" target="_blank" style="color:#38bdf8;text-decoration:underline;">${link}</a>`
-  );
-}
+  function linkify(t) {
+    if (!t) return "";
+    return t.replace(/(https?:\/\/[^\s]+)/g, url => 
+      `<a href="${url}" target="_blank" style="color:#c084fc;text-decoration:underline">${url}</a>`
+    );
+  }
 
-/* ————— تسجيل الدخول ————— */
-function login() {
-  const pass = document.getElementById("adminPass").value.trim();
+  function login() {
+    const p = document.getElementById("pass").value.trim();
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ type: "login", password: p })
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.success) {
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("panel").classList.remove("hidden");
+        loadNotes();
+      } else {
+        document.getElementById("loginMsg").textContent = "❌ كلمة المرور غير صحيحة";
+      }
+    });
+  }
 
-  fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({ type: "login", password: pass })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      document.getElementById("loginCard").style.display = "none";
-      document.getElementById("adminPanel").style.display = "block";
-      loadNotes();
-    } else {
-      document.getElementById("loginStatus").textContent = "❌ كلمة المرور غير صحيحة";
-    }
-  });
-}
-
-/* ————— تحميل جميع الملاحظات ————— */
-function loadNotes() {
-  const list = document.getElementById("notesList");
-  list.innerHTML = "جاري التحميل...";
-
-  fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({ type: "get" })
-  })
-  .then(res => res.json())
-  .then(result => {
-    if (!result.success) {
-      list.textContent = "لا توجد بيانات";
+  async function loadNotes() {
+    document.getElementById("notes").innerHTML = "جاري التحميل...";
+    const r = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
+    const d = await r.json();
+    if (!d.success || !d.data) {
+      document.getElementById("notes").innerHTML = "لا توجد ملاحظات";
       return;
     }
 
     let html = "";
-    result.data.forEach(n => {
+    d.data.forEach(n => {
       html += `
-        <div class="note-card">
-
-          <p><strong>👤 ${n.name}</strong></p>
-          <p>${linkify(n.note)}</p>
-          ${n.image ? `<img class="note-image" src="${n.image}" onclick="showModal('${n.image}')">` : ""}
-
-          <hr style="margin:10px 0;border-color:#555;">
-
+        <div class="note">
+          <div class="note-author">👤 ${n.name || "مجهول"}</div>
+          <div>${linkify(n.note || "")}</div>
+          ${n.image ? `<img src="${n.image}" onclick="document.getElementById('modalImg').src='${n.image}'; document.getElementById('modal').style.display='flex'">` : ""}
+          <hr style="margin:14px 0;border-color:var(--border);">
           <label>رد الأستاذ</label>
-          <textarea id="reply_${n.row}">${n.reply || ""}</textarea>
-
-          <label>صورة الرد</label>
-          <input type="file" id="replyImg_${n.row}" accept="image/*">
-
-          <button onclick="saveReply(${n.row})">💾 حفظ الرد</button>
-
-          <p id="status_${n.row}" style="font-size:14px; margin-top:8px;"></p>
-
+          <textarea id="r${n.row}" placeholder="اكتب الرد...">${n.reply || ""}</textarea>
+          <input type="file" id="f${n.row}" accept="image/*" style="margin-bottom:10px;">
+          <button class="btn" style="padding:10px;font-size:16px;" onclick="save(${n.row})">💾 حفظ الرد</button>
+          <p id="s${n.row}" class="status"></p>
         </div>
       `;
     });
-
-    list.innerHTML = html;
-  });
-}
-
-/* ————— حفظ الرد ————— */
-async function saveReply(row) {
-  const replyText = document.getElementById(`reply_${row}`).value.trim();
-  const statusBox = document.getElementById(`status_${row}`);
-  const fileInput = document.getElementById(`replyImg_${row}`);
-  let replyImg = "";
-
-  statusBox.textContent = "⏳ جاري إرسال الرد...";
-  statusBox.style.color = "#38bdf8";
-
-  if (fileInput.files[0]) {
-    replyImg = await toBase64(fileInput.files[0]);
+    document.getElementById("notes").innerHTML = html;
   }
 
-  fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({
-      type: "reply",
-      row: row,
-      reply: replyText,
-      replyImage: replyImg
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      statusBox.textContent = "✔ تم إرسال الرد بنجاح";
-      statusBox.style.color = "#4ade80";
-      fileInput.value = "";
+  function toBase64(f) {
+    return new Promise(r => {
+      const rd = new FileReader();
+      rd.onload = () => r(rd.result);
+      rd.readAsDataURL(f);
+    });
+  }
+
+  async function save(row) {
+    const txt = document.getElementById(`r${row}`).value.trim();
+    const file = document.getElementById(`f${row}`).files[0];
+    const status = document.getElementById(`s${row}`);
+    status.textContent = "⏳ جاري الحفظ...";
+    status.style.color = "#c084fc";
+
+    let img = "";
+    if (file) img = await toBase64(file);
+
+    const res = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ type: "reply", row, reply: txt, replyImage: img })
+    });
+    const d = await res.json();
+    if (d.success) {
+      status.textContent = "✔ تم الحفظ!";
+      status.style.color = "#4ade80";
+      document.getElementById(`f${row}`).value = "";
     } else {
-      statusBox.textContent = "❌ فشل في إرسال الرد: " + (data.error || "");
-      statusBox.style.color = "#f87171";
+      status.textContent = "❌ فشل: " + (d.error || "");
+      status.style.color = "#f87171";
     }
-
-    setTimeout(() => statusBox.textContent = "", 5000);
-  })
-  .catch(() => {
-    statusBox.textContent = "❌ حدث خطأ أثناء الاتصال";
-    statusBox.style.color = "#f87171";
-
-    setTimeout(() => statusBox.textContent = "", 5000);
-  });
-}
-
-/* ————— Base64 تحويل للصورة ————— */
-function toBase64(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.readAsDataURL(file);
-  });
-}
-
-/* ————— عرض صورة في نافذة كبيرة ————— */
-function showModal(src) {
-  document.getElementById("modalImg").src = src;
-  document.getElementById("imgModal").style.display = "flex";
-}
-function hideModal() {
-  document.getElementById("imgModal").style.display = "none";
-}
+    setTimeout(() => status.textContent = "", 4000);
+  }
 </script>
-
 </body>
 </html>
