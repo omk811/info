@@ -479,12 +479,17 @@ input, textarea, .btn, label {
   input, textarea, .btn { font-size: 18px; }
   .note-body { font-size: 18px; }
 }
+.refresh-btn {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  margin-bottom: 15px;
+  font-size: 17px;
+}
 }
     
   </style>
 </head>
 <body>
-
+<button class="btn refresh-btn" onclick="loadNotes()">🔄 تحديث القائمة</button>
 <div class="app-shell" id="top">
 
   <header class="app-header">
