@@ -1,758 +1,163 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-  <title>صندوق ملاحظات – الأستاذ خليل البلوشي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>شكرًا وتقديرًا | الأستاذ خليل البلوشي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- خط -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --primary: #8b5cf6;
-      --primary-light: #a78bfa;
-      --secondary: #ec4899;
-      --accent: #06b6d4;
-      --success: #10b981;
-      --bg: #0a0a14;
-      --card-bg: rgba(30, 27, 75, 0.4);
-      --card-hover: rgba(30, 27, 75, 0.6);
-      --text: #f1f5f9;
-      --text-muted: #cbd5e1;
-      --border: rgba(139, 92, 246, 0.2);
-      --radius: 24px;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      --glow: 0 0 30px rgba(139, 92, 246, 0.3);
-    }
-
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
-
     body {
-      font-family: "Cairo", sans-serif;
-      background: 
-        radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15), transparent 50%),
-        radial-gradient(ellipse at bottom, rgba(236, 72, 153, 0.1), transparent 50%),
-        linear-gradient(180deg, #0a0a14 0%, #1a0b2e 100%);
-      color: var(--text);
-      line-height: 1.8;
-      padding-bottom: 90px;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* خلفية متحركة */
-    body::before {
-      content: '';
-      position: fixed;
-      width: 200%;
-      height: 200%;
-      top: -50%;
-      left: -50%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
-      animation: floatBg 20s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    @keyframes floatBg {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(30px, -30px) rotate(120deg); }
-      66% { transform: translate(-20px, 20px) rotate(240deg); }
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 20px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* === الهيدر === */
-    .header {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius);
-      padding: 32px;
-      margin-bottom: 32px;
-      box-shadow: var(--shadow), var(--glow);
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-      animation: slideDown 0.6s ease-out;
-    }
-
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-      animation: shimmer 3s linear infinite;
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    .header h1 {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, #a78bfa, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at top, #111 0%, #000 60%);
+      color: #fff;
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .header h1 .icon {
-      font-size: 36px;
-      filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.6));
-    }
-
-    .header p {
-      color: var(--text-muted);
-      font-size: 16px;
-      line-height: 1.8;
-    }
-
-    .badges {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
-      color: #e9d5ff;
-      padding: 8px 16px;
-      border-radius: 50px;
-      font-size: 14px;
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      cursor: default;
-    }
-
-    .badge:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
-    }
-
-    /* === البطاقات === */
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius);
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      transition: all 0.4s ease;
-      animation: fadeInUp 0.6s ease-out backwards;
-    }
-
-    .card:nth-child(2) { animation-delay: 0.1s; }
-    .card:nth-child(3) { animation-delay: 0.2s; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card:hover {
-      background: var(--card-hover);
-      border-color: rgba(139, 92, 246, 0.4);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow), 0 0 40px rgba(139, 92, 246, 0.2);
-    }
-
-    .card-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      color: var(--primary-light);
-    }
-
-    .card-title .icon {
-      font-size: 28px;
-      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
-    }
-
-    /* === النماذج === */
-    .form-group {
-      margin-bottom: 20px;
-      animation: fadeIn 0.5s ease-out backwards;
-    }
-
-    .form-group:nth-child(1) { animation-delay: 0.1s; }
-    .form-group:nth-child(2) { animation-delay: 0.2s; }
-    .form-group:nth-child(3) { animation-delay: 0.3s; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--text);
-    }
-
-    .required::after { 
-      content: " *"; 
-      color: #f87171; 
-      font-weight: 700;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 16px;
-      background: rgba(15, 15, 30, 0.8);
-      border: 2px solid rgba(139, 92, 246, 0.3);
-      color: var(--text);
-      font-size: 16px;
-      font-family: inherit;
-      transition: all 0.3s ease;
-    }
-
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(15, 15, 30, 0.95);
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1), 0 0 20px rgba(139, 92, 246, 0.2);
-      transform: translateY(-2px);
-    }
-
-    textarea { 
-      min-height: 120px; 
-      resize: vertical;
-      line-height: 1.6;
-    }
-
-    .file-input-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      background: rgba(30, 30, 50, 0.7);
-      border-radius: 16px;
-      border: 2px dashed rgba(139, 92, 246, 0.4);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .file-input-wrap:hover {
-      border-color: var(--primary);
-      background: rgba(30, 30, 50, 0.9);
-      transform: translateY(-2px);
-    }
-
-    .file-input-wrap i { 
-      color: var(--secondary); 
-      font-size: 22px;
-      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.5));
-    }
-
-    /* === الأزرار === */
-    .btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
-    }
-
-    .btn:active { 
-      transform: translateY(-1px); 
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3));
-      backdrop-filter: blur(10px);
-      width: auto;
-      padding: 10px 20px;
-      font-size: 15px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(139, 92, 246, 0.5);
-    }
-
-    .status {
-      text-align: center;
-      margin-top: 12px;
-      min-height: 24px;
-      font-size: 16px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    /* === الملاحظات === */
-    .note {
-      background: linear-gradient(135deg, rgba(35, 35, 60, 0.8), rgba(45, 35, 70, 0.6));
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-right: 4px solid var(--primary);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      animation: slideInRight 0.5s ease-out backwards;
-    }
-
-    .note:nth-child(even) { animation-delay: 0.1s; }
-
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .note:hover {
-      transform: translateX(-5px);
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
-      border-right-width: 6px;
-    }
-
-    .note-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 15px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .note-author { 
-      font-weight: 700; 
-      color: #ddd6fe;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .note-date { 
-      color: var(--text-muted); 
-      font-size: 13px;
-    }
-
-    .note-text, .reply-text {
-      white-space: pre-wrap;
-      line-height: 1.8;
-      color: var(--text);
-    }
-
-    .note img, .reply img {
-      width: 100%;
-      max-height: 280px;
-      object-fit: contain;
-      border-radius: 16px;
-      margin-top: 12px;
-      cursor: zoom-in;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(139, 92, 246, 0.2);
-    }
-
-    .note img:hover, .reply img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
-    }
-
-    .reply-box {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 2px dashed rgba(139, 92, 246, 0.3);
-      animation: fadeIn 0.6s ease-out;
-    }
-
-    .reply-title {
-      font-weight: 700;
-      color: var(--success);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 16px;
-    }
-
-    .empty {
-      text-align: center;
-      color: var(--text-muted);
-      padding: 40px 20px;
-      font-size: 16px;
-    }
-
-    /* === التنقل السفلي === */
-    .nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(15, 15, 27, 0.95);
-      backdrop-filter: blur(20px);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-      z-index: 100;
-    }
-
-    .nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      text-align: center;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 16px;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-      font-weight: 600;
-    }
-
-    .nav a .icon {
-      font-size: 24px;
-      transition: all 0.3s ease;
-    }
-
-    .nav a:hover {
-      color: var(--primary-light);
-      background: rgba(139, 92, 246, 0.1);
-    }
-
-    .nav a.active { 
-      color: var(--primary);
-      background: rgba(139, 92, 246, 0.2);
-    }
-
-    .nav a.active .icon {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
-    }
-
-    /* === Modal === */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
       justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(10px);
-      animation: fadeIn 0.3s ease-out;
+      min-height: 100vh;
     }
 
-    .modal img {
-      max-width: 95vw;
-      max-height: 90vh;
-      border-radius: 20px;
-      box-shadow: 0 0 60px rgba(139, 92, 246, 0.6);
-      animation: zoomIn 0.3s ease-out;
+    .card {
+      max-width: 800px;
+      width: 92%;
+      background: linear-gradient(180deg, #0b0b0b, #000);
+      border-radius: 22px;
+      padding: 45px 35px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,.6);
+      border: 1px solid rgba(212,175,55,0.25);
     }
 
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .gold-line {
+      width: 90px;
+      height: 3px;
+      background: linear-gradient(90deg, #bfa14a, #f5d97a, #bfa14a);
+      margin: 0 auto 25px;
+      border-radius: 2px;
     }
 
-    /* === تحسينات الموبايل === */
-    @media (max-width: 768px) {
-      .header h1 { font-size: 24px; }
-      .card-title { font-size: 20px; }
-      .container { padding: 14px; }
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+      color: #f5d97a;
+      letter-spacing: 1px;
     }
 
-    /* === تأثيرات إضافية === */
-    a {
-      color: var(--primary-light);
+    .subtitle {
+      font-size: 16px;
+      color: #ccc;
+      margin-bottom: 35px;
+      line-height: 1.9;
+    }
+
+    .message {
+      font-size: 17px;
+      line-height: 2;
+      color: #eaeaea;
+      margin-bottom: 40px;
+    }
+
+    .message span {
+      color: #f5d97a;
+      font-weight: 600;
+    }
+
+    .section-title {
+      margin: 35px 0 15px;
+      font-size: 18px;
+      color: #f5d97a;
+      letter-spacing: .5px;
+    }
+
+    .links {
+      display: grid;
+      gap: 14px;
+    }
+
+    .links a {
       text-decoration: none;
-      transition: all 0.2s ease;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      border: 1px solid rgba(212,175,55,0.3);
+      transition: all .3s ease;
+      font-size: 15px;
     }
 
-    a:hover {
-      color: var(--secondary);
-      text-decoration: underline;
+    .links a:hover {
+      background: rgba(212,175,55,0.12);
+      transform: translateY(-2px);
     }
 
-    ::-webkit-scrollbar {
-      width: 10px;
+    .footer {
+      margin-top: 35px;
+      font-size: 13px;
+      color: #aaa;
     }
 
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 15, 30, 0.5);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, var(--primary), var(--secondary));
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(180deg, var(--primary-light), var(--secondary));
+    @media (max-width: 480px) {
+      h1 { font-size: 24px; }
+      .message { font-size: 15px; }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="header">
-    <h1><span class="icon">📮</span>صندوق ملاحظات الصف الخامس</h1>
-    <p>أرسل سؤالك أو ملاحظتك، وسيتم الرد عليك هنا بعد مراجعتها من قبل <strong>الأستاذ خليل البلوشي</strong>.</p>
-    <div class="badges">
-      <span class="badge">📱 متوافق مع الجوال</span>
-      <span class="badge">💬 الرد خلال 24–48 ساعة</span>
-      <span class="badge">🔒 آمن ومحمي</span>
-    </div>
-  </div>
-
   <div class="card">
-    <h2 class="card-title"><span class="icon">📝</span>إرسال ملاحظة جديدة</h2>
-    <div class="form-group">
-      <label class="required">الاسم</label>
-      <input type="text" id="name" placeholder="طالب/ة، ولي أمر، أو اسم مستعار">
+    <div class="gold-line"></div>
+
+    <h1>شكرًا وتقديرًا</h1>
+    <div class="subtitle">
+      امتنان صادق على شرف المتابعة والدعم
     </div>
-    <div class="form-group">
-      <label class="required">الملاحظة أو السؤال</label>
-      <textarea id="note" placeholder="اكتب سؤالك أو ملاحظتك بوضوح..."></textarea>
+
+    <div class="message">
+      أتقدّم بجزيل الشكر والتقدير لكل من كان جزءًا من الرحلة التعليمية  
+      عبر <span>قناة الواتساب</span> طوال السنوات الثلاث الماضية.
+      <br><br>
+      ونظرًا لتراكم <span>أعباء الحياة الاجتماعية</span>، وضغوط
+      <span>العمل المدرسي</span>، وبعض <span>الظروف الصحية</span>،
+      إضافةً إلى ضيق الوقت، أصبح من الصعب الاستمرار في إدارة القناة
+      بالصورة التي تليق بثقة المتابعين.
+      <br><br>
+      وقد كانت المتابعة طوال الفترة الماضية <span>أمانة تعليمية</span>،
+      لا يمكن الاستمرار في حملها دون القدرة على أدائها على الوجه المطلوب،
+      لذلك تم اتخاذ قرار الإيقاف حرصًا على المصداقية واحترامًا للجميع.
     </div>
-    <div class="form-group">
-      <label>صورة (اختياري)</label>
-      <div class="file-input-wrap" onclick="document.getElementById('image').click()">
-        <i>📷</i>
-        <span id="fileLabel">اضغط لاختيار صورة (حتى 5MB)</span>
-      </div>
-      <input type="file" id="image" accept="image/*" style="display:none">
-      <p style="font-size:13px;color:var(--text-muted);margin-top:8px">يمكن رفع لقطة شاشة للتمرين أو السؤال</p>
+
+    <div class="section-title">قنوات التواصل المعتمدة</div>
+
+    <div class="links">
+      <a href="mailto:omk456456@gmail.com">
+        📧 البريد الإلكتروني الرسمي  
+        <br><strong>omk456456@gmail.com</strong>
+      </a>
+
+      <a href="https://www.youtube.com/@teacherKhalil811" target="_blank">
+        ▶ قناة اليوتيوب  
+        شروحات المنهج والدروس المجانية
+      </a>
+
+      <a href="https://omk811.blogspot.com/" target="_blank">
+        🌐 المدونة الرسمية  
+        كل ما يحتاجه طالب الصف الخامس
+      </a>
+
+      <a href="https://omk811.github.io/K/" target="_blank">
+        📰 موقع عرض المواضيع الجديدة
+      </a>
     </div>
-    <button class="btn" id="sendBtn" onclick="sendNote()">📤 إرسال الملاحظة</button>
-    <p class="status" id="formStatus"></p>
+
+    <div class="footer">
+      مع خالص التقدير  
+      <br>
+      الأستاذ خليل البلوشي
+    </div>
   </div>
 
-  <div class="card">
-    <h2 class="card-title"><span class="icon">💬</span>الملاحظات التي تم الرد عليها</h2>
-    <button class="btn btn-secondary" onclick="loadReplies()">
-      🔄 تحديث القائمة
-    </button>
-    <div id="replies">
-      <div class="empty">جاري التحميل...</div>
-    </div>
-  </div>
-</div>
-
-<nav class="nav">
-  <a href="#" class="active">
-    <span class="icon">🏠</span>
-    <span>الرئيسية</span>
-  </a>
-  <a href="#send" onclick="document.getElementById('name').focus()">
-    <span class="icon">📝</span>
-    <span>إرسال</span>
-  </a>
-  <a href="#replies" onclick="loadReplies()">
-    <span class="icon">💬</span>
-    <span>الردود</span>
-  </a>
-  <a href="admin.html">
-    <span class="icon">⚙️</span>
-    <span>الإدارة</span>
-  </a>
-</nav>
-
-<div class="modal" id="modal" onclick="this.style.display='none'">
-  <img id="modalImg">
-</div>
-
-<script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxXQMLTAcN924jaXNFYEGhkm6gj0LRZvwWq66ciz3UQM3gLTUWATInFNrfJ7X0gDG1m/exec";
-
-  const nameInput = document.getElementById("name");
-  const noteInput = document.getElementById("note");
-  const fileInput = document.getElementById("image");
-  const fileLabel = document.getElementById("fileLabel");
-  const formStatus = document.getElementById("formStatus");
-
-  fileInput.addEventListener("change", () => {
-    fileLabel.textContent = fileInput.files[0] ? fileInput.files[0].name : "اضغط لاختيار صورة (حتى 5MB)";
-  });
-
-  function setStatus(msg, color = "#cbd5e1") {
-    formStatus.innerHTML = `<span style="color:${color}">${msg}</span>`;
-  }
-
-  function toBase64(f) {
-    return new Promise((resolve) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.readAsDataURL(f);
-    });
-  }
-
-  function linkify(t) {
-    if (!t) return "";
-    return t.replace(/(https?:\/\/[^\s]+)/g, url => 
-      `<a href="${url}" target="_blank">${url}</a>`
-    );
-  }
-
-  async function sendNote() {
-    const name = nameInput.value.trim() || "مجهول";
-    const note = noteInput.value.trim();
-    if (!note) return setStatus("❌ يرجى كتابة الملاحظة", "#f87171");
-
-    let img = "";
-    if (fileInput.files[0]) {
-      if (fileInput.files[0].size > 5 * 1024 * 1024) {
-        return setStatus("❌ الحد الأقصى 5MB", "#f87171");
-      }
-      img = await toBase64(fileInput.files[0]);
-    }
-
-    document.getElementById("sendBtn").disabled = true;
-    setStatus("⏳ جاري الإرسال...", "#a78bfa");
-
-    try {
-      const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({ type: "add", name, note, image: img })
-      });
-      const r = await res.json();
-      if (r.success) {
-        setStatus("✅ تم الإرسال بنجاح!", "#10b981");
-        nameInput.value = ""; noteInput.value = ""; fileInput.value = "";
-        fileLabel.textContent = "اضغط لاختيار صورة (حتى 5MB)";
-        setTimeout(() => loadReplies(), 1000);
-      } else {
-        setStatus(`❌ خطأ: ${r.error || "غير معروف"}`, "#f87171");
-      }
-    } catch (e) {
-      setStatus("❌ خطأ في الاتصال", "#f87171");
-    } finally {
-      document.getElementById("sendBtn").disabled = false;
-    }
-  }
-
-  function formatDate(d) {
-    if (!d) return "";
-    try {
-      return new Date(d).toLocaleString("ar-OM", {
-        year: "numeric", month: "short", day: "numeric",
-        hour: "2-digit", minute: "2-digit"
-      });
-    } catch { return ""; }
-  }
-
-  function showModal(src) {
-    document.getElementById("modalImg").src = src;
-    document.getElementById("modal").style.display = "flex";
-  }
-
-  async function loadReplies() {
-    document.getElementById("replies").innerHTML = '<div class="empty">جاري التحميل...</div>';
-    try {
-      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
-      const r = await res.json();
-      if (!r.success || !r.data) {
-        document.getElementById("replies").innerHTML = '<div class="empty">لا توجد ردود بعد</div>';
-        return;
-      }
-
-      const replied = r.data.filter(n => n.reply?.trim());
-      if (replied.length === 0) {
-        document.getElementById("replies").innerHTML = '<div class="empty">لا توجد ملاحظات تم الرد عليها بعد</div>';
-        return;
-      }
-
-      replied.sort((a, b) => (b.row || 0) - (a.row || 0));
-      let html = "";
-      replied.forEach(n => {
-        const noteHtml = linkify((n.note || "").replace(/\n/g, "<br>"));
-        const replyHtml = linkify((n.reply || "").replace(/\n/g, "<br>"));
-        html += `
-          <div class="note">
-            <div class="note-header">
-              <span class="note-author"><span class="icon">👤</span>${n.name || "مجهول"}</span>
-              <span class="note-date">${formatDate(n.date)}</span>
-            </div>
-            <div class="note-text">${noteHtml}</div>
-            ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')">` : ""}
-            <div class="reply-box">
-              <div class="reply-title"><span class="icon">✔</span>رد الأستاذ</div>
-              <div class="reply-text">${replyHtml}</div>
-              ${n.replyImage ? `<img src="${n.replyImage}" onclick="showModal('${n.replyImage}')">` : ""}
-            </div>
-          </div>
-        `;
-      });
-      document.getElementById("replies").innerHTML = html;
-    } catch {
-      document.getElementById("replies").innerHTML = '<div class="empty">❌ خطأ في التحميل</div>';
-    }
-  }
-
-  loadReplies();
-</script>
 </body>
 </html>
