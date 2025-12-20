@@ -5,22 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <title>صندوق ملاحظات – الأستاذ خليل البلوشي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #8b5cf6;
-      --primary-light: #a78bfa;
+      --primary: #7c3aed;
+      --primary-light: #8b5cf6;
+      --primary-dark: #5b21b6;
       --secondary: #ec4899;
       --accent: #06b6d4;
       --success: #10b981;
-      --bg: #0a0a14;
-      --card-bg: rgba(30, 27, 75, 0.4);
-      --card-hover: rgba(30, 27, 75, 0.6);
-      --text: #f1f5f9;
-      --text-muted: #cbd5e1;
-      --border: rgba(139, 92, 246, 0.2);
-      --radius: 24px;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #0f0f23;
+      --card-bg: rgba(25, 25, 50, 0.4);
+      --card-hover: rgba(35, 35, 65, 0.6);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(124, 58, 237, 0.3);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
       --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      --glow: 0 0 30px rgba(139, 92, 246, 0.3);
+      --shadow-light: 0 8px 24px rgba(0, 0, 0, 0.3);
+      --glow: 0 0 40px rgba(124, 58, 237, 0.2);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * { 
@@ -32,12 +40,12 @@
     body {
       font-family: "Cairo", sans-serif;
       background: 
-        radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15), transparent 50%),
+        radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15), transparent 50%),
         radial-gradient(ellipse at bottom, rgba(236, 72, 153, 0.1), transparent 50%),
         linear-gradient(180deg, #0a0a14 0%, #1a0b2e 100%);
       color: var(--text);
       line-height: 1.8;
-      padding-bottom: 90px;
+      padding-bottom: 100px;
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
@@ -52,7 +60,7 @@
       top: -50%;
       left: -50%;
       background: 
-        radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
       animation: floatBg 20s ease-in-out infinite;
@@ -66,6 +74,17 @@
       66% { transform: translate(-20px, 20px) rotate(240deg); }
     }
 
+    /* أنماط النصوص */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    /* الحاوية الرئيسية */
     .container {
       max-width: 1000px;
       margin: 0 auto;
@@ -76,9 +95,9 @@
 
     /* === الهيدر === */
     .header {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.15));
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(236, 72, 153, 0.15));
       backdrop-filter: blur(20px);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       padding: 32px;
       margin-bottom: 32px;
       box-shadow: var(--shadow), var(--glow);
@@ -113,7 +132,7 @@
       font-size: 28px;
       font-weight: 800;
       margin-bottom: 12px;
-      background: linear-gradient(135deg, #a78bfa, #ec4899);
+      background: linear-gradient(135deg, #a78bfa, #ec4899, #06b6d4);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -122,9 +141,9 @@
       gap: 12px;
     }
 
-    .header h1 .icon {
+    .header h1 i {
       font-size: 36px;
-      filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.6));
+      filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.6));
     }
 
     .header p {
@@ -141,32 +160,35 @@
     }
 
     .badge {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(236, 72, 153, 0.2));
       color: #e9d5ff;
       padding: 8px 16px;
       border-radius: 50px;
       font-size: 14px;
-      border: 1px solid rgba(139, 92, 246, 0.4);
+      border: 1px solid rgba(124, 58, 237, 0.4);
       backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
+      transition: var(--transition);
       cursor: default;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .badge:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
     }
 
     /* === البطاقات === */
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       padding: 28px;
       margin-bottom: 28px;
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
-      transition: all 0.4s ease;
+      transition: var(--transition);
       animation: fadeInUp 0.6s ease-out backwards;
     }
 
@@ -180,9 +202,9 @@
 
     .card:hover {
       background: var(--card-hover);
-      border-color: rgba(139, 92, 246, 0.4);
+      border-color: rgba(124, 58, 237, 0.5);
       transform: translateY(-4px);
-      box-shadow: var(--shadow), 0 0 40px rgba(139, 92, 246, 0.2);
+      box-shadow: var(--shadow), 0 0 40px rgba(124, 58, 237, 0.2);
     }
 
     .card-title {
@@ -195,9 +217,9 @@
       color: var(--primary-light);
     }
 
-    .card-title .icon {
+    .card-title i {
       font-size: 28px;
-      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+      filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.5));
     }
 
     /* === النماذج === */
@@ -225,27 +247,27 @@
 
     .required::after { 
       content: " *"; 
-      color: #f87171; 
+      color: var(--danger); 
       font-weight: 700;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 14px 18px;
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       background: rgba(15, 15, 30, 0.8);
-      border: 2px solid rgba(139, 92, 246, 0.3);
+      border: 2px solid rgba(124, 58, 237, 0.3);
       color: var(--text);
       font-size: 16px;
       font-family: inherit;
-      transition: all 0.3s ease;
+      transition: var(--transition);
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: var(--primary);
       background: rgba(15, 15, 30, 0.95);
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1), 0 0 20px rgba(139, 92, 246, 0.2);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1), 0 0 20px rgba(124, 58, 237, 0.2);
       transform: translateY(-2px);
     }
 
@@ -261,10 +283,10 @@
       gap: 12px;
       padding: 14px;
       background: rgba(30, 30, 50, 0.7);
-      border-radius: 16px;
-      border: 2px dashed rgba(139, 92, 246, 0.4);
+      border-radius: var(--radius-md);
+      border: 2px dashed rgba(124, 58, 237, 0.4);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
     }
 
     .file-input-wrap:hover {
@@ -290,10 +312,14 @@
       font-size: 18px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
       position: relative;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
 
     .btn::before {
@@ -316,7 +342,7 @@
 
     .btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
     }
 
     .btn:active { 
@@ -330,13 +356,13 @@
     }
 
     .btn-secondary {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3));
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(236, 72, 153, 0.3));
       backdrop-filter: blur(10px);
       width: auto;
       padding: 10px 20px;
       font-size: 15px;
       margin-bottom: 16px;
-      border: 1px solid rgba(139, 92, 246, 0.5);
+      border: 1px solid rgba(124, 58, 237, 0.5);
     }
 
     .status {
@@ -345,7 +371,25 @@
       min-height: 24px;
       font-size: 16px;
       font-weight: 600;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(30, 30, 50, 0.3);
+    }
+
+    .status.success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .status.loading {
+      background: rgba(124, 58, 237, 0.2);
+      color: #a78bfa;
     }
 
     /* === الملاحظات === */
@@ -356,7 +400,7 @@
       margin-bottom: 20px;
       border-right: 4px solid var(--primary);
       backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
+      transition: var(--transition);
       animation: slideInRight 0.5s ease-out backwards;
     }
 
@@ -369,7 +413,7 @@
 
     .note:hover {
       transform: translateX(-5px);
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
       border-right-width: 6px;
     }
 
@@ -393,6 +437,9 @@
     .note-date { 
       color: var(--text-muted); 
       font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .note-text, .reply-text {
@@ -405,22 +452,22 @@
       width: 100%;
       max-height: 280px;
       object-fit: contain;
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       margin-top: 12px;
       cursor: zoom-in;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(139, 92, 246, 0.2);
+      transition: var(--transition);
+      border: 2px solid rgba(124, 58, 237, 0.2);
     }
 
     .note img:hover, .reply img:hover {
       transform: scale(1.02);
-      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
     }
 
     .reply-box {
       margin-top: 16px;
       padding-top: 16px;
-      border-top: 2px dashed rgba(139, 92, 246, 0.3);
+      border-top: 2px dashed rgba(124, 58, 237, 0.3);
       animation: fadeIn 0.6s ease-out;
     }
 
@@ -439,6 +486,15 @@
       color: var(--text-muted);
       padding: 40px 20px;
       font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .empty i {
+      font-size: 48px;
+      opacity: 0.7;
     }
 
     /* === التنقل السفلي === */
@@ -467,29 +523,31 @@
       align-items: center;
       gap: 4px;
       padding: 8px 16px;
-      border-radius: 12px;
-      transition: all 0.3s ease;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
       font-weight: 600;
+      flex: 1;
+      max-width: 100px;
     }
 
-    .nav a .icon {
-      font-size: 24px;
-      transition: all 0.3s ease;
+    .nav a i {
+      font-size: 22px;
+      transition: var(--transition);
     }
 
     .nav a:hover {
       color: var(--primary-light);
-      background: rgba(139, 92, 246, 0.1);
+      background: rgba(124, 58, 237, 0.1);
     }
 
     .nav a.active { 
       color: var(--primary);
-      background: rgba(139, 92, 246, 0.2);
+      background: rgba(124, 58, 237, 0.2);
     }
 
-    .nav a.active .icon {
+    .nav a.active i {
       transform: scale(1.2);
-      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+      filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6));
     }
 
     /* === Modal === */
@@ -505,12 +563,37 @@
       animation: fadeIn 0.3s ease-out;
     }
 
-    .modal img {
+    .modal-content {
+      position: relative;
       max-width: 95vw;
       max-height: 90vh;
+    }
+
+    .modal img {
+      max-width: 100%;
+      max-height: 90vh;
       border-radius: 20px;
-      box-shadow: 0 0 60px rgba(139, 92, 246, 0.6);
+      box-shadow: 0 0 60px rgba(124, 58, 237, 0.6);
       animation: zoomIn 0.3s ease-out;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
 
     @keyframes zoomIn {
@@ -523,13 +606,25 @@
       .header h1 { font-size: 24px; }
       .card-title { font-size: 20px; }
       .container { padding: 14px; }
+      .header { padding: 24px; }
+      .card { padding: 20px; }
+      .nav a { font-size: 12px; padding: 8px 12px; }
+      .nav a i { font-size: 20px; }
+      .btn { padding: 14px; font-size: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 22px; flex-direction: column; align-items: flex-start; gap: 8px; }
+      .header h1 i { font-size: 32px; }
+      .badge { font-size: 12px; padding: 6px 12px; }
+      .note-header { flex-direction: column; align-items: flex-start; }
     }
 
     /* === تأثيرات إضافية === */
     a {
       color: var(--primary-light);
       text-decoration: none;
-      transition: all 0.2s ease;
+      transition: var(--transition);
     }
 
     a:hover {
@@ -537,6 +632,7 @@
       text-decoration: underline;
     }
 
+    /* شريط التمرير */
     ::-webkit-scrollbar {
       width: 10px;
     }
@@ -553,23 +649,36 @@
     ::-webkit-scrollbar-thumb:hover {
       background: linear-gradient(180deg, var(--primary-light), var(--secondary));
     }
+
+    /* أدوات تنسيق النصوص */
+    .text-center {
+      text-align: center;
+    }
+
+    .mt-1 { margin-top: 10px; }
+    .mt-2 { margin-top: 20px; }
+    .mt-3 { margin-top: 30px; }
+    .mb-1 { margin-bottom: 10px; }
+    .mb-2 { margin-bottom: 20px; }
+    .mb-3 { margin-bottom: 30px; }
   </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header">
-    <h1><span class="icon">📮</span>صندوق ملاحظات الصف الخامس</h1>
+    <h1><i class="fas fa-inbox"></i>صندوق ملاحظات الصف الخامس</h1>
     <p>أرسل سؤالك أو ملاحظتك، وسيتم الرد عليك هنا بعد مراجعتها من قبل <strong>الأستاذ خليل البلوشي</strong>.</p>
     <div class="badges">
-      <span class="badge">📱 متوافق مع الجوال</span>
-      <span class="badge">💬 الرد خلال 24–48 ساعة</span>
-      <span class="badge">🔒 آمن ومحمي</span>
+      <span class="badge"><i class="fas fa-mobile-alt"></i> متوافق مع الجوال</span>
+      <span class="badge"><i class="fas fa-clock"></i> الرد خلال 24–48 ساعة</span>
+      <span class="badge"><i class="fas fa-lock"></i> آمن ومحمي</span>
+      <span class="badge"><i class="fas fa-image"></i> رفع الصور</span>
     </div>
   </div>
 
   <div class="card">
-    <h2 class="card-title"><span class="icon">📝</span>إرسال ملاحظة جديدة</h2>
+    <h2 class="card-title"><i class="fas fa-edit"></i>إرسال ملاحظة جديدة</h2>
     <div class="form-group">
       <label class="required">الاسم</label>
       <input type="text" id="name" placeholder="طالب/ة، ولي أمر، أو اسم مستعار">
@@ -581,48 +690,60 @@
     <div class="form-group">
       <label>صورة (اختياري)</label>
       <div class="file-input-wrap" onclick="document.getElementById('image').click()">
-        <i>📷</i>
+        <i class="fas fa-camera"></i>
         <span id="fileLabel">اضغط لاختيار صورة (حتى 5MB)</span>
       </div>
       <input type="file" id="image" accept="image/*" style="display:none">
-      <p style="font-size:13px;color:var(--text-muted);margin-top:8px">يمكن رفع لقطة شاشة للتمرين أو السؤال</p>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:8px">
+        <i class="fas fa-info-circle"></i> يمكن رفع لقطة شاشة للتمرين أو السؤال
+      </p>
     </div>
-    <button class="btn" id="sendBtn" onclick="sendNote()">📤 إرسال الملاحظة</button>
+    <button class="btn" id="sendBtn" onclick="sendNote()">
+      <i class="fas fa-paper-plane"></i> إرسال الملاحظة
+    </button>
     <p class="status" id="formStatus"></p>
   </div>
 
   <div class="card">
-    <h2 class="card-title"><span class="icon">💬</span>الملاحظات التي تم الرد عليها</h2>
+    <h2 class="card-title"><i class="fas fa-comments"></i>الملاحظات التي تم الرد عليها</h2>
     <button class="btn btn-secondary" onclick="loadReplies()">
-      🔄 تحديث القائمة
+      <i class="fas fa-sync-alt"></i> تحديث القائمة
     </button>
     <div id="replies">
-      <div class="empty">جاري التحميل...</div>
+      <div class="empty">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>جاري التحميل...</span>
+      </div>
     </div>
   </div>
 </div>
 
 <nav class="nav">
   <a href="#" class="active">
-    <span class="icon">🏠</span>
+    <i class="fas fa-home"></i>
     <span>الرئيسية</span>
   </a>
   <a href="#send" onclick="document.getElementById('name').focus()">
-    <span class="icon">📝</span>
+    <i class="fas fa-pen"></i>
     <span>إرسال</span>
   </a>
   <a href="#replies" onclick="loadReplies()">
-    <span class="icon">💬</span>
+    <i class="fas fa-comment-dots"></i>
     <span>الردود</span>
   </a>
   <a href="admin.html">
-    <span class="icon">⚙️</span>
+    <i class="fas fa-cog"></i>
     <span>الإدارة</span>
   </a>
 </nav>
 
-<div class="modal" id="modal" onclick="this.style.display='none'">
-  <img id="modalImg">
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">
+      <i class="fas fa-times"></i>
+    </button>
+    <img id="modalImg">
+  </div>
 </div>
 
 <script>
@@ -633,13 +754,21 @@
   const fileInput = document.getElementById("image");
   const fileLabel = document.getElementById("fileLabel");
   const formStatus = document.getElementById("formStatus");
+  const sendBtn = document.getElementById("sendBtn");
 
   fileInput.addEventListener("change", () => {
     fileLabel.textContent = fileInput.files[0] ? fileInput.files[0].name : "اضغط لاختيار صورة (حتى 5MB)";
   });
 
-  function setStatus(msg, color = "#cbd5e1") {
-    formStatus.innerHTML = `<span style="color:${color}">${msg}</span>`;
+  function setStatus(msg, type = "info") {
+    formStatus.textContent = msg;
+    formStatus.className = "status";
+    formStatus.classList.add(type);
+  }
+
+  function clearStatus() {
+    formStatus.textContent = "";
+    formStatus.className = "status";
   }
 
   function toBase64(f) {
@@ -660,18 +789,24 @@
   async function sendNote() {
     const name = nameInput.value.trim() || "مجهول";
     const note = noteInput.value.trim();
-    if (!note) return setStatus("❌ يرجى كتابة الملاحظة", "#f87171");
+    if (!note) {
+      setStatus("❌ يرجى كتابة الملاحظة أو السؤال", "error");
+      noteInput.focus();
+      return;
+    }
 
     let img = "";
     if (fileInput.files[0]) {
       if (fileInput.files[0].size > 5 * 1024 * 1024) {
-        return setStatus("❌ الحد الأقصى 5MB", "#f87171");
+        setStatus("❌ حجم الصورة يجب أن يكون أقل من 5MB", "error");
+        return;
       }
       img = await toBase64(fileInput.files[0]);
     }
 
-    document.getElementById("sendBtn").disabled = true;
-    setStatus("⏳ جاري الإرسال...", "#a78bfa");
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+    setStatus("⏳ جاري إرسال ملاحظتك...", "loading");
 
     try {
       const res = await fetch(scriptURL, {
@@ -680,17 +815,20 @@
       });
       const r = await res.json();
       if (r.success) {
-        setStatus("✅ تم الإرسال بنجاح!", "#10b981");
-        nameInput.value = ""; noteInput.value = ""; fileInput.value = "";
+        setStatus("✅ تم إرسال ملاحظتك بنجاح! سيتم الرد عليها قريبًا.", "success");
+        nameInput.value = ""; 
+        noteInput.value = ""; 
+        fileInput.value = "";
         fileLabel.textContent = "اضغط لاختيار صورة (حتى 5MB)";
-        setTimeout(() => loadReplies(), 1000);
+        setTimeout(() => loadReplies(), 1500);
       } else {
-        setStatus(`❌ خطأ: ${r.error || "غير معروف"}`, "#f87171");
+        setStatus(`❌ خطأ: ${r.error || "غير معروف"}`, "error");
       }
     } catch (e) {
-      setStatus("❌ خطأ في الاتصال", "#f87171");
+      setStatus("❌ خطأ في الاتصال بالإنترنت. تحقق من اتصالك وحاول مرة أخرى.", "error");
     } finally {
-      document.getElementById("sendBtn").disabled = false;
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الملاحظة';
     }
   }
 
@@ -698,10 +836,15 @@
     if (!d) return "";
     try {
       return new Date(d).toLocaleString("ar-OM", {
-        year: "numeric", month: "short", day: "numeric",
-        hour: "2-digit", minute: "2-digit"
+        year: "numeric", 
+        month: "short", 
+        day: "numeric",
+        hour: "2-digit", 
+        minute: "2-digit"
       });
-    } catch { return ""; }
+    } catch { 
+      return ""; 
+    }
   }
 
   function showModal(src) {
@@ -709,19 +852,43 @@
     document.getElementById("modal").style.display = "flex";
   }
 
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
+
   async function loadReplies() {
-    document.getElementById("replies").innerHTML = '<div class="empty">جاري التحميل...</div>';
+    const repliesContainer = document.getElementById("replies");
+    repliesContainer.innerHTML = `
+      <div class="empty">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>جاري تحميل الملاحظات...</span>
+      </div>
+    `;
+    
     try {
-      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
+      const res = await fetch(scriptURL, { 
+        method: "POST", 
+        body: JSON.stringify({ type: "get" }) 
+      });
       const r = await res.json();
       if (!r.success || !r.data) {
-        document.getElementById("replies").innerHTML = '<div class="empty">لا توجد ردود بعد</div>';
+        repliesContainer.innerHTML = `
+          <div class="empty">
+            <i class="far fa-comment-dots"></i>
+            <span>لا توجد ردود بعد</span>
+          </div>
+        `;
         return;
       }
 
       const replied = r.data.filter(n => n.reply?.trim());
       if (replied.length === 0) {
-        document.getElementById("replies").innerHTML = '<div class="empty">لا توجد ملاحظات تم الرد عليها بعد</div>';
+        repliesContainer.innerHTML = `
+          <div class="empty">
+            <i class="far fa-comment-dots"></i>
+            <span>لا توجد ملاحظات تم الرد عليها بعد</span>
+          </div>
+        `;
         return;
       }
 
@@ -733,26 +900,61 @@
         html += `
           <div class="note">
             <div class="note-header">
-              <span class="note-author"><span class="icon">👤</span>${n.name || "مجهول"}</span>
-              <span class="note-date">${formatDate(n.date)}</span>
+              <span class="note-author">
+                <i class="fas fa-user"></i>
+                ${n.name || "مجهول"}
+              </span>
+              <span class="note-date">
+                <i class="far fa-clock"></i>
+                ${formatDate(n.date)}
+              </span>
             </div>
             <div class="note-text">${noteHtml}</div>
             ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')">` : ""}
             <div class="reply-box">
-              <div class="reply-title"><span class="icon">✔</span>رد الأستاذ</div>
+              <div class="reply-title">
+                <i class="fas fa-check-circle"></i>
+                رد الأستاذ خليل البلوشي
+              </div>
               <div class="reply-text">${replyHtml}</div>
               ${n.replyImage ? `<img src="${n.replyImage}" onclick="showModal('${n.replyImage}')">` : ""}
             </div>
           </div>
         `;
       });
-      document.getElementById("replies").innerHTML = html;
+      repliesContainer.innerHTML = html;
     } catch {
-      document.getElementById("replies").innerHTML = '<div class="empty">❌ خطأ في التحميل</div>';
+      repliesContainer.innerHTML = `
+        <div class="empty">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>❌ حدث خطأ أثناء تحميل الملاحظات</span>
+        </div>
+      `;
     }
   }
 
-  loadReplies();
+  // تحميل الملاحظات عند فتح الصفحة
+  document.addEventListener('DOMContentLoaded', function() {
+    loadReplies();
+    
+    // إضافة مؤثرات عند التركيز على الحقول
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+      });
+      input.addEventListener('blur', function() {
+        this.parentElement.classList.remove('focused');
+      });
+    });
+  });
+
+  // إغلاق المودال بالضغط على ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
 </script>
 </body>
 </html>
