@@ -9,7 +9,6 @@
   <style>
     :root {
       --primary: #2563eb;
-      --primary-glow: rgba(37, 99, 235, 0.4);
       --secondary: #7c3aed;
       --accent: #f59e0b;
       --bg-dark: #0f172a;
@@ -29,7 +28,7 @@
       color: var(--text-main);
       line-height: 1.6;
       min-height: 100vh;
-      padding-bottom: 80px;
+      padding-bottom: 100px; /* مساحة للتنقل السفلي */
     }
 
     .container { max-width: 800px; margin: 0 auto; padding: 20px; }
@@ -37,21 +36,16 @@
     /* Header */
     .hero-section {
       text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+      padding: 30px 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(124, 58, 237, 0.15));
       border-radius: var(--radius);
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       border: 1px solid var(--border-color);
     }
 
-    .hero-section h1 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin-bottom: 15px;
-      color: #fff;
-    }
+    .hero-section h1 { font-size: 1.6rem; margin-bottom: 10px; color: #fff; }
 
-    /* Card Styling */
+    /* Cards */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -59,93 +53,68 @@
       padding: 25px;
       border: 1px solid var(--border-color);
       margin-bottom: 25px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-    .section-title {
-      font-size: 1.25rem;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--accent);
-    }
+    .section-title { color: var(--accent); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
 
-    /* Form Elements */
+    /* Form */
     input, textarea {
-      width: 100%;
-      padding: 14px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      color: white;
-      font-family: inherit;
-      margin-top: 8px;
+      width: 100%; padding: 12px; margin-top: 8px; border-radius: 12px;
+      background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color);
+      color: white; font-family: inherit;
     }
 
     /* Links Formatting */
-    .clickable-link {
-      color: #60a5fa;
-      text-decoration: underline;
-      word-break: break-all;
-      transition: color 0.2s;
-    }
-    .clickable-link:hover { color: #93c5fd; }
+    .clickable-link { color: #60a5fa; text-decoration: underline; word-break: break-all; }
 
     /* Buttons */
     .btn-primary {
-      width: 100%;
-      padding: 16px;
+      width: 100%; padding: 15px; border-radius: 12px; border: none;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 15px;
+      color: white; font-weight: 700; cursor: pointer; margin-top: 15px;
     }
 
     .btn-refresh {
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      padding: 8px 18px;
-      border-radius: 8px;
-      cursor: pointer;
+      background: transparent; border: 1px solid var(--primary); color: var(--primary);
+      padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
     }
 
-    /* Notes List */
+    /* Note Items */
     .note-item {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-right: 4px solid var(--accent);
+      background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 18px;
+      margin-bottom: 15px; border-right: 4px solid var(--accent);
     }
 
     .teacher-reply {
-      background: rgba(16, 185, 129, 0.08);
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 15px;
-      border: 1px solid rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.1); border-radius: 10px; padding: 15px;
+      margin-top: 15px; border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
+    /* Bottom Nav - تم تعديله لإضافة الإدارة */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
       display: flex; justify-content: space-around;
-      padding: 12px; border-top: 1px solid var(--border-color);
+      padding: 10px 5px; border-top: 1px solid var(--border-color);
+      z-index: 2000;
     }
 
-    .nav-item { text-decoration: none; color: var(--text-dim); font-size: 0.8rem; text-align: center; }
-    .nav-item.active { color: var(--primary); }
+    .nav-item {
+      text-decoration: none; color: var(--text-dim); font-size: 0.75rem;
+      text-align: center; flex: 1; transition: 0.3s;
+    }
 
+    .nav-item i { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.admin-link { color: #f87171; } /* لون مميز للإدارة */
+
+    /* Modal */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      z-index: 2000; justify-content: center; align-items: center;
+      z-index: 3000; justify-content: center; align-items: center;
     }
-    .modal img { max-width: 90%; max-height: 80vh; }
+    .modal img { max-width: 90%; max-height: 85vh; border-radius: 10px; }
   </style>
 </head>
 <body>
@@ -157,24 +126,24 @@
   </header>
 
   <div class="glass-card" id="send">
-    <h2 class="section-title"><i class="fas fa-edit"></i> إرسال ملاحظة</h2>
-    <input type="text" id="name" placeholder="الاسم (اختياري)">
-    <textarea id="note" rows="4" placeholder="اكتب سؤالك أو رابط التمرين هنا..."></textarea>
+    <h2 class="section-title"><i class="fas fa-pen-fancy"></i> إرسال ملاحظة</h2>
+    <input type="text" id="name" placeholder="الاسم (طالب/ولي أمر)">
+    <textarea id="note" rows="4" placeholder="اكتب سؤالك أو استفسارك هنا..."></textarea>
     
     <div style="margin-top:15px">
       <div onclick="document.getElementById('image').click()" style="cursor:pointer; color:var(--text-dim); border:1px dashed var(--border-color); padding:15px; border-radius:12px; text-align:center">
-        <i class="fas fa-camera"></i> <span id="fileLabel">إرفاق صورة</span>
+        <i class="fas fa-image"></i> <span id="fileLabel">إرفاق صورة (اختياري)</span>
       </div>
       <input type="file" id="image" accept="image/*" style="display:none">
     </div>
 
     <button class="btn-primary" id="sendBtn" onclick="sendNote()">إرسال الملاحظة</button>
-    <p id="formStatus" style="text-align:center; margin-top:10px"></p>
+    <p id="formStatus" style="text-align:center; margin-top:10px; font-size:0.9rem"></p>
   </div>
 
   <div class="glass-card" id="replies-section">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
-      <h2 class="section-title" style="margin:0"><i class="fas fa-comments"></i> الردود</h2>
+      <h2 class="section-title" style="margin:0"><i class="fas fa-comment-dots"></i> الردود الواردة</h2>
       <button class="btn-refresh" onclick="loadReplies()"><i class="fas fa-sync"></i> تحديث</button>
     </div>
     <div id="replies"></div>
@@ -182,9 +151,10 @@
 </div>
 
 <nav class="bottom-nav">
-  <a href="#" class="nav-item active"><i class="fas fa-home"></i><br>الرئيسية</a>
-  <a href="#send" class="nav-item"><i class="fas fa-pen"></i><br>إرسال</a>
-  <a href="#replies-section" class="nav-item"><i class="fas fa-comment-dots"></i><br>الردود</a>
+  <a href="#" class="nav-item active"><i class="fas fa-home"></i>الرئيسية</a>
+  <a href="#send" class="nav-item"><i class="fas fa-plus-circle"></i>إرسال</a>
+  <a href="#replies-section" class="nav-item"><i class="fas fa-reply-all"></i>الردود</a>
+  <a href="admin.html" class="nav-item admin-link"><i class="fas fa-user-cog"></i>الإدارة</a>
 </nav>
 
 <div class="modal" id="modal" onclick="closeModal()">
@@ -194,7 +164,6 @@
 <script>
   const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
 
-  // وظيفة تحويل الروابط النصية إلى روابط قابلة للنقر
   function linkify(text) {
     if (!text) return "";
     const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -216,10 +185,10 @@
     const status = document.getElementById("formStatus");
     const file = document.getElementById("image").files[0];
 
-    if (!note) { status.textContent = "⚠️ اكتب الملاحظة أولاً"; return; }
+    if (!note) { status.textContent = "⚠️ يرجى كتابة الملاحظة أولاً"; status.style.color = "#fbbf24"; return; }
 
     btn.disabled = true;
-    status.textContent = "⏳ جاري الإرسال...";
+    status.textContent = "⏳ جاري الإرسال الآن...";
     
     let imgBase64 = file ? await toBase64(file) : "";
 
@@ -230,56 +199,59 @@
       });
       const res = await response.json();
       if (res.success) {
-        status.textContent = "✅ تم الإرسال!";
+        status.textContent = "✅ تم إرسال ملاحظتك بنجاح!";
+        status.style.color = "#10b981";
         document.getElementById("note").value = "";
+        document.getElementById("image").value = "";
+        document.getElementById("fileLabel").textContent = "إرفاق صورة (اختياري)";
         loadReplies();
       }
-    } catch (e) { status.textContent = "❌ خطأ في الإرسال"; }
+    } catch (e) { 
+      status.textContent = "❌ فشل الاتصال بالخادم"; 
+      status.style.color = "#f87171";
+    }
     btn.disabled = false;
   }
 
   async function loadReplies() {
     const container = document.getElementById("replies");
-    container.innerHTML = "جاري التحميل...";
+    container.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحديث الردود...</div>`;
     
     try {
       const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
       const r = await res.json();
-      
       const replied = r.data.filter(n => n.reply?.trim()).sort((a,b) => b.row - a.row);
       
       let html = "";
       replied.forEach(n => {
-        // تطبيق Linkify هنا
         const formattedNote = linkify(n.note).replace(/\n/g, "<br>");
         const formattedReply = linkify(n.reply).replace(/\n/g, "<br>");
-
         html += `
           <div class="note-item">
             <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-dim); margin-bottom:10px">
-              <span><strong>${n.name}</strong></span>
-              <span>${new Date(n.date).toLocaleDateString('ar-OM')}</span>
+              <span><i class="fas fa-user"></i> ${n.name}</span>
+              <span><i class="fas fa-calendar-alt"></i> ${new Date(n.date).toLocaleDateString('ar-OM')}</span>
             </div>
-            <p>${formattedNote}</p>
-            ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')" style="max-width:100%; border-radius:8px; margin-top:10px; cursor:zoom-in">` : ""}
+            <p style="font-size:0.95rem">${formattedNote}</p>
+            ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')" style="max-width:100%; max-height:150px; border-radius:8px; margin-top:10px; cursor:zoom-in; border:1px solid var(--border-color)">` : ""}
             
             <div class="teacher-reply">
-              <div style="color:var(--success); font-weight:700; margin-bottom:5px">الرد:</div>
-              <p>${formattedReply}</p>
+              <div style="color:var(--success); font-weight:800; margin-bottom:5px; font-size:0.9rem;"><i class="fas fa-check-circle"></i> رد الأستاذ خليل:</div>
+              <p style="font-size:0.95rem">${formattedReply}</p>
               ${n.replyImage ? `<img src="${n.replyImage}" onclick="showModal('${n.replyImage}')" style="max-width:100%; border-radius:8px; margin-top:10px;">` : ""}
             </div>
           </div>
         `;
       });
-      container.innerHTML = html || "لا توجد ردود حالياً";
-    } catch (e) { container.innerHTML = "خطأ في التحميل"; }
+      container.innerHTML = html || `<p style="text-align:center; color:var(--text-dim);">لا توجد ملاحظات تم الرد عليها بعد.</p>`;
+    } catch (e) { container.innerHTML = "❌ تعذر تحميل البيانات"; }
   }
 
   function showModal(src) { document.getElementById("modalImg").src = src; document.getElementById("modal").style.display = "flex"; }
   function closeModal() { document.getElementById("modal").style.display = "none"; }
 
   document.getElementById("image").onchange = function() {
-    document.getElementById("fileLabel").textContent = this.files[0].name;
+    if(this.files[0]) document.getElementById("fileLabel").textContent = "تم اختيار: " + this.files[0].name;
   };
 
   loadReplies();
