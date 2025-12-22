@@ -3,548 +3,183 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة التحكم – ملاحظات الصف الخامس</title>
+  <title>لوحة التحكم – الأستاذ خليل البلوشي</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #8b5cf6;
-      --primary-light: #a78bfa;
-      --secondary: #ec4899;
+      --primary: #2563eb;
+      --secondary: #7c3aed;
+      --accent: #f59e0b;
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
       --success: #10b981;
       --danger: #ef4444;
-      --warning: #f59e0b;
-      --bg: #0a0a14;
-      --card-bg: rgba(30, 27, 75, 0.4);
-      --card-hover: rgba(30, 27, 75, 0.6);
-      --text: #f1f5f9;
-      --text-muted: #cbd5e1;
-      --border: rgba(139, 92, 246, 0.2);
-      --radius: 24px;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --radius: 20px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: "Cairo", sans-serif;
-      background: 
-        radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.15), transparent 50%),
-        radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.1), transparent 50%),
-        linear-gradient(180deg, #0a0a14 0%, #1a0b2e 100%);
-      color: var(--text);
-      padding: 24px;
+      background: radial-gradient(circle at top left, #1e293b, #0f172a);
+      color: var(--text-main);
+      line-height: 1.6;
       min-height: 100vh;
-      line-height: 1.8;
-      position: relative;
-      overflow-x: hidden;
+      padding: 20px;
     }
 
-    /* خلفية متحركة */
-    body::before {
-      content: '';
-      position: fixed;
-      width: 200%;
-      height: 200%;
-      top: -50%;
-      left: -50%;
-      background: 
-        radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
-      animation: rotate 30s linear infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
+    .container { max-width: 900px; margin: 0 auto; }
 
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .container { 
-      max-width: 1100px; 
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* === البطاقات === */
-    .card {
+    /* Glass Effect Card */
+    .glass-card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(12px);
       border-radius: var(--radius);
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      transition: all 0.4s ease;
-      animation: fadeInUp 0.6s ease-out backwards;
-    }
-
-    .card:nth-child(2) { animation-delay: 0.1s; }
-    .card:nth-child(3) { animation-delay: 0.2s; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card:hover {
-      background: var(--card-hover);
-      border-color: rgba(139, 92, 246, 0.4);
-      box-shadow: var(--shadow), 0 0 40px rgba(139, 92, 246, 0.2);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 12px;
+      padding: 25px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     }
 
     .card-title {
-      font-size: 24px;
+      font-size: 1.5rem;
       font-weight: 800;
+      color: var(--text-main);
       display: flex;
+      align-items: center;
       gap: 12px;
-      align-items: center;
-      background: linear-gradient(135deg, #a78bfa, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin-bottom: 20px;
     }
 
-    .card-title .icon {
-      filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.6));
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
-    /* === أزرار الهيدر === */
-    .header-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .back-btn {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3));
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      color: #ddd6fe;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .back-btn:hover {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5));
-      transform: scale(1.1) rotate(10deg);
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
-    }
-
-    /* === النماذج === */
-    input, textarea {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 16px;
-      background: rgba(15, 15, 30, 0.8);
-      border: 2px solid rgba(139, 92, 246, 0.3);
-      color: var(--text);
-      font-size: 16px;
-      font-family: inherit;
-      margin-bottom: 16px;
-      transition: all 0.3s ease;
-    }
-
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(15, 15, 30, 0.95);
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1), 0 0 20px rgba(139, 92, 246, 0.2);
-      transform: translateY(-2px);
-    }
-
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    /* === الأزرار === */
-    .btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(139, 92, 246, 0.5);
-    }
-
-    .btn:active { transform: translateY(-1px); }
-
-    .btn-reload {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    }
-
-    .btn-save {
-      background: linear-gradient(135deg, var(--success), #059669);
-      padding: 12px;
-      font-size: 16px;
-    }
-
-    /* === الملاحظات === */
-    .note {
-      background: linear-gradient(135deg, rgba(35, 35, 60, 0.8), rgba(45, 35, 70, 0.6));
-      padding: 24px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-      border-right: 4px solid var(--primary);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      animation: slideInRight 0.5s ease-out backwards;
-    }
-
-    .note:nth-child(even) { animation-delay: 0.1s; }
-
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .note:hover {
-      transform: translateX(-5px);
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-      border-right-width: 6px;
-    }
-
-    .note-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .note-author {
-      font-weight: 700;
-      color: #ddd6fe;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .note-status {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
-      color: #e9d5ff;
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 13px;
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      font-weight: 600;
-    }
-
-    .note-content {
-      background: rgba(15, 15, 30, 0.6);
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(139, 92, 246, 0.2);
-      line-height: 1.8;
-    }
-
-    .note img {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      border-radius: 16px;
-      margin: 12px 0;
-      cursor: zoom-in;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(139, 92, 246, 0.3);
-    }
-
-    .note img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-    }
-
-    .divider {
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
-      margin: 20px 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      color: var(--primary-light);
-    }
-
-    .file-upload {
-      background: rgba(30, 30, 50, 0.7);
-      border: 2px dashed rgba(139, 92, 246, 0.4);
-      border-radius: 16px;
-      padding: 12px;
-      margin-bottom: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .file-upload:hover {
-      border-color: var(--primary);
-      background: rgba(30, 30, 50, 0.9);
-    }
-
-    .status {
-      margin-top: 10px;
-      font-size: 15px;
-      font-weight: 600;
+    .stat-box {
+      background: rgba(15, 23, 42, 0.5);
+      padding: 20px;
+      border-radius: 15px;
       text-align: center;
-      padding: 8px;
-      border-radius: 12px;
-      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
     }
+
+    .stat-box h3 { font-size: 2rem; color: var(--accent); }
+    .stat-box p { font-size: 0.85rem; color: var(--text-dim); }
+
+    /* Inputs & Buttons */
+    input, textarea {
+      width: 100%; padding: 14px; background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color); border-radius: 12px;
+      color: white; font-family: inherit; margin-top: 8px;
+    }
+
+    .btn {
+      padding: 12px 25px; border-radius: 10px; border: none;
+      font-weight: 700; cursor: pointer; transition: 0.3s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    .btn-primary { background: linear-gradient(90deg, var(--primary), var(--secondary)); color: white; }
+    .btn-save { background: var(--success); color: white; width: 100%; justify-content: center; }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+
+    /* Note Item */
+    .note-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+      border-right: 5px solid var(--primary);
+    }
+
+    .note-meta {
+      display: flex; justify-content: space-between;
+      color: var(--text-dim); font-size: 0.85rem; margin-bottom: 12px;
+    }
+
+    .note-text { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+
+    .clickable-link { color: #60a5fa; text-decoration: underline; }
+
+    /* Modal */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      z-index: 2000; justify-content: center; align-items: center;
+    }
+    .modal img { max-width: 90%; max-height: 80vh; border-radius: 10px; }
 
     .hidden { display: none; }
 
-    /* === تسجيل الدخول === */
-    .login-card {
-      max-width: 500px;
-      margin: 100px auto;
-      animation: zoomIn 0.5s ease-out;
+    /* Login Box */
+    .login-container {
+      max-width: 400px; margin: 100px auto; text-align: center;
     }
-
-    @keyframes zoomIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .login-icon {
-      text-align: center;
-      font-size: 64px;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6));
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    #loginMsg {
-      text-align: center;
-      margin-top: 16px;
-      color: var(--danger);
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    /* === Modal === */
-    #modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(10px);
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    #modal img {
-      max-width: 95vw;
-      max-height: 90vh;
-      border-radius: 20px;
-      box-shadow: 0 0 60px rgba(139, 92, 246, 0.6);
-      animation: zoomIn 0.3s ease-out;
-    }
-
-    /* === احصائيات === */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-    }
-
-    .stat-number {
-      font-size: 32px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-top: 4px;
-    }
-
-    a {
-      color: var(--primary-light);
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    a:hover {
-      color: var(--secondary);
-    }
-
-    /* === تحسينات الموبايل === */
-    @media (max-width: 768px) {
-      .card { padding: 20px; }
-      .card-title { font-size: 20px; }
-      body { padding: 16px; }
-    }
-
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: rgba(15, 15, 30, 0.5); }
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, var(--primary), var(--secondary));
-      border-radius: 10px;
-    }
+    
+    .status-msg { margin-top: 10px; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Login -->
-  <div id="login" class="card login-card">
-    <div class="login-icon">🔐</div>
-    <div class="card-header">
-      <h2 class="card-title" style="margin: 0 auto;">تسجيل الدخول إلى لوحة الإدارة</h2>
-    </div>
-    <input type="password" id="pass" placeholder="أدخل كلمة المرور" />
-    <button class="btn" onclick="login()">→ دخول</button>
-    <p id="loginMsg"></p>
+  <div id="login" class="glass-card login-container">
+    <div style="font-size: 3rem; margin-bottom: 15px;">🔐</div>
+    <h2 class="card-title" style="justify-content: center;">دخول الإدارة</h2>
+    <input type="password" id="pass" placeholder="كلمة المرور">
+    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="login()">دخول</button>
+    <p id="loginMsg" style="margin-top: 15px; color: var(--danger);"></p>
   </div>
 
-  <!-- Admin Panel -->
   <div id="panel" class="hidden">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title"><span class="icon">⚙️</span>لوحة التحكم</h2>
-        <div class="header-actions">
-          <button class="btn btn-reload" style="width:auto;padding:10px 24px;font-size:16px;" onclick="loadNotes()">
-            🔄 تحديث
-          </button>
-          <a href="index.html" class="back-btn" title="العودة إلى الصفحة الرئيسية">🏠</a>
+    <header class="glass-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h2 class="card-title" style="margin:0;"><i class="fas fa-user-shield"></i> لوحة التحكم</h2>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="loadNotes()"><i class="fas fa-sync"></i> تحديث</button>
+            <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> الرئيسية</a>
         </div>
       </div>
-      <div class="stats" id="stats">
-        <div class="stat-card">
-          <div class="stat-number" id="totalNotes">0</div>
-          <div class="stat-label">إجمالي الملاحظات</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="repliedNotes">0</div>
-          <div class="stat-label">تم الرد عليها</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="pendingNotes">0</div>
-          <div class="stat-label">قيد المراجعة</div>
-        </div>
+      
+      <div class="stats-grid" style="margin-top: 25px;">
+        <div class="stat-box"><h3 id="totalNotes">0</h3><p>الملاحظات</p></div>
+        <div class="stat-box"><h3 id="repliedNotes">0</h3><p>تم الرد</p></div>
+        <div class="stat-box"><h3 id="pendingNotes">0</h3><p>بانتظار رد</p></div>
       </div>
-    </div>
+    </header>
 
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title"><span class="icon">📥</span>جميع الملاحظات</h2>
-      </div>
+    <div class="glass-card">
+      <h2 class="card-title"><i class="fas fa-list"></i> قائمة الملاحظات</h2>
       <div id="notes">جاري التحميل...</div>
     </div>
   </div>
 </div>
 
-<div id="modal" onclick="this.style.display='none'">
+<div class="modal" id="modal" onclick="this.style.display='none'">
   <img id="modalImg">
 </div>
 
 <script>
   const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
 
-  function linkify(t) {
-    if (!t) return "";
-    return t.replace(/(https?:\/\/[^\s]+)/g, url => 
-      `<a href="${url}" target="_blank">${url}</a>`
-    );
+  // تفعيل الروابط
+  function linkify(text) {
+    if (!text) return "";
+    const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(urlPattern, '<a href="$1" target="_blank" class="clickable-link">$1</a>');
   }
 
   function login() {
     const p = document.getElementById("pass").value.trim();
-    const loginMsg = document.getElementById("loginMsg");
+    if (!p) return;
+    document.getElementById("loginMsg").textContent = "⏳ جاري التحقق...";
     
-    if (!p) {
-      loginMsg.textContent = "⚠️ يرجى إدخال كلمة المرور";
-      return;
-    }
-
-    loginMsg.textContent = "⏳ جاري التحقق...";
-    loginMsg.style.color = "#a78bfa";
-
     fetch(scriptURL, {
       method: "POST",
       body: JSON.stringify({ type: "login", password: p })
@@ -556,102 +191,57 @@
         document.getElementById("panel").classList.remove("hidden");
         loadNotes();
       } else {
-        loginMsg.textContent = "❌ كلمة المرور غير صحيحة";
-        loginMsg.style.color = "#ef4444";
+        document.getElementById("loginMsg").textContent = "❌ كلمة المرور خطأ";
       }
-    })
-    .catch(() => {
-      loginMsg.textContent = "❌ خطأ في الاتصال";
-      loginMsg.style.color = "#ef4444";
     });
   }
 
-  // إضافة إمكانية الدخول بالضغط على Enter
-  document.addEventListener('DOMContentLoaded', () => {
-    const passInput = document.getElementById("pass");
-    if (passInput) {
-      passInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') login();
-      });
-    }
-  });
-
   async function loadNotes() {
-    document.getElementById("notes").innerHTML = '<div style="text-align:center;padding:40px;color:#cbd5e1;">⏳ جاري التحميل...</div>';
+    const container = document.getElementById("notes");
+    container.innerHTML = "جاري التحميل...";
     
     try {
-      const r = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
-      const d = await r.json();
+      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
+      const d = await res.json();
       
-      if (!d.success || !d.data) {
-        document.getElementById("notes").innerHTML = '<div style="text-align:center;padding:40px;color:#cbd5e1;">لا توجد ملاحظات</div>';
-        updateStats(0, 0, 0);
-        return;
-      }
-
-      // حساب الإحصائيات
       const total = d.data.length;
       const replied = d.data.filter(n => n.reply?.trim()).length;
-      const pending = total - replied;
-      updateStats(total, replied, pending);
+      updateStats(total, replied, total - replied);
 
-      // ترتيب الملاحظات (الأحدث أولاً)
-      d.data.sort((a, b) => (b.row || 0) - (a.row || 0));
+      d.data.sort((a, b) => b.row - a.row);
 
       let html = "";
       d.data.forEach(n => {
-        const hasReply = n.reply?.trim();
         html += `
-          <div class="note">
-            <div class="note-header">
-              <div class="note-author">
-                <span>👤</span>
-                <span>${n.name || "مجهول"}</span>
-              </div>
-              <span class="note-status">${n.status || "قيد المراجعة"}</span>
+          <div class="note-item">
+            <div class="note-meta">
+              <span><i class="fas fa-user"></i> ${n.name || "مجهول"}</span>
+              <span><i class="fas fa-clock"></i> ${new Date(n.date).toLocaleDateString('ar-OM')}</span>
             </div>
+            <div class="note-text">${linkify(n.note).replace(/\n/g, "<br>")}</div>
+            ${n.image ? `<img src="${n.image}" onclick="openImg('${n.image}')" style="max-width:100px; border-radius:8px; cursor:pointer; margin-bottom:15px; border:1px solid var(--border-color)">` : ""}
             
-            <div class="note-content">
-              ${linkify(n.note || "")}
+            <div style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <label style="font-size: 0.85rem; color: var(--success); font-weight: bold;">الرد على الطالب:</label>
+                <textarea id="r${n.row}" rows="3" placeholder="اكتب ردك هنا...">${n.reply || ""}</textarea>
+                
+                <label style="font-size: 0.85rem; color: var(--text-dim); display: block; margin-top: 10px;">ارفاق صورة للرد:</label>
+                <input type="file" id="f${n.row}" accept="image/*" style="font-size: 0.8rem; margin-bottom: 10px;">
+                
+                <button class="btn btn-save" onclick="save(${n.row})"><i class="fas fa-paper-plane"></i> حفظ وإرسال الرد</button>
+                <div id="s${n.row}" class="status-msg"></div>
             </div>
-            
-            ${n.image ? `<img src="${n.image}" onclick="document.getElementById('modalImg').src='${n.image}'; document.getElementById('modal').style.display='flex'" alt="صورة الملاحظة">` : ""}
-            
-            <div class="divider"></div>
-            
-            <label>✍️ رد الأستاذ</label>
-            <textarea id="r${n.row}" placeholder="اكتب الرد هنا...">${n.reply || ""}</textarea>
-            
-            <label>📷 صورة الرد (اختياري)</label>
-            <input type="file" id="f${n.row}" accept="image/*" class="file-upload">
-            
-            ${n.replyImage ? `<div style="margin-bottom:12px;"><img src="${n.replyImage}" onclick="document.getElementById('modalImg').src='${n.replyImage}'; document.getElementById('modal').style.display='flex'" alt="صورة الرد" style="max-height:200px;"></div>` : ""}
-            
-            <button class="btn btn-save" onclick="save(${n.row})">💾 حفظ الرد</button>
-            <div id="s${n.row}" class="status"></div>
           </div>
         `;
       });
-      
-      document.getElementById("notes").innerHTML = html;
-    } catch (error) {
-      document.getElementById("notes").innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ خطأ في تحميل البيانات</div>';
-      updateStats(0, 0, 0);
-    }
+      container.innerHTML = html;
+    } catch (e) { container.innerHTML = "❌ خطأ في التحميل"; }
   }
 
-  function updateStats(total, replied, pending) {
-    document.getElementById("totalNotes").textContent = total;
-    document.getElementById("repliedNotes").textContent = replied;
-    document.getElementById("pendingNotes").textContent = pending;
-  }
-
-  function toBase64(f) {
-    return new Promise(r => {
-      const rd = new FileReader();
-      rd.onload = () => r(rd.result);
-      rd.readAsDataURL(f);
-    });
+  function updateStats(t, r, p) {
+    document.getElementById("totalNotes").textContent = t;
+    document.getElementById("repliedNotes").textContent = r;
+    document.getElementById("pendingNotes").textContent = p;
   }
 
   async function save(row) {
@@ -660,49 +250,32 @@
     const status = document.getElementById(`s${row}`);
     
     status.textContent = "⏳ جاري الحفظ...";
-    status.style.color = "#a78bfa";
-    status.style.background = "rgba(139, 92, 246, 0.1)";
+    status.style.color = "var(--accent)";
 
-    let img = "";
+    let imgBase64 = "";
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        status.textContent = "❌ حجم الصورة يجب أن يكون أقل من 5MB";
-        status.style.color = "#ef4444";
-        status.style.background = "rgba(239, 68, 68, 0.1)";
-        return;
-      }
-      img = await toBase64(file);
+      const reader = new FileReader();
+      imgBase64 = await new Promise(res => {
+        reader.onload = () => res(reader.result);
+        reader.readAsDataURL(file);
+      });
     }
 
     try {
       const res = await fetch(scriptURL, {
         method: "POST",
-        body: JSON.stringify({ type: "reply", row, reply: txt, replyImage: img })
+        body: JSON.stringify({ type: "reply", row, reply: txt, replyImage: imgBase64 })
       });
       const d = await res.json();
-      
       if (d.success) {
-        status.textContent = "✔ تم الحفظ بنجاح!";
-        status.style.color = "#10b981";
-        status.style.background = "rgba(16, 185, 129, 0.1)";
-        document.getElementById(`f${row}`).value = "";
-        setTimeout(() => loadNotes(), 2000);
-      } else {
-        status.textContent = "❌ فشل الحفظ: " + (d.error || "خطأ غير معروف");
-        status.style.color = "#ef4444";
-        status.style.background = "rgba(239, 68, 68, 0.1)";
+        status.textContent = "✅ تم الحفظ بنجاح";
+        status.style.color = "var(--success)";
+        setTimeout(() => loadNotes(), 1500);
       }
-    } catch (error) {
-      status.textContent = "❌ خطأ في الاتصال بالخادم";
-      status.style.color = "#ef4444";
-      status.style.background = "rgba(239, 68, 68, 0.1)";
-    }
-    
-    setTimeout(() => {
-      status.textContent = "";
-      status.style.background = "transparent";
-    }, 5000);
+    } catch (e) { status.textContent = "❌ خطأ في الحفظ"; }
   }
+
+  function openImg(s) { document.getElementById("modalImg").src = s; document.getElementById("modal").style.display = "flex"; }
 </script>
 </body>
 </html>
