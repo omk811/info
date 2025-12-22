@@ -8,843 +8,426 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #7c3aed;
-      --primary-light: #8b5cf6;
-      --primary-dark: #5b21b6;
-      --secondary: #ec4899;
-      --accent: #06b6d4;
+      --primary: #2563eb;
+      --primary-glow: rgba(37, 99, 235, 0.4);
+      --secondary: #7c3aed;
+      --accent: #f59e0b;
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
       --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg: #0f0f23;
-      --card-bg: rgba(25, 25, 50, 0.4);
-      --card-hover: rgba(35, 35, 65, 0.6);
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: rgba(124, 58, 237, 0.3);
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      --shadow-light: 0 8px 24px rgba(0, 0, 0, 0.3);
-      --glow: 0 0 40px rgba(124, 58, 237, 0.2);
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --radius: 20px;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: "Cairo", sans-serif;
-      background: 
-        radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15), transparent 50%),
-        radial-gradient(ellipse at bottom, rgba(236, 72, 153, 0.1), transparent 50%),
-        linear-gradient(180deg, #0a0a14 0%, #1a0b2e 100%);
-      color: var(--text);
-      line-height: 1.8;
-      padding-bottom: 100px;
+      background: radial-gradient(circle at top left, #1e293b, #0f172a);
+      color: var(--text-main);
+      line-height: 1.6;
       min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
+      padding-bottom: 80px;
     }
 
-    /* خلفية متحركة */
-    body::before {
-      content: '';
-      position: fixed;
-      width: 200%;
-      height: 200%;
-      top: -50%;
-      left: -50%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
-      animation: floatBg 20s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    @keyframes floatBg {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(30px, -30px) rotate(120deg); }
-      66% { transform: translate(-20px, 20px) rotate(240deg); }
-    }
-
-    /* أنماط النصوص */
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    p {
-      margin-bottom: 1rem;
-    }
-
-    /* الحاوية الرئيسية */
     .container {
-      max-width: 1000px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 20px;
-      position: relative;
-      z-index: 1;
     }
 
-    /* === الهيدر === */
-    .header {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(236, 72, 153, 0.15));
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      margin-bottom: 32px;
-      box-shadow: var(--shadow), var(--glow);
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-      animation: slideDown 0.6s ease-out;
+    /* Header Design */
+    .hero-section {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+      border-radius: var(--radius);
+      margin-bottom: 30px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-      animation: shimmer 3s linear infinite;
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    .header h1 {
-      font-size: 28px;
+    .hero-section h1 {
+      font-size: 1.8rem;
       font-weight: 800;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, #a78bfa, #ec4899, #06b6d4);
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #fff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
+    }
+
+    .hero-section i {
+      color: var(--accent);
+      margin-left: 10px;
+    }
+
+    /* Badges */
+    .badge-container {
       display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .header h1 i {
-      font-size: 36px;
-      filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.6));
-    }
-
-    .header p {
-      color: var(--text-muted);
-      font-size: 16px;
-      line-height: 1.8;
-    }
-
-    .badges {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
       flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
     }
 
     .badge {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(236, 72, 153, 0.2));
-      color: #e9d5ff;
-      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 14px;
       border-radius: 50px;
-      font-size: 14px;
-      border: 1px solid rgba(124, 58, 237, 0.4);
-      backdrop-filter: blur(10px);
-      transition: var(--transition);
-      cursor: default;
+      font-size: 0.85rem;
+      border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .badge:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
-    }
-
-    /* === البطاقات === */
-    .card {
+    /* Card Styling */
+    .glass-card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      transition: var(--transition);
-      animation: fadeInUp 0.6s ease-out backwards;
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      padding: 25px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.5s ease;
     }
-
-    .card:nth-child(2) { animation-delay: 0.1s; }
-    .card:nth-child(3) { animation-delay: 0.2s; }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .card:hover {
-      background: var(--card-hover);
-      border-color: rgba(124, 58, 237, 0.5);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow), 0 0 40px rgba(124, 58, 237, 0.2);
-    }
-
-    .card-title {
-      font-size: 22px;
-      font-weight: 700;
+    .section-title {
+      font-size: 1.25rem;
       margin-bottom: 20px;
       display: flex;
-      gap: 12px;
       align-items: center;
-      color: var(--primary-light);
+      gap: 10px;
+      color: var(--accent);
     }
 
-    .card-title i {
-      font-size: 28px;
-      filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.5));
-    }
-
-    /* === النماذج === */
-    .form-group {
-      margin-bottom: 20px;
-      animation: fadeIn 0.5s ease-out backwards;
-    }
-
-    .form-group:nth-child(1) { animation-delay: 0.1s; }
-    .form-group:nth-child(2) { animation-delay: 0.2s; }
-    .form-group:nth-child(3) { animation-delay: 0.3s; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
+    /* Form Elements */
+    .form-group { margin-bottom: 20px; }
+    
     label {
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
-      font-size: 16px;
-      color: var(--text);
+      font-size: 0.95rem;
     }
 
-    .required::after { 
-      content: " *"; 
-      color: var(--danger); 
-      font-weight: 700;
-    }
-
-    input, textarea, select {
+    input, textarea {
       width: 100%;
-      padding: 14px 18px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 15, 30, 0.8);
-      border: 2px solid rgba(124, 58, 237, 0.3);
-      color: var(--text);
-      font-size: 16px;
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: white;
       font-family: inherit;
-      transition: var(--transition);
+      transition: 0.3s;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
-      background: rgba(15, 15, 30, 0.95);
-      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1), 0 0 20px rgba(124, 58, 237, 0.2);
-      transform: translateY(-2px);
+      box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
-    textarea { 
-      min-height: 120px; 
-      resize: vertical;
-      line-height: 1.6;
-    }
-
-    .file-input-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      background: rgba(30, 30, 50, 0.7);
-      border-radius: var(--radius-md);
-      border: 2px dashed rgba(124, 58, 237, 0.4);
+    /* File Upload Area */
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
       cursor: pointer;
-      transition: var(--transition);
+      transition: 0.3s;
     }
 
-    .file-input-wrap:hover {
+    .upload-area:hover {
       border-color: var(--primary);
-      background: rgba(30, 30, 50, 0.9);
-      transform: translateY(-2px);
+      background: rgba(37, 99, 235, 0.05);
     }
 
-    .file-input-wrap i { 
-      color: var(--secondary); 
-      font-size: 22px;
-      filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.5));
-    }
-
-    /* === الأزرار === */
-    .btn {
+    /* Buttons */
+    .btn-primary {
       width: 100%;
       padding: 16px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       border: none;
-      border-radius: 50px;
-      font-size: 18px;
+      border-radius: 12px;
+      color: white;
       font-weight: 700;
+      font-size: 1.1rem;
       cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--shadow-light);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
 
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
     }
 
-    .btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
-    }
-
-    .btn:active { 
-      transform: translateY(-1px); 
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(236, 72, 153, 0.3));
-      backdrop-filter: blur(10px);
-      width: auto;
-      padding: 10px 20px;
-      font-size: 15px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(124, 58, 237, 0.5);
-    }
-
-    .status {
-      text-align: center;
-      margin-top: 12px;
-      min-height: 24px;
-      font-size: 16px;
+    .btn-refresh {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
       font-weight: 600;
-      transition: var(--transition);
-      padding: 10px;
-      border-radius: var(--radius-sm);
-      background: rgba(30, 30, 50, 0.3);
+      margin-bottom: 20px;
     }
 
-    .status.success {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-    }
-
-    .status.error {
-      background: rgba(239, 68, 68, 0.2);
-      color: #ef4444;
-    }
-
-    .status.loading {
-      background: rgba(124, 58, 237, 0.2);
-      color: #a78bfa;
-    }
-
-    /* === الملاحظات === */
-    .note {
-      background: linear-gradient(135deg, rgba(35, 35, 60, 0.8), rgba(45, 35, 70, 0.6));
-      border-radius: 20px;
+    /* Notes List */
+    .note-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
       padding: 20px;
       margin-bottom: 20px;
-      border-right: 4px solid var(--primary);
-      backdrop-filter: blur(10px);
-      transition: var(--transition);
-      animation: slideInRight 0.5s ease-out backwards;
+      border-right: 4px solid var(--accent);
     }
 
-    .note:nth-child(even) { animation-delay: 0.1s; }
-
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .note:hover {
-      transform: translateX(-5px);
-      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
-      border-right-width: 6px;
-    }
-
-    .note-header {
+    .note-meta {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 15px;
-      flex-wrap: wrap;
-      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
     }
 
-    .note-author { 
-      font-weight: 700; 
-      color: #ddd6fe;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .teacher-reply {
+      background: rgba(16, 185, 129, 0.08);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
-    .note-date { 
-      color: var(--text-muted); 
-      font-size: 13px;
+    .teacher-reply-title {
+      color: var(--success);
+      font-weight: 700;
+      margin-bottom: 5px;
       display: flex;
       align-items: center;
       gap: 5px;
     }
 
-    .note-text, .reply-text {
-      white-space: pre-wrap;
-      line-height: 1.8;
-      color: var(--text);
-    }
-
-    .note img, .reply img {
-      width: 100%;
-      max-height: 280px;
-      object-fit: contain;
-      border-radius: var(--radius-md);
-      margin-top: 12px;
-      cursor: zoom-in;
-      transition: var(--transition);
-      border: 2px solid rgba(124, 58, 237, 0.2);
-    }
-
-    .note img:hover, .reply img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
-    }
-
-    .reply-box {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 2px dashed rgba(124, 58, 237, 0.3);
-      animation: fadeIn 0.6s ease-out;
-    }
-
-    .reply-title {
-      font-weight: 700;
-      color: var(--success);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 16px;
-    }
-
-    .empty {
-      text-align: center;
-      color: var(--text-muted);
-      padding: 40px 20px;
-      font-size: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .empty i {
-      font-size: 48px;
-      opacity: 0.7;
-    }
-
-    /* === التنقل السفلي === */
-    .nav {
+    /* Bottom Nav */
+    .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(15, 15, 27, 0.95);
-      backdrop-filter: blur(20px);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-      z-index: 100;
-    }
-
-    .nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      text-align: center;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      transition: var(--transition);
-      font-weight: 600;
-      flex: 1;
-      max-width: 100px;
-    }
-
-    .nav a i {
-      font-size: 22px;
-      transition: var(--transition);
-    }
-
-    .nav a:hover {
-      color: var(--primary-light);
-      background: rgba(124, 58, 237, 0.1);
-    }
-
-    .nav a.active { 
-      color: var(--primary);
-      background: rgba(124, 58, 237, 0.2);
-    }
-
-    .nav a.active i {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6));
-    }
-
-    /* === Modal === */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.95);
+      padding: 10px;
+      border-top: 1px solid var(--border-color);
       z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(10px);
-      animation: fadeIn 0.3s ease-out;
     }
 
-    .modal-content {
-      position: relative;
-      max-width: 95vw;
-      max-height: 90vh;
+    .nav-item {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      text-align: center;
     }
 
-    .modal img {
-      max-width: 100%;
-      max-height: 90vh;
-      border-radius: 20px;
-      box-shadow: 0 0 60px rgba(124, 58, 237, 0.6);
-      animation: zoomIn 0.3s ease-out;
-    }
+    .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
+    .nav-item.active { color: var(--primary); }
 
-    .modal-close {
-      position: absolute;
-      top: -15px;
-      right: -15px;
-      background: var(--danger);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1001;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    /* Modal */
+    .modal {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      z-index: 2000; justify-content: center; align-items: center;
     }
-
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* === تحسينات الموبايل === */
-    @media (max-width: 768px) {
-      .header h1 { font-size: 24px; }
-      .card-title { font-size: 20px; }
-      .container { padding: 14px; }
-      .header { padding: 24px; }
-      .card { padding: 20px; }
-      .nav a { font-size: 12px; padding: 8px 12px; }
-      .nav a i { font-size: 20px; }
-      .btn { padding: 14px; font-size: 16px; }
-    }
+    .modal img { max-width: 90%; max-height: 80vh; border-radius: 10px; }
 
     @media (max-width: 480px) {
-      .header h1 { font-size: 22px; flex-direction: column; align-items: flex-start; gap: 8px; }
-      .header h1 i { font-size: 32px; }
-      .badge { font-size: 12px; padding: 6px 12px; }
-      .note-header { flex-direction: column; align-items: flex-start; }
+      .hero-section h1 { font-size: 1.4rem; }
     }
-
-    /* === تأثيرات إضافية === */
-    a {
-      color: var(--primary-light);
-      text-decoration: none;
-      transition: var(--transition);
-    }
-
-    a:hover {
-      color: var(--secondary);
-      text-decoration: underline;
-    }
-
-    /* شريط التمرير */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 15, 30, 0.5);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, var(--primary), var(--secondary));
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(180deg, var(--primary-light), var(--secondary));
-    }
-
-    /* أدوات تنسيق النصوص */
-    .text-center {
-      text-align: center;
-    }
-
-    .mt-1 { margin-top: 10px; }
-    .mt-2 { margin-top: 20px; }
-    .mt-3 { margin-top: 30px; }
-    .mb-1 { margin-bottom: 10px; }
-    .mb-2 { margin-bottom: 20px; }
-    .mb-3 { margin-bottom: 30px; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="header">
-    <h1><i class="fas fa-inbox"></i>صندوق ملاحظات الصف الخامس</h1>
-    <p>أرسل سؤالك أو ملاحظتك، وسيتم الرد عليك هنا بعد مراجعتها من قبل <strong>الأستاذ خليل البلوشي</strong>.</p>
-    <div class="badges">
-      <span class="badge"><i class="fas fa-mobile-alt"></i> متوافق مع الجوال</span>
-      <span class="badge"><i class="fas fa-clock"></i> الرد خلال 24–48 ساعة</span>
-      <span class="badge"><i class="fas fa-lock"></i> آمن ومحمي</span>
-      <span class="badge"><i class="fas fa-image"></i> رفع الصور</span>
+  <header class="hero-section">
+    <h1><i class="fas fa-graduation-cap"></i>صندوق ملاحظات الصف الخامس</h1>
+    <p>تواصل مباشرة مع <strong>الأستاذ خليل البلوشي</strong> لطرح أسئلتك وملاحظاتك.</p>
+    <div class="badge-container">
+      <div class="badge"><i class="fas fa-clock"></i> رد سريع</div>
+      <div class="badge"><i class="fas fa-user-shield"></i> خصوصية تامة</div>
+      <div class="badge"><i class="fas fa-image"></i> دعم الصور</div>
     </div>
-  </div>
+  </header>
 
-  <div class="card">
-    <h2 class="card-title"><i class="fas fa-edit"></i>إرسال ملاحظة جديدة</h2>
+  <div class="glass-card" id="send">
+    <h2 class="section-title"><i class="fas fa-paper-plane"></i>إرسال ملاحظة جديدة</h2>
+    
     <div class="form-group">
-      <label class="required">الاسم</label>
-      <input type="text" id="name" placeholder="طالب/ة، ولي أمر، أو اسم مستعار">
+      <label>الاسم الكامل</label>
+      <input type="text" id="name" placeholder="أدخل اسمك أو اسماً مستعاراً">
     </div>
+
     <div class="form-group">
-      <label class="required">الملاحظة أو السؤال</label>
-      <textarea id="note" placeholder="اكتب سؤالك أو ملاحظتك بوضوح..."></textarea>
+      <label>نص الملاحظة أو السؤال</label>
+      <textarea id="note" rows="4" placeholder="اكتب استفسارك هنا بالتفصيل..."></textarea>
     </div>
+
     <div class="form-group">
-      <label>صورة (اختياري)</label>
-      <div class="file-input-wrap" onclick="document.getElementById('image').click()">
-        <i class="fas fa-camera"></i>
-        <span id="fileLabel">اضغط لاختيار صورة (حتى 5MB)</span>
+      <label>إرفاق صورة (اختياري)</label>
+      <div class="upload-area" onclick="document.getElementById('image').click()">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;"></i>
+        <p id="fileLabel">اسحب الصورة هنا أو انقر للاختيار</p>
+        <span style="font-size: 0.75rem; color: var(--text-dim);">الحد الأقصى: 5 ميجابايت</span>
       </div>
       <input type="file" id="image" accept="image/*" style="display:none">
-      <p style="font-size:13px;color:var(--text-muted);margin-top:8px">
-        <i class="fas fa-info-circle"></i> يمكن رفع لقطة شاشة للتمرين أو السؤال
-      </p>
     </div>
-    <button class="btn" id="sendBtn" onclick="sendNote()">
-      <i class="fas fa-paper-plane"></i> إرسال الملاحظة
+
+    <button class="btn-primary" id="sendBtn" onclick="sendNote()">
+      <i class="fas fa-send"></i> إرسال الآن
     </button>
-    <p class="status" id="formStatus"></p>
+    <p id="formStatus" style="margin-top: 15px; text-align: center; font-weight: 600;"></p>
   </div>
 
-  <div class="card">
-    <h2 class="card-title"><i class="fas fa-comments"></i>الملاحظات التي تم الرد عليها</h2>
-    <button class="btn btn-secondary" onclick="loadReplies()">
-      <i class="fas fa-sync-alt"></i> تحديث القائمة
-    </button>
-    <div id="replies">
-      <div class="empty">
-        <i class="fas fa-spinner fa-spin"></i>
-        <span>جاري التحميل...</span>
+  <div class="glass-card" id="replies-section">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2 class="section-title" style="margin-bottom: 0;"><i class="fas fa-comments"></i> السجل والردود</h2>
+      <button class="btn-refresh" onclick="loadReplies()">
+        <i class="fas fa-sync-alt"></i> تحديث
+      </button>
+    </div>
+    
+    <div id="replies" style="margin-top: 20px;">
+      <div style="text-align: center; padding: 40px;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+        <p style="margin-top: 10px;">جاري جلب البيانات...</p>
       </div>
     </div>
   </div>
 </div>
 
-<nav class="nav">
-  <a href="#" class="active">
-    <i class="fas fa-home"></i>
-    <span>الرئيسية</span>
+<nav class="bottom-nav">
+  <a href="#" class="nav-item active">
+    <i class="fas fa-home"></i> الرئيسية
   </a>
-  <a href="#send" onclick="document.getElementById('name').focus()">
-    <i class="fas fa-pen"></i>
-    <span>إرسال</span>
+  <a href="#send" class="nav-item">
+    <i class="fas fa-pen-nib"></i> إرسال
   </a>
-  <a href="#replies" onclick="loadReplies()">
-    <i class="fas fa-comment-dots"></i>
-    <span>الردود</span>
+  <a href="#replies-section" class="nav-item">
+    <i class="fas fa-reply-all"></i> الردود
   </a>
-  <a href="admin.html">
-    <i class="fas fa-cog"></i>
-    <span>الإدارة</span>
+  <a href="admin.html" class="nav-item">
+    <i class="fas fa-user-lock"></i> الإدارة
   </a>
 </nav>
 
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal()">
-      <i class="fas fa-times"></i>
-    </button>
-    <img id="modalImg">
-  </div>
+<div class="modal" id="modal" onclick="closeModal()">
+  <img id="modalImg">
 </div>
 
 <script>
+  // نستخدم نفس الرابط البرمجي الخاص بك
   const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
 
-  const nameInput = document.getElementById("name");
-  const noteInput = document.getElementById("note");
   const fileInput = document.getElementById("image");
   const fileLabel = document.getElementById("fileLabel");
-  const formStatus = document.getElementById("formStatus");
-  const sendBtn = document.getElementById("sendBtn");
 
   fileInput.addEventListener("change", () => {
-    fileLabel.textContent = fileInput.files[0] ? fileInput.files[0].name : "اضغط لاختيار صورة (حتى 5MB)";
+    fileLabel.textContent = fileInput.files[0] ? `تم اختيار: ${fileInput.files[0].name}` : "انقر لاختيار صورة";
   });
 
-  function setStatus(msg, type = "info") {
-    formStatus.textContent = msg;
-    formStatus.className = "status";
-    formStatus.classList.add(type);
-  }
-
-  function clearStatus() {
-    formStatus.textContent = "";
-    formStatus.className = "status";
-  }
-
-  function toBase64(f) {
-    return new Promise((resolve) => {
-      const r = new FileReader();
-      r.onload = () => resolve(r.result);
-      r.readAsDataURL(f);
-    });
-  }
-
-  function linkify(t) {
-    if (!t) return "";
-    return t.replace(/(https?:\/\/[^\s]+)/g, url => 
-      `<a href="${url}" target="_blank">${url}</a>`
-    );
-  }
-
   async function sendNote() {
-    const name = nameInput.value.trim() || "مجهول";
-    const note = noteInput.value.trim();
+    const name = document.getElementById("name").value.trim() || "مجهول";
+    const note = document.getElementById("note").value.trim();
+    const btn = document.getElementById("sendBtn");
+    const status = document.getElementById("formStatus");
+
     if (!note) {
-      setStatus("❌ يرجى كتابة الملاحظة أو السؤال", "error");
-      noteInput.focus();
+      status.style.color = "#ef4444";
+      status.textContent = "⚠️ يرجى كتابة نص الملاحظة";
       return;
     }
 
-    let img = "";
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+    
+    let imgBase64 = "";
     if (fileInput.files[0]) {
-      if (fileInput.files[0].size > 5 * 1024 * 1024) {
-        setStatus("❌ حجم الصورة يجب أن يكون أقل من 5MB", "error");
-        return;
-      }
-      img = await toBase64(fileInput.files[0]);
+      imgBase64 = await toBase64(fileInput.files[0]);
     }
 
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-    setStatus("⏳ جاري إرسال ملاحظتك...", "loading");
-
     try {
-      const res = await fetch(scriptURL, {
+      const response = await fetch(scriptURL, {
         method: "POST",
-        body: JSON.stringify({ type: "add", name, note, image: img })
+        body: JSON.stringify({ type: "add", name, note, image: imgBase64 })
       });
-      const r = await res.json();
-      if (r.success) {
-        setStatus("✅ تم إرسال ملاحظتك بنجاح! سيتم الرد عليها قريبًا.", "success");
-        nameInput.value = ""; 
-        noteInput.value = ""; 
+      const result = await response.json();
+      if (result.success) {
+        status.style.color = "#10b981";
+        status.textContent = "✅ تم الإرسال بنجاح!";
+        document.getElementById("note").value = "";
         fileInput.value = "";
-        fileLabel.textContent = "اضغط لاختيار صورة (حتى 5MB)";
-        setTimeout(() => loadReplies(), 1500);
-      } else {
-        setStatus(`❌ خطأ: ${r.error || "غير معروف"}`, "error");
+        fileLabel.textContent = "اسحب الصورة هنا أو انقر للاختيار";
+        loadReplies();
       }
     } catch (e) {
-      setStatus("❌ خطأ في الاتصال بالإنترنت. تحقق من اتصالك وحاول مرة أخرى.", "error");
+      status.style.color = "#ef4444";
+      status.textContent = "❌ فشل الإرسال، حاول لاحقاً";
     } finally {
-      sendBtn.disabled = false;
-      sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الملاحظة';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-send"></i> إرسال الآن';
     }
   }
 
-  function formatDate(d) {
-    if (!d) return "";
+  async function loadReplies() {
+    const container = document.getElementById("replies");
     try {
-      return new Date(d).toLocaleString("ar-OM", {
-        year: "numeric", 
-        month: "short", 
-        day: "numeric",
-        hour: "2-digit", 
-        minute: "2-digit"
+      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
+      const r = await res.json();
+      
+      if (!r.success || r.data.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:var(--text-dim);">لا توجد ملاحظات حالياً</p>`;
+        return;
+      }
+
+      const replied = r.data.filter(n => n.reply?.trim()).sort((a,b) => b.row - a.row);
+      
+      let html = "";
+      replied.forEach(n => {
+        html += `
+          <div class="note-item">
+            <div class="note-meta">
+              <span><strong>${n.name}</strong></span>
+              <span>${new Date(n.date).toLocaleDateString('ar-OM')}</span>
+            </div>
+            <p>${n.note}</p>
+            ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')" style="width:100px; border-radius:8px; margin-top:10px; cursor:zoom-in;">` : ""}
+            
+            <div class="teacher-reply">
+              <div class="teacher-reply-title"><i class="fas fa-check-circle"></i> رد الأستاذ خليل:</div>
+              <p>${n.reply}</p>
+            </div>
+          </div>
+        `;
       });
-    } catch { 
-      return ""; 
+      container.innerHTML = html;
+    } catch (e) {
+      container.innerHTML = `<p style="color:red">خطأ في تحميل البيانات</p>`;
     }
+  }
+
+  function toBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
   }
 
   function showModal(src) {
@@ -856,105 +439,8 @@
     document.getElementById("modal").style.display = "none";
   }
 
-  async function loadReplies() {
-    const repliesContainer = document.getElementById("replies");
-    repliesContainer.innerHTML = `
-      <div class="empty">
-        <i class="fas fa-spinner fa-spin"></i>
-        <span>جاري تحميل الملاحظات...</span>
-      </div>
-    `;
-    
-    try {
-      const res = await fetch(scriptURL, { 
-        method: "POST", 
-        body: JSON.stringify({ type: "get" }) 
-      });
-      const r = await res.json();
-      if (!r.success || !r.data) {
-        repliesContainer.innerHTML = `
-          <div class="empty">
-            <i class="far fa-comment-dots"></i>
-            <span>لا توجد ردود بعد</span>
-          </div>
-        `;
-        return;
-      }
-
-      const replied = r.data.filter(n => n.reply?.trim());
-      if (replied.length === 0) {
-        repliesContainer.innerHTML = `
-          <div class="empty">
-            <i class="far fa-comment-dots"></i>
-            <span>لا توجد ملاحظات تم الرد عليها بعد</span>
-          </div>
-        `;
-        return;
-      }
-
-      replied.sort((a, b) => (b.row || 0) - (a.row || 0));
-      let html = "";
-      replied.forEach(n => {
-        const noteHtml = linkify((n.note || "").replace(/\n/g, "<br>"));
-        const replyHtml = linkify((n.reply || "").replace(/\n/g, "<br>"));
-        html += `
-          <div class="note">
-            <div class="note-header">
-              <span class="note-author">
-                <i class="fas fa-user"></i>
-                ${n.name || "مجهول"}
-              </span>
-              <span class="note-date">
-                <i class="far fa-clock"></i>
-                ${formatDate(n.date)}
-              </span>
-            </div>
-            <div class="note-text">${noteHtml}</div>
-            ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')">` : ""}
-            <div class="reply-box">
-              <div class="reply-title">
-                <i class="fas fa-check-circle"></i>
-                رد الأستاذ خليل البلوشي
-              </div>
-              <div class="reply-text">${replyHtml}</div>
-              ${n.replyImage ? `<img src="${n.replyImage}" onclick="showModal('${n.replyImage}')">` : ""}
-            </div>
-          </div>
-        `;
-      });
-      repliesContainer.innerHTML = html;
-    } catch {
-      repliesContainer.innerHTML = `
-        <div class="empty">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>❌ حدث خطأ أثناء تحميل الملاحظات</span>
-        </div>
-      `;
-    }
-  }
-
-  // تحميل الملاحظات عند فتح الصفحة
-  document.addEventListener('DOMContentLoaded', function() {
-    loadReplies();
-    
-    // إضافة مؤثرات عند التركيز على الحقول
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-      input.addEventListener('focus', function() {
-        this.parentElement.classList.add('focused');
-      });
-      input.addEventListener('blur', function() {
-        this.parentElement.classList.remove('focused');
-      });
-    });
-  });
-
-  // إغلاق المودال بالضغط على ESC
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeModal();
-    }
-  });
+  // Initial load
+  loadReplies();
 </script>
 </body>
 </html>
