@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة التحكم – الأستاذ خليل البلوشي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #2563eb;
-      --secondary: #7c3aed;
+      --primary: #3b82f6;
+      --secondary: #8b5cf6;
       --accent: #f59e0b;
       --bg-dark: #0f172a;
       --card-bg: rgba(30, 41, 59, 0.7);
@@ -19,12 +19,18 @@
       --danger: #ef4444;
       --border-color: rgba(255, 255, 255, 0.1);
       --radius: 20px;
+      --shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
 
     body {
-      font-family: "Cairo", sans-serif;
+      font-family: "Baloo Bhaijaan 2", sans-serif;
       background: radial-gradient(circle at top left, #1e293b, #0f172a);
       color: var(--text-main);
       line-height: 1.6;
@@ -32,7 +38,10 @@
       padding: 20px;
     }
 
-    .container { max-width: 900px; margin: 0 auto; }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
     /* Glass Effect Card */
     .glass-card {
@@ -42,7 +51,7 @@
       padding: 25px;
       border: 1px solid var(--border-color);
       margin-bottom: 25px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow);
     }
 
     .card-title {
@@ -69,27 +78,69 @@
       border-radius: 15px;
       text-align: center;
       border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .stat-box h3 { font-size: 2rem; color: var(--accent); }
-    .stat-box p { font-size: 0.85rem; color: var(--text-dim); }
+    .stat-box h3 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+
+    .stat-box p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
 
     /* Inputs & Buttons */
     input, textarea {
-      width: 100%; padding: 14px; background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-color); border-radius: 12px;
-      color: white; font-family: inherit; margin-top: 8px;
+      width: 100%;
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: white;
+      font-family: inherit;
+      margin-top: 8px;
+      resize: vertical;
     }
 
     .btn {
-      padding: 12px 25px; border-radius: 10px; border: none;
-      font-weight: 700; cursor: pointer; transition: 0.3s;
-      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 25px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
     }
 
-    .btn-primary { background: linear-gradient(90deg, var(--primary), var(--secondary)); color: white; }
-    .btn-save { background: var(--success); color: white; width: 100%; justify-content: center; }
-    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .btn-save {
+      background: var(--success);
+      color: white;
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
     /* Note Item */
     .note-item {
@@ -98,184 +149,246 @@
       padding: 20px;
       margin-bottom: 25px;
       border-right: 5px solid var(--primary);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .note-meta {
-      display: flex; justify-content: space-between;
-      color: var(--text-dim); font-size: 0.85rem; margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
     }
 
-    .note-text { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+    .note-text {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
 
-    .clickable-link { color: #60a5fa; text-decoration: underline; }
+    .clickable-link {
+      color: #60a5fa;
+      text-decoration: underline;
+      word-break: break-all;
+    }
 
     /* Modal */
     .modal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      z-index: 2000; justify-content: center; align-items: center;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
     }
-    .modal img { max-width: 90%; max-height: 80vh; border-radius: 10px; }
 
-    .hidden { display: none; }
+    .modal img {
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hidden {
+      display: none;
+    }
 
     /* Login Box */
     .login-container {
-      max-width: 400px; margin: 100px auto; text-align: center;
+      max-width: 400px;
+      margin: 100px auto;
+      text-align: center;
+      padding: 25px;
     }
-    
-    .status-msg { margin-top: 10px; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+
+    .status-msg {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div id="login" class="glass-card login-container">
+      <div style="font-size: 3rem; margin-bottom: 15px;">🔐</div>
+      <h2 class="card-title" style="justify-content: center;">دخول الإدارة</h2>
+      <input type="password" id="pass" placeholder="كلمة المرور">
+      <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="login()">دخول</button>
+      <p id="loginMsg" style="margin-top: 15px; color: var(--danger);"></p>
+    </div>
 
-<div class="container">
-  <div id="login" class="glass-card login-container">
-    <div style="font-size: 3rem; margin-bottom: 15px;">🔐</div>
-    <h2 class="card-title" style="justify-content: center;">دخول الإدارة</h2>
-    <input type="password" id="pass" placeholder="كلمة المرور">
-    <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="login()">دخول</button>
-    <p id="loginMsg" style="margin-top: 15px; color: var(--danger);"></p>
-  </div>
-
-  <div id="panel" class="hidden">
-    <header class="glass-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-        <h2 class="card-title" style="margin:0;"><i class="fas fa-user-shield"></i> لوحة التحكم</h2>
-        <div style="display: flex; gap: 10px;">
+    <div id="panel" class="hidden">
+      <header class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+          <h2 class="card-title" style="margin: 0;"><i class="fas fa-user-shield"></i> لوحة التحكم</h2>
+          <div style="display: flex; gap: 10px;">
             <button class="btn btn-outline" onclick="loadNotes()"><i class="fas fa-sync"></i> تحديث</button>
             <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> الرئيسية</a>
+          </div>
         </div>
-      </div>
-      
-      <div class="stats-grid" style="margin-top: 25px;">
-        <div class="stat-box"><h3 id="totalNotes">0</h3><p>الملاحظات</p></div>
-        <div class="stat-box"><h3 id="repliedNotes">0</h3><p>تم الرد</p></div>
-        <div class="stat-box"><h3 id="pendingNotes">0</h3><p>بانتظار رد</p></div>
-      </div>
-    </header>
 
-    <div class="glass-card">
-      <h2 class="card-title"><i class="fas fa-list"></i> قائمة الملاحظات</h2>
-      <div id="notes">جاري التحميل...</div>
+        <div class="stats-grid" style="margin-top: 25px;">
+          <div class="stat-box">
+            <h3 id="totalNotes">0</h3>
+            <p>الملاحظات</p>
+          </div>
+          <div class="stat-box">
+            <h3 id="repliedNotes">0</h3>
+            <p>تم الرد</p>
+          </div>
+          <div class="stat-box">
+            <h3 id="pendingNotes">0</h3>
+            <p>بانتظار رد</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="glass-card">
+        <h2 class="card-title"><i class="fas fa-list"></i> قائمة الملاحظات</h2>
+        <div id="notes">جاري التحميل...</div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal" id="modal" onclick="this.style.display='none'">
-  <img id="modalImg">
-</div>
+  <div class="modal" id="modal" onclick="this.style.display='none'">
+    <img id="modalImg">
+  </div>
 
-<script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
 
-  // تفعيل الروابط
-  function linkify(text) {
-    if (!text) return "";
-    const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(urlPattern, '<a href="$1" target="_blank" class="clickable-link">$1</a>');
-  }
+    // تفعيل الروابط
+    function linkify(text) {
+      if (!text) return "";
+      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      return text.replace(urlPattern, '<a href="$1" target="_blank" class="clickable-link">$1</a>');
+    }
 
-  function login() {
-    const p = document.getElementById("pass").value.trim();
-    if (!p) return;
-    document.getElementById("loginMsg").textContent = "⏳ جاري التحقق...";
-    
-    fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify({ type: "login", password: p })
-    })
-    .then(r => r.json())
-    .then(d => {
-      if (d.success) {
-        document.getElementById("login").classList.add("hidden");
-        document.getElementById("panel").classList.remove("hidden");
-        loadNotes();
-      } else {
-        document.getElementById("loginMsg").textContent = "❌ كلمة المرور خطأ";
-      }
-    });
-  }
+    function login() {
+      const p = document.getElementById("pass").value.trim();
+      if (!p) return;
+      document.getElementById("loginMsg").textContent = "⏳ جاري التحقق...";
 
-  async function loadNotes() {
-    const container = document.getElementById("notes");
-    container.innerHTML = "جاري التحميل...";
-    
-    try {
-      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
-      const d = await res.json();
-      
-      const total = d.data.length;
-      const replied = d.data.filter(n => n.reply?.trim()).length;
-      updateStats(total, replied, total - replied);
-
-      d.data.sort((a, b) => b.row - a.row);
-
-      let html = "";
-      d.data.forEach(n => {
-        html += `
-          <div class="note-item">
-            <div class="note-meta">
-              <span><i class="fas fa-user"></i> ${n.name || "مجهول"}</span>
-              <span><i class="fas fa-clock"></i> ${new Date(n.date).toLocaleDateString('ar-OM')}</span>
-            </div>
-            <div class="note-text">${linkify(n.note).replace(/\n/g, "<br>")}</div>
-            ${n.image ? `<img src="${n.image}" onclick="openImg('${n.image}')" style="max-width:100px; border-radius:8px; cursor:pointer; margin-bottom:15px; border:1px solid var(--border-color)">` : ""}
-            
-            <div style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
-                <label style="font-size: 0.85rem; color: var(--success); font-weight: bold;">الرد على الطالب:</label>
-                <textarea id="r${n.row}" rows="3" placeholder="اكتب ردك هنا...">${n.reply || ""}</textarea>
-                
-                <label style="font-size: 0.85rem; color: var(--text-dim); display: block; margin-top: 10px;">ارفاق صورة للرد:</label>
-                <input type="file" id="f${n.row}" accept="image/*" style="font-size: 0.8rem; margin-bottom: 10px;">
-                
-                <button class="btn btn-save" onclick="save(${n.row})"><i class="fas fa-paper-plane"></i> حفظ وإرسال الرد</button>
-                <div id="s${n.row}" class="status-msg"></div>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    } catch (e) { container.innerHTML = "❌ خطأ في التحميل"; }
-  }
-
-  function updateStats(t, r, p) {
-    document.getElementById("totalNotes").textContent = t;
-    document.getElementById("repliedNotes").textContent = r;
-    document.getElementById("pendingNotes").textContent = p;
-  }
-
-  async function save(row) {
-    const txt = document.getElementById(`r${row}`).value.trim();
-    const file = document.getElementById(`f${row}`).files[0];
-    const status = document.getElementById(`s${row}`);
-    
-    status.textContent = "⏳ جاري الحفظ...";
-    status.style.color = "var(--accent)";
-
-    let imgBase64 = "";
-    if (file) {
-      const reader = new FileReader();
-      imgBase64 = await new Promise(res => {
-        reader.onload = () => res(reader.result);
-        reader.readAsDataURL(file);
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({ type: "login", password: p })
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) {
+          document.getElementById("login").classList.add("hidden");
+          document.getElementById("panel").classList.remove("hidden");
+          loadNotes();
+        } else {
+          document.getElementById("loginMsg").textContent = "❌ كلمة المرور خطأ";
+        }
       });
     }
 
-    try {
-      const res = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({ type: "reply", row, reply: txt, replyImage: imgBase64 })
-      });
-      const d = await res.json();
-      if (d.success) {
-        status.textContent = "✅ تم الحفظ بنجاح";
-        status.style.color = "var(--success)";
-        setTimeout(() => loadNotes(), 1500);
-      }
-    } catch (e) { status.textContent = "❌ خطأ في الحفظ"; }
-  }
+    async function loadNotes() {
+      const container = document.getElementById("notes");
+      container.innerHTML = "جاري التحميل...";
 
-  function openImg(s) { document.getElementById("modalImg").src = s; document.getElementById("modal").style.display = "flex"; }
-</script>
+      try {
+        const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
+        const d = await res.json();
+
+        const total = d.data.length;
+        const replied = d.data.filter(n => n.reply?.trim()).length;
+        updateStats(total, replied, total - replied);
+
+        d.data.sort((a, b) => b.row - a.row);
+
+        let html = "";
+        d.data.forEach(n => {
+          html += `
+            <div class="note-item fade-in">
+              <div class="note-meta">
+                <span><i class="fas fa-user"></i> ${n.name || "مجهول"}</span>
+                <span><i class="fas fa-clock"></i> ${new Date(n.date).toLocaleDateString('ar-OM')}</span>
+              </div>
+              <div class="note-text">${linkify(n.note).replace(/\n/g, "<br>")}</div>
+              ${n.image ? `<img src="${n.image}" onclick="openImg('${n.image}')" style="max-width: 100px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; border: 1px solid var(--border-color);">` : ""}
+
+              <div style="background: rgba(0, 0, 0, 0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+                <label style="font-size: 0.85rem; color: var(--success); font-weight: bold;">الرد على الطالب:</label>
+                <textarea id="r${n.row}" rows="3" placeholder="اكتب ردك هنا...">${n.reply || ""}</textarea>
+
+                <label style="font-size: 0.85rem; color: var(--text-dim); display: block; margin-top: 10px;">إرفاق صورة للرد:</label>
+                <input type="file" id="f${n.row}" accept="image/*" style="font-size: 0.8rem; margin-bottom: 10px;">
+
+                <button class="btn btn-save" onclick="save(${n.row})"><i class="fas fa-paper-plane"></i> حفظ وإرسال الرد</button>
+                <div id="s${n.row}" class="status-msg"></div>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html || "<p style='text-align: center; color: var(--text-dim);'>لا توجد ملاحظات بعد.</p>";
+      } catch (e) {
+        container.innerHTML = "❌ خطأ في التحميل";
+      }
+    }
+
+    function updateStats(t, r, p) {
+      document.getElementById("totalNotes").textContent = t;
+      document.getElementById("repliedNotes").textContent = r;
+      document.getElementById("pendingNotes").textContent = p;
+    }
+
+    async function save(row) {
+      const txt = document.getElementById(`r${row}`).value.trim();
+      const file = document.getElementById(`f${row}`).files[0];
+      const status = document.getElementById(`s${row}`);
+
+      status.textContent = "⏳ جاري الحفظ...";
+      status.style.color = "var(--accent)";
+
+      let imgBase64 = "";
+      if (file) {
+        const reader = new FileReader();
+        imgBase64 = await new Promise(res => {
+          reader.onload = () => res(reader.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({ type: "reply", row, reply: txt, replyImage: imgBase64 })
+        });
+        const d = await res.json();
+        if (d.success) {
+          status.textContent = "✅ تم الحفظ بنجاح";
+          status.style.color = "var(--success)";
+          setTimeout(() => loadNotes(), 1500);
+        }
+      } catch (e) {
+        status.textContent = "❌ خطأ في الحفظ";
+        status.style.color = "var(--danger)";
+      }
+    }
+
+    function openImg(s) {
+      document.getElementById("modalImg").src = s;
+      document.getElementById("modal").style.display = "flex";
+    }
+  </script>
 </body>
 </html>
