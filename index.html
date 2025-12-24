@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <title>صندوق ملاحظات – الأستاذ خليل البلوشي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #2563eb;
-      --secondary: #7c3aed;
+      --primary: #3b82f6;
+      --secondary: #8b5cf6;
       --accent: #f59e0b;
       --bg-dark: #0f172a;
       --card-bg: rgba(30, 41, 59, 0.7);
@@ -18,34 +18,54 @@
       --success: #10b981;
       --border-color: rgba(255, 255, 255, 0.1);
       --radius: 20px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
 
     body {
-      font-family: "Cairo", sans-serif;
+      font-family: "Baloo Bhaijaan 2", sans-serif;
       background: radial-gradient(circle at top left, #1e293b, #0f172a);
       color: var(--text-main);
       line-height: 1.6;
       min-height: 100vh;
-      padding-bottom: 100px; /* مساحة للتنقل السفلي */
+      padding-bottom: 100px;
     }
 
-    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
     /* Header */
     .hero-section {
       text-align: center;
       padding: 30px 20px;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(124, 58, 237, 0.15));
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
       border-radius: var(--radius);
       margin-bottom: 25px;
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
 
-    .hero-section h1 { font-size: 1.6rem; margin-bottom: 10px; color: #fff; }
+    .hero-section h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
 
-    /* Cards */
+    .hero-section p {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+    }
+
+    /* Glass Card */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -53,208 +73,312 @@
       padding: 25px;
       border: 1px solid var(--border-color);
       margin-bottom: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow);
     }
 
-    .section-title { color: var(--accent); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .section-title {
+      color: var(--accent);
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
     /* Form */
     input, textarea {
-      width: 100%; padding: 12px; margin-top: 8px; border-radius: 12px;
-      background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color);
-      color: white; font-family: inherit;
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      color: white;
+      font-family: inherit;
+      resize: vertical;
     }
 
-    /* Links Formatting */
-    .clickable-link { color: #60a5fa; text-decoration: underline; word-break: break-all; }
+    textarea {
+      min-height: 120px;
+    }
 
     /* Buttons */
     .btn-primary {
-      width: 100%; padding: 15px; border-radius: 12px; border: none;
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: white; font-weight: 700; cursor: pointer; margin-top: 15px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 15px;
+      font-family: inherit;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
 
     .btn-refresh {
-      background: transparent; border: 1px solid var(--primary); color: var(--primary);
-      padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .btn-refresh:hover {
+      background: rgba(59, 130, 246, 0.1);
     }
 
     /* Note Items */
     .note-item {
-      background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 18px;
-      margin-bottom: 15px; border-right: 4px solid var(--accent);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      padding: 18px;
+      margin-bottom: 15px;
+      border-right: 4px solid var(--accent);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .teacher-reply {
-      background: rgba(16, 185, 129, 0.1); border-radius: 10px; padding: 15px;
-      margin-top: 15px; border: 1px solid rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
-    /* Bottom Nav - تم تعديله لإضافة الإدارة */
+    /* Bottom Navigation */
     .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
-      display: flex; justify-content: space-around;
-      padding: 10px 5px; border-top: 1px solid var(--border-color);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(15px);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 5px;
+      border-top: 1px solid var(--border-color);
       z-index: 2000;
     }
 
     .nav-item {
-      text-decoration: none; color: var(--text-dim); font-size: 0.75rem;
-      text-align: center; flex: 1; transition: 0.3s;
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      text-align: center;
+      flex: 1;
+      padding: 5px;
     }
 
-    .nav-item i { font-size: 1.3rem; display: block; margin-bottom: 4px; }
-    .nav-item.active { color: var(--primary); }
-    .nav-item.admin-link { color: #f87171; } /* لون مميز للإدارة */
+    .nav-item i {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.admin-link {
+      color: #f87171;
+    }
 
     /* Modal */
     .modal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      z-index: 3000; justify-content: center; align-items: center;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
     }
-    .modal img { max-width: 90%; max-height: 85vh; border-radius: 10px; }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: 10px;
+    }
+
+    /* Clickable Links */
+    .clickable-link {
+      color: #60a5fa;
+      text-decoration: underline;
+      word-break: break-all;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header class="hero-section">
+      <h1><i class="fas fa-inbox"></i> صندوق ملاحظات الصف الخامس</h1>
+      <p>بإشراف <strong>الأستاذ خليل البلوشي</strong></p>
+    </header>
 
-<div class="container">
-  <header class="hero-section">
-    <h1><i class="fas fa-inbox"></i> صندوق ملاحظات الصف الخامس</h1>
-    <p>بإشراف <strong>الأستاذ خليل البلوشي</strong></p>
-  </header>
+    <div class="glass-card" id="send">
+      <h2 class="section-title"><i class="fas fa-pen-fancy"></i> إرسال ملاحظة</h2>
+      <input type="text" id="name" placeholder="الاسم (طالب/ولي أمر)">
+      <textarea id="note" rows="4" placeholder="اكتب سؤالك أو استفسارك هنا..."></textarea>
 
-  <div class="glass-card" id="send">
-    <h2 class="section-title"><i class="fas fa-pen-fancy"></i> إرسال ملاحظة</h2>
-    <input type="text" id="name" placeholder="الاسم (طالب/ولي أمر)">
-    <textarea id="note" rows="4" placeholder="اكتب سؤالك أو استفسارك هنا..."></textarea>
-    
-    <div style="margin-top:15px">
-      <div onclick="document.getElementById('image').click()" style="cursor:pointer; color:var(--text-dim); border:1px dashed var(--border-color); padding:15px; border-radius:12px; text-align:center">
-        <i class="fas fa-image"></i> <span id="fileLabel">إرفاق صورة (اختياري)</span>
+      <div style="margin-top: 15px;">
+        <div onclick="document.getElementById('image').click()" style="cursor: pointer; color: var(--text-dim); border: 1px dashed var(--border-color); padding: 15px; border-radius: 12px; text-align: center;">
+          <i class="fas fa-image"></i> <span id="fileLabel">إرفاق صورة (اختياري)</span>
+        </div>
+        <input type="file" id="image" accept="image/*" style="display: none;">
       </div>
-      <input type="file" id="image" accept="image/*" style="display:none">
+
+      <button class="btn-primary" id="sendBtn" onclick="sendNote()">إرسال الملاحظة</button>
+      <p id="formStatus" style="text-align: center; margin-top: 10px; font-size: 0.9rem;"></p>
     </div>
 
-    <button class="btn-primary" id="sendBtn" onclick="sendNote()">إرسال الملاحظة</button>
-    <p id="formStatus" style="text-align:center; margin-top:10px; font-size:0.9rem"></p>
-  </div>
-
-  <div class="glass-card" id="replies-section">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
-      <h2 class="section-title" style="margin:0"><i class="fas fa-comment-dots"></i> الردود الواردة</h2>
-      <button class="btn-refresh" onclick="loadReplies()"><i class="fas fa-sync"></i> تحديث</button>
+    <div class="glass-card" id="replies-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 class="section-title" style="margin: 0;"><i class="fas fa-comment-dots"></i> الردود الواردة</h2>
+        <button class="btn-refresh" onclick="loadReplies()"><i class="fas fa-sync"></i> تحديث</button>
+      </div>
+      <div id="replies"></div>
     </div>
-    <div id="replies"></div>
   </div>
-</div>
 
-<nav class="bottom-nav">
-  <a href="#" class="nav-item active"><i class="fas fa-home"></i>الرئيسية</a>
-  <a href="#send" class="nav-item"><i class="fas fa-plus-circle"></i>إرسال</a>
-  <a href="#replies-section" class="nav-item"><i class="fas fa-reply-all"></i>الردود</a>
-  <a href="admin.html" class="nav-item admin-link"><i class="fas fa-user-cog"></i>الإدارة</a>
-</nav>
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active"><i class="fas fa-home"></i> الرئيسية</a>
+    <a href="#send" class="nav-item"><i class="fas fa-plus-circle"></i> إرسال</a>
+    <a href="#replies-section" class="nav-item"><i class="fas fa-reply-all"></i> الردود</a>
+    <a href="admin.html" class="nav-item admin-link"><i class="fas fa-user-cog"></i> الإدارة</a>
+  </nav>
 
-<div class="modal" id="modal" onclick="closeModal()">
-  <img id="modalImg">
-</div>
+  <div class="modal" id="modal" onclick="closeModal()">
+    <img id="modalImg">
+  </div>
 
-<script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw1qGg0ZASORdCNI7YjiHkB0fS04tFG_BOfgu1O7kjKC2I4PDws6kmFC6LAGr83XRBB/exec";
 
-  function linkify(text) {
-    if (!text) return "";
-    const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(urlPattern, '<a href="$1" target="_blank" class="clickable-link">$1</a>');
-  }
-
-  function toBase64(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function sendNote() {
-    const name = document.getElementById("name").value.trim() || "مجهول";
-    const note = document.getElementById("note").value.trim();
-    const btn = document.getElementById("sendBtn");
-    const status = document.getElementById("formStatus");
-    const file = document.getElementById("image").files[0];
-
-    if (!note) { status.textContent = "⚠️ يرجى كتابة الملاحظة أولاً"; status.style.color = "#fbbf24"; return; }
-
-    btn.disabled = true;
-    status.textContent = "⏳ جاري الإرسال الآن...";
-    
-    let imgBase64 = file ? await toBase64(file) : "";
-
-    try {
-      const response = await fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({ type: "add", name, note, image: imgBase64 })
-      });
-      const res = await response.json();
-      if (res.success) {
-        status.textContent = "✅ تم إرسال ملاحظتك بنجاح!";
-        status.style.color = "#10b981";
-        document.getElementById("note").value = "";
-        document.getElementById("image").value = "";
-        document.getElementById("fileLabel").textContent = "إرفاق صورة (اختياري)";
-        loadReplies();
-      }
-    } catch (e) { 
-      status.textContent = "❌ فشل الاتصال بالخادم"; 
-      status.style.color = "#f87171";
+    function linkify(text) {
+      if (!text) return "";
+      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      return text.replace(urlPattern, '<a href="$1" target="_blank" class="clickable-link">$1</a>');
     }
-    btn.disabled = false;
-  }
 
-  async function loadReplies() {
-    const container = document.getElementById("replies");
-    container.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحديث الردود...</div>`;
-    
-    try {
-      const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
-      const r = await res.json();
-      const replied = r.data.filter(n => n.reply?.trim()).sort((a,b) => b.row - a.row);
-      
-      let html = "";
-      replied.forEach(n => {
-        const formattedNote = linkify(n.note).replace(/\n/g, "<br>");
-        const formattedReply = linkify(n.reply).replace(/\n/g, "<br>");
-        html += `
-          <div class="note-item">
-            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-dim); margin-bottom:10px">
-              <span><i class="fas fa-user"></i> ${n.name}</span>
-              <span><i class="fas fa-calendar-alt"></i> ${new Date(n.date).toLocaleDateString('ar-OM')}</span>
-            </div>
-            <p style="font-size:0.95rem">${formattedNote}</p>
-            ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')" style="max-width:100%; max-height:150px; border-radius:8px; margin-top:10px; cursor:zoom-in; border:1px solid var(--border-color)">` : ""}
-            
-            <div class="teacher-reply">
-              <div style="color:var(--success); font-weight:800; margin-bottom:5px; font-size:0.9rem;"><i class="fas fa-check-circle"></i> رد الأستاذ خليل:</div>
-              <p style="font-size:0.95rem">${formattedReply}</p>
-              ${n.replyImage ? `<img src="${n.replyImage}" onclick="showModal('${n.replyImage}')" style="max-width:100%; border-radius:8px; margin-top:10px;">` : ""}
-            </div>
-          </div>
-        `;
+    function toBase64(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
       });
-      container.innerHTML = html || `<p style="text-align:center; color:var(--text-dim);">لا توجد ملاحظات تم الرد عليها بعد.</p>`;
-    } catch (e) { container.innerHTML = "❌ تعذر تحميل البيانات"; }
-  }
+    }
 
-  function showModal(src) { document.getElementById("modalImg").src = src; document.getElementById("modal").style.display = "flex"; }
-  function closeModal() { document.getElementById("modal").style.display = "none"; }
+    async function sendNote() {
+      const name = document.getElementById("name").value.trim() || "مجهول";
+      const note = document.getElementById("note").value.trim();
+      const btn = document.getElementById("sendBtn");
+      const status = document.getElementById("formStatus");
+      const file = document.getElementById("image").files[0];
 
-  document.getElementById("image").onchange = function() {
-    if(this.files[0]) document.getElementById("fileLabel").textContent = "تم اختيار: " + this.files[0].name;
-  };
+      if (!note) {
+        status.textContent = "⚠️ يرجى كتابة الملاحظة أولاً";
+        status.style.color = "#fbbf24";
+        return;
+      }
 
-  loadReplies();
-</script>
+      btn.disabled = true;
+      status.textContent = "⏳ جاري الإرسال الآن...";
+
+      let imgBase64 = file ? await toBase64(file) : "";
+
+      try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({ type: "add", name, note, image: imgBase64 })
+        });
+        const res = await response.json();
+        if (res.success) {
+          status.textContent = "✅ تم إرسال ملاحظتك بنجاح!";
+          status.style.color = "#10b981";
+          document.getElementById("note").value = "";
+          document.getElementById("image").value = "";
+          document.getElementById("fileLabel").textContent = "إرفاق صورة (اختياري)";
+          loadReplies();
+        }
+      } catch (e) {
+        status.textContent = "❌ فشل الاتصال بالخادم";
+        status.style.color = "#f87171";
+      }
+      btn.disabled = false;
+    }
+
+    async function loadReplies() {
+      const container = document.getElementById("replies");
+      container.innerHTML = `<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحديث الردود...</div>`;
+
+      try {
+        const res = await fetch(scriptURL, { method: "POST", body: JSON.stringify({ type: "get" }) });
+        const r = await res.json();
+        const replied = r.data.filter(n => n.reply?.trim()).sort((a, b) => b.row - a.row);
+
+        let html = "";
+        replied.forEach(n => {
+          const formattedNote = linkify(n.note).replace(/\n/g, "<br>");
+          const formattedReply = linkify(n.reply).replace(/\n/g, "<br>");
+          html += `
+            <div class="note-item fade-in">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px;">
+                <span><i class="fas fa-user"></i> ${n.name}</span>
+                <span><i class="fas fa-calendar-alt"></i> ${new Date(n.date).toLocaleDateString('ar-OM')}</span>
+              </div>
+              <p style="font-size: 0.95rem;">${formattedNote}</p>
+              ${n.image ? `<img src="${n.image}" onclick="showModal('${n.image}')" style="max-width: 100%; max-height: 150px; border-radius: 8px; margin-top: 10px; cursor: zoom-in; border: 1px solid var(--border-color);">` : ""}
+
+              <div class="teacher-reply">
+                <div style="color: var(--success); font-weight: 800; margin-bottom: 5px; font-size: 0.9rem;"><i class="fas fa-check-circle"></i> رد الأستاذ خليل:</div>
+                <p style="font-size: 0.95rem;">${formattedReply}</p>
+                ${n.replyImage ? `<img src="${n.replyImage}" onclick="showModal('${n.replyImage}')" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">` : ""}
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html || `<p style="text-align: center; color: var(--text-dim);">لا توجد ملاحظات تم الرد عليها بعد.</p>`;
+      } catch (e) {
+        container.innerHTML = "❌ تعذر تحميل البيانات";
+      }
+    }
+
+    function showModal(src) {
+      document.getElementById("modalImg").src = src;
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    document.getElementById("image").onchange = function() {
+      if (this.files[0]) {
+        document.getElementById("fileLabel").textContent = "تم اختيار: " + this.files[0].name;
+      }
+    };
+
+    loadReplies();
+  </script>
 </body>
 </html>
