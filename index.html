@@ -799,7 +799,7 @@
         const data = await res.json();
         const replied = (data.data || [])
           .filter(n => n.reply?.trim())
-          .sort((a, b) => b.row - a.row);
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
 
         document.getElementById("replyCount").textContent = replied.length;
 
