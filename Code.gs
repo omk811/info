@@ -1,7 +1,7 @@
 /** صندوق التواصل — الأستاذ خليل البلوشي | الإصدار 2.0
  * جميع عمليات الإدارة تتطلب جلسة؛ الدوال المساعدة خاصة وتنتهي بشرطة سفلية.
  * ملف خادم كامل مستقل لواجهة GitHub: لا تحتاج إلى ملفات HTML هنا.
- * الإعداد: ADMIN_PASSWORD في الخصائص، ثم تشغيل setupSystem_، ثم نشر إصدار جديد.
+ * الإعداد: ADMIN_PASSWORD في الخصائص، ثم تشغيل setupSystem، ثم نشر إصدار جديد.
  * لا تجعل جدول البيانات أو مجلد الصور عامًا.
  */
 const CONFIG = Object.freeze({
@@ -23,7 +23,7 @@ function doGet() {
     success: true,
     version: '2.0',
     configured: configured,
-    message: configured ? 'نظام المراسلات يعمل — الأستاذ خليل البلوشي' : 'الكود مكتمل؛ شغّل setupSystem_ بعد إعداد ADMIN_PASSWORD.',
+    message: configured ? 'نظام المراسلات يعمل — الأستاذ خليل البلوشي' : 'الكود مكتمل؛ شغّل setupSystem بعد إعداد ADMIN_PASSWORD.',
     website: 'https://omk811.github.io/info/',
     admin: 'https://omk811.github.io/info/admin.html'
   });
@@ -68,6 +68,16 @@ function api(data) {
  * ينقل كلمة المرور إلى بصمة HMAC، ويضيف أعمدة الإصدار الجديد دون حذف بيانات قديمة.
  * لتغيير كلمة المرور: ضع ADMIN_PASSWORD جديدًا ثم أعد تشغيل هذه الدالة.
  */
+/** تظهر في قائمة تشغيل المحرر؛ تمنع التهيئة من حساب زائر أو حساب آخر. */
+function setupSystem() {
+  const active = String(Session.getActiveUser().getEmail() || '').toLowerCase();
+  const effective = String(Session.getEffectiveUser().getEmail() || '').toLowerCase();
+  if (!active || !effective || active !== effective) {
+    throw new Error('شغّل setupSystem من محرر Apps Script بالحساب الذي يملك النشر.');
+  }
+  return setupSystem_();
+}
+
 function setupSystem_() {
   return locked_(function() {
     const p = PropertiesService.getScriptProperties();
@@ -114,7 +124,7 @@ function sheet_() {
   return sheet;
 }
 function ready_() {
-  if (!PropertiesService.getScriptProperties().getProperty('ADMIN_HASH')) fail_('SETUP','النظام يحتاج إلى تشغيل setupSystem_ من المحرر.');
+  if (!PropertiesService.getScriptProperties().getProperty('ADMIN_HASH')) fail_('SETUP','النظام يحتاج إلى تشغيل setupSystem من المحرر.');
 }
 function rows_() {
   ready_(); const s = sheet_(); const n = s.getLastRow();
