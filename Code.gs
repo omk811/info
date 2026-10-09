@@ -1,5 +1,7 @@
 /** صندوق التواصل — الأستاذ خليل البلوشي | الإصدار 2.0
  * جميع عمليات الإدارة تتطلب جلسة؛ الدوال المساعدة خاصة وتنتهي بشرطة سفلية.
+ * ملف خادم كامل مستقل لواجهة GitHub: لا تحتاج إلى ملفات HTML هنا.
+ * الإعداد: ADMIN_PASSWORD في الخصائص، ثم تشغيل setupSystem_، ثم نشر إصدار جديد.
  * لا تجعل جدول البيانات أو مجلد الصور عامًا.
  */
 const CONFIG = Object.freeze({
@@ -14,24 +16,31 @@ const C = {DATE:0,NAME:1,NOTE:2,IMAGE:3,REPLY:4,REPLY_IMAGE:5,STATUS:6,ID:8,RECE
   CONSENT:10,PUBLISHED:11,UPDATED:12,VERSION:13,ARCHIVED:14,CATEGORY:15,REQUEST:16,PUBLISH_IMAGES:17};
 const CATEGORIES = ['عام','القراءة','النصوص الأدبية','النحو والصرف','الإملاء','الأنشطة والاختبارات'];
 
-function doGet(e) {
-  const page = e && e.parameter && e.parameter.page === 'admin' ? 'admin' : 'index';
-  const url = ScriptApp.getService().getUrl();
-  let html = HtmlService.createHtmlOutputFromFile(page).getContent();
-  html = html.replace('href="admin.html"', 'href="' + url + '?page=admin"')
-    .replace('href="index.html"', 'href="' + url + '"');
-  return HtmlService.createHtmlOutput(html).setTitle('صندوق التواصل — الأستاذ خليل البلوشي')
-    .addMetaTag('viewport','width=device-width, initial-scale=1, viewport-fit=cover');
+/** فحص الاتصال: الخادم مستقل، والصفحات منشورة في GitHub. */
+function doGet() {
+  const configured = !!PropertiesService.getScriptProperties().getProperty('ADMIN_HASH');
+  return json_({
+    success: true,
+    version: '2.0',
+    configured: configured,
+    message: configured ? 'نظام المراسلات يعمل — الأستاذ خليل البلوشي' : 'الكود مكتمل؛ شغّل setupSystem_ بعد إعداد ADMIN_PASSWORD.',
+    website: 'https://omk811.github.io/info/',
+    admin: 'https://omk811.github.io/info/admin.html'
+  });
 }
+function json_(value) {
+  return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
   let result;
   try {
     if (!e || !e.postData || e.postData.contents.length > 650000) fail_('BAD_REQUEST','طلب غير صالح أو كبير جدًا.');
     result = api(JSON.parse(e.postData.contents));
   } catch (err) { result = error_(err); }
-  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+  return json_(result);
 }
-/** المدخل الوحيد عبر google.script.run. */
+/** مدخل موحد لجميع العمليات، مع التحقق من الصلاحيات في الخادم. */
 function api(data) {
   try {
     if (!data || typeof data !== 'object' || Array.isArray(data)) fail_('BAD_REQUEST','طلب غير صالح.');
@@ -100,7 +109,9 @@ function setupSystem_() {
 }
 function sheet_() {
   const ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
-  return ss.getSheetByName(CONFIG.SHEET_NAME) || ss.insertSheet(CONFIG.SHEET_NAME);
+  const sheet = ss.getSheetByName(CONFIG.SHEET_NAME) || ss.insertSheet(CONFIG.SHEET_NAME);
+  if (sheet.getMaxColumns() < HEADERS.length) sheet.insertColumnsAfter(sheet.getMaxColumns(), HEADERS.length - sheet.getMaxColumns());
+  return sheet;
 }
 function ready_() {
   if (!PropertiesService.getScriptProperties().getProperty('ADMIN_HASH')) fail_('SETUP','النظام يحتاج إلى تشغيل setupSystem_ من المحرر.');

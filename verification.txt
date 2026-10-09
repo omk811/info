@@ -1,7 +1,7 @@
 صندوق التواصل — الأستاذ خليل البلوشي
 نتائج التحقق — 9 أكتوبر 2026
 
-23 اختبارًا للخادم و19 اختبارًا للواجهة: جميعها نجحت (42 حالة).
+26 اختبارًا للخادم و19 اختبارًا للواجهة: جميعها نجحت (45 حالة).
 الخادم: محاكاة SpreadsheetApp وDriveApp وCacheService وPropertiesService وLockService.
 الواجهة: Chromium 153 باستخدام Playwright، مع توجيه طلبات API إلى الخلفية المحاكية فقط.
 لم تُرسل اختبارات إلى الجدول الحقيقي أو إلى نشر Apps Script الحقيقي.
@@ -13,6 +13,9 @@
 المعاينات المرفقة تعرض بيانات تجريبية فقط.
 التشغيل الفعلي بعد نشر Google يحتاج التأكد من صلاحيات الحساب والجدول وDrive وخيارات إتاحة التطبيق. لم يُنفذ النشر من هذه المحادثة.
 لا يمثل نجاح هذه الاختبارات تدقيقًا أمنيًا مستقلاً أو اختبار أحمال واسعًا؛ حدود التشغيل مذكورة في الدليل.
+
+
+التصحيح الأخير: doGet يعيد حالة اتصال JSON دون أي ملفات HTML، مع فحص أعمدة الجدول وإكمالها قبل ترحيل السجلات. اختُبرت نقطة doPost وتغطية المسارات كاملة. الواجهة تظل على GitHub.
 
 السجل التفصيلي:
 PASS legacy migration preserves A:H and makes old records private
@@ -37,9 +40,12 @@ PASS formula prefixes are escaped before writing to Sheets
 PASS logout revokes server session
 PASS session expires after one hour
 PASS setup is idempotent and passwords rotate existing sessions
-PASS HTML hosting resolves navigation to actual deployment
+PASS standalone health endpoint works without any HTML files
+PASS POST dispatcher returns JSON and rejects anonymous administrative requests
+PASS malformed POST JSON produces a controlled error
+PASS all required API routes are present in complete source
 
-23 backend checks passed.
+26 backend checks passed.
 
 PASS public pagination loads only twelve cards
 PASS public cards do not disclose sender names
