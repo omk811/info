@@ -1,0 +1,64 @@
+صندوق التواصل — الأستاذ خليل البلوشي
+نتائج التحقق — 9 أكتوبر 2026
+
+23 اختبارًا للخادم و19 اختبارًا للواجهة: جميعها نجحت (42 حالة).
+الخادم: محاكاة SpreadsheetApp وDriveApp وCacheService وPropertiesService وLockService.
+الواجهة: Chromium 153 باستخدام Playwright، مع توجيه طلبات API إلى الخلفية المحاكية فقط.
+لم تُرسل اختبارات إلى الجدول الحقيقي أو إلى نشر Apps Script الحقيقي.
+
+شملت الاختبارات: الخصوصية، وعدم كشف الأسماء أو مفاتيح المتابعة للعامة، ورفض عمليات الإدارة بلا جلسة، وانتهاء الجلسات وإلغاؤها، وتعطيل المسارات القديمة، وترحيل السجلات مع الحفاظ عليها، وعدم النشر دون موافقة، وضبط نسخ السجل، وحفظ صورة الرد أثناء التعديل، وفحص الصور، وتحصين كتابة الخلايا من الصيغ، ومنع تكرار الإرسال، والبحث والتقسيم إلى صفحات، وحفظ المسودات، والعرض النصي الآمن، وإرسال صورة مضغوطة وعرضها لصاحب الرمز، وفتح الصور وإغلاقها بلوحة المفاتيح، والأرشفة والاستعادة، وتبديل المظهر.
+اختُبر انقطاع استجابة الخادم بعد الحفظ ثم إعادة تحميل الصفحة وإعادة إرسال الطلب نفسه: لم يتكرر السجل.
+فُحص عدم تجاوز العرض الأفقي عند 360×800 و800×1280 و1280×800. فُحصت لقطات الواجهة بصريًا، كما نجح فحص صياغة JavaScript.
+
+المعاينات المرفقة تعرض بيانات تجريبية فقط.
+التشغيل الفعلي بعد نشر Google يحتاج التأكد من صلاحيات الحساب والجدول وDrive وخيارات إتاحة التطبيق. لم يُنفذ النشر من هذه المحادثة.
+لا يمثل نجاح هذه الاختبارات تدقيقًا أمنيًا مستقلاً أو اختبار أحمال واسعًا؛ حدود التشغيل مذكورة في الدليل.
+
+السجل التفصيلي:
+PASS legacy migration preserves A:H and makes old records private
+PASS password is not stored in plaintext after setup
+PASS anonymous administrative operations are rejected
+PASS old unsafe get and delete routes are disabled
+PASS invalid password cannot log in
+PASS login issues an opaque session
+PASS admin can read legacy records without exposing receipt hashes
+PASS submission validates ticket timing and writes a stable ID
+PASS duplicate retry never writes a second row
+PASS duplicate ID cannot be used with another secret
+PASS private data and attachments are not available publicly
+PASS receipt authorizes tracking and image access
+PASS moderation publishes only approved question without private name
+PASS reply editing keeps existing image unless removed explicitly
+PASS stale version cannot overwrite a newer reply
+PASS private legacy record cannot be published
+PASS archive and restore preserve record and revoke publication
+PASS malformed and oversized images are rejected
+PASS formula prefixes are escaped before writing to Sheets
+PASS logout revokes server session
+PASS session expires after one hour
+PASS setup is idempotent and passwords rotate existing sessions
+PASS HTML hosting resolves navigation to actual deployment
+
+23 backend checks passed.
+
+PASS public pagination loads only twelve cards
+PASS public cards do not disclose sender names
+PASS next and previous page work
+PASS malicious HTML is rendered as text without script execution
+PASS submission returns private receipt and clears draft
+PASS receipt tracking displays pending state
+PASS private reply is available only through tracking
+PASS authorized image display and keyboard modal closing work
+PASS lost response retains original request and freezes editing
+PASS retry after reload prevents duplicate submissions
+PASS admin login and list work
+PASS search does not erase reply drafts
+PASS reply saves and updates card state
+PASS archive and restore work without deleting rows
+PASS dark mode toggle works
+PASS admin has no horizontal overflow at phone and tablet sizes
+PASS logout clears UI and revokes session
+PASS public UI has no horizontal overflow at phone and tablet sizes
+PASS no uncaught browser JavaScript errors
+
+19 browser checks passed.
